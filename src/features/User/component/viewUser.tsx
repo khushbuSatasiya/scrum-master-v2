@@ -29,16 +29,16 @@ const ViewUser: FC = () => {
   const [totalWorkingHour, setTotalWorkingHour] = useState<string>("");
 
   /* API call for get user info*/
-  const getUserInfo = () => {
-    httpService
-      .get(`${API_CONFIG.path.getUser}/${params.id}`)
-      .then((res) => {
-        setUserData(res.data);
-      })
-      .catch((err: Error) => {
-        console.error("Error", err);
-      });
-  };
+  // const getUserInfo = () => {
+  //   httpService
+  //     .get(`${API_CONFIG.path.getUser}/${params.id}`)
+  //     .then((res) => {
+  //       setUserData(res.data);
+  //     })
+  //     .catch((err: Error) => {
+  //       console.error("Error", err);
+  //     });
+  // };
 
   const totalExperience = userData.experience / 365;
 
@@ -132,9 +132,9 @@ const ViewUser: FC = () => {
     },
   ];
 
-  useEffect(() => {
-    getUserInfo();
-  }, []);
+  // useEffect(() => {
+  //   getUserInfo();
+  // }, []);
 
   return (
     <Box>

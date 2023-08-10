@@ -3,7 +3,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { Group, Loader } from "@mantine/core";
 
 import Layout from "shared/hoc/layout/container/layout";
-import { User } from "shared/hoc/asyncComponents";
+import { Dashboard, User } from "shared/hoc/asyncComponents";
 
 import "./App.css";
 
@@ -19,6 +19,7 @@ const App: FC = () => {
       >
         <Routes>
           <Route path="/user/list" element={<User />} />
+          <Route path="/:token" element={<Dashboard />} />
 
           <Route path="*" element={<Navigate replace to="/dashboard" />} />
         </Routes>

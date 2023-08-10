@@ -120,7 +120,7 @@ const commonAxios = ({
   const headers: any = {
     "Content-Type": contentType,
   };
-  const token = isAccessTokenRequire && AuthService.getAccessToken();
+  const token = "";
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;

@@ -41,7 +41,7 @@ const Layout: React.FC<PropsWithChildren> = (props) => {
   const theme = useMantineTheme();
   const [isOpened, setIsOpened] = useState(false);
   // const organizationData = useSelector((state: State) => state?.auth?.user.organizations);
-  const selectedOrg = useSelector((state: State) => state?.auth?.selectedOrg);
+  // const selectedOrg = useSelector((state: State) => state?.auth?.selectedOrg);
 
   const dispatch = useDispatch();
 
