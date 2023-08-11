@@ -20,6 +20,7 @@ const App: FC = () => {
         <Routes>
           <Route path="/user/list" element={<User />} />
           <Route path="/:token" element={<Dashboard />} />
+          <Route path="/" element={<Dashboard />} />
 
           <Route path="*" element={<Navigate replace to="/dashboard" />} />
         </Routes>

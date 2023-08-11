@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { getUrl } from "shared/constants/api";
 import { ResponseObj } from "../interface";
 import AuthService from "./auth.service";
+import authService from "./auth.service";
 
 const axiosInstance = axios.create();
 const CancelToken = axios.CancelToken;
@@ -120,12 +121,12 @@ const commonAxios = ({
   const headers: any = {
     "Content-Type": contentType,
   };
-  const token = "";
+  const token = isAccessTokenRequire && authService.getAccessToken();
 
   if (token) {
-    headers.Authorization = `Bearer ${token}`;
+    headers["x-access-token"] = `${token}`;
   } else {
-    // headers['x-request-language'] = localStorage.getItem('lang');
+    headers["x-request-language"] = localStorage.getItem("lang");
   }
 
   // const selectedOrg = AuthService.getSelectedOrg();

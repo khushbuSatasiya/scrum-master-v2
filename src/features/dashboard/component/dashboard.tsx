@@ -2,20 +2,52 @@ import { Box, Flex, Image, Paper, Space, Tabs, Text } from "@mantine/core";
 import { IconMail, IconUserStar } from "@tabler/icons-react";
 import CheckIn from "features/checkIn/checkIn";
 import React, { FC, Fragment, useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { API_CONFIG } from "shared/constants/api";
+import authService from "shared/services/auth.service";
 import httpService from "shared/services/http.service";
 
 const Dashboard: FC = () => {
   const { token }: any = useParams();
+  const navigate = useNavigate();
 
   const [userDetails, setUserDetails] = useState<any>([]);
   const [activeTab, setActiveTab] = useState<string | null>("check-in");
   const [projectArray, setProjectArray] = useState<any>([]);
+  const [newToken, setNewToken] = useState("");
 
-  const getUserDetails = useCallback((token: any) => {
+  const login = useCallback(
+    async (token: string) => {
+      try {
+        const response = await httpService.post(API_CONFIG.path.login, {
+          email: "",
+          password: "",
+          token: token,
+        });
+        authService.setAuthData(response);
+        // localStorage.setItem("token", response.token);
+        navigate("/");
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [navigate]
+  );
+
+  useEffect(() => {
+    if (authService.getAuthData()) {
+      const tempToken = authService.getAuthData();
+      setNewToken(tempToken);
+    } else {
+      console.log("authService.getAuthData():", authService.getAuthData());
+      setNewToken(token);
+      login(token);
+    }
+  }, [login, token]);
+
+  const getUserDetails = useCallback(() => {
     httpService
-      .get(`${API_CONFIG.path.getUserDetails}?token=${token}`)
+      .get(`${API_CONFIG.path.getUserDetails}`)
 
       .then((res) => {
         setUserDetails(res.findUser[0]);
@@ -28,9 +60,8 @@ const Dashboard: FC = () => {
   }, []);
 
   useEffect(() => {
-    getUserDetails(token);
-    localStorage.setItem("token", token);
-  }, [getUserDetails, token]);
+    getUserDetails();
+  }, [getUserDetails]);
 
   const USER_INFO_ARR = [
     {
@@ -64,7 +95,7 @@ const Dashboard: FC = () => {
         }}
       >
         <Tabs
-          defaultValue="overview"
+          defaultValue="check-in"
           onTabChange={(data) => {
             setActiveTab(data);
           }}
