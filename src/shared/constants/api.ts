@@ -10,6 +10,8 @@ export const API_CONFIG = {
     getUserDetails: "web/userDetails",
     checkIn: "web/checkIn",
     getTimeSheet: "timesheet",
+    leaveList: "leave/list",
+    leaveExcel: "leave/excel",
   },
 };
 

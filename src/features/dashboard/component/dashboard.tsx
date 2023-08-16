@@ -9,6 +9,7 @@ import authService from "shared/services/auth.service";
 
 import CheckIn from "features/checkIn/checkIn";
 import TimeSheet from "features/timeSheet/component/timeSheet";
+import Leave from "features/leave/component/leave";
 
 import UserInfoTab from "./userInfoTab";
 import UserDetail from "./userDetail";
@@ -21,7 +22,8 @@ const Dashboard: FC = () => {
   const [activeTab, setActiveTab] = useState<string | null>("check-in");
   const [projectArray, setProjectArray] = useState<any>([]);
   const [newToken, setNewToken] = useState<any>({});
-  console.log("newToken:", newToken);
+  const [totalWorkingHour, setTotalWorkingHour] = useState("");
+  const [leaveDetails, setLeaveDetails] = useState<Record<string, any>>({});
 
   const login = useCallback(
     async (token: string) => {
@@ -53,6 +55,27 @@ const Dashboard: FC = () => {
     }
   }, [login, token]);
 
+  const handleTimeSheetDetails = (workingHours) => {
+    setTotalWorkingHour(workingHours);
+  };
+
+  const handleLeaveDetails = (leaveInfo) => {
+    const {
+      grantedLeaves,
+      usedLeaves,
+      remainingLeaves,
+      vacationLeaves,
+      compensationLeaves,
+    } = leaveInfo;
+    setLeaveDetails({
+      grantedLeaves,
+      usedLeaves,
+      remainingLeaves,
+      vacationLeaves,
+      compensationLeaves,
+    });
+  };
+
   const USER_INFO_ARR = [
     {
       label: "Check In",
@@ -67,12 +90,22 @@ const Dashboard: FC = () => {
     {
       label: "Time Sheet",
       value: "timesheet",
-      content: <TimeSheet uId={newToken && newToken.userId} />,
+      content: (
+        <TimeSheet
+          uId={newToken && newToken.userId}
+          handleTimeSheetDetails={handleTimeSheetDetails}
+        />
+      ),
     },
     {
       label: "Leave Report",
       value: "leavereport",
-      content: "Leave Report",
+      content: (
+        <Leave
+          handleLeaveDetails={handleLeaveDetails}
+          uId={newToken && newToken.userId}
+        />
+      ),
     },
   ];
 
@@ -94,6 +127,8 @@ const Dashboard: FC = () => {
             activeTab={activeTab}
             USER_INFO_ARR={USER_INFO_ARR}
             newToken={newToken}
+            totalWorkingHour={totalWorkingHour}
+            leaveDetails={leaveDetails}
           />
 
           <UserInfoTab activeTab={activeTab} USER_INFO_ARR={USER_INFO_ARR} />

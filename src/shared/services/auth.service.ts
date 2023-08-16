@@ -14,7 +14,6 @@ const checkLogin = (): boolean => {
 };
 
 const setAuthData = (data: any): void => {
-  console.log("data:", data);
   const cipherText = CryptoJS.AES.encrypt(JSON.stringify(data), KEY);
   localStorage.setItem("authData", cipherText.toString());
 };
