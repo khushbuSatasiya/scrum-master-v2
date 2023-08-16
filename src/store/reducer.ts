@@ -3,8 +3,11 @@ import { State, Action } from "shared/interface";
 import * as actionTypes from "store/action-types";
 import loadingReducer from "./loadingReducer";
 
+import userDetails from "features/dashboard/store/reducer";
+
 const appReducer = combineReducers({
   loading: loadingReducer,
+  userDetails: userDetails,
 });
 
 const rootReducer = (state: State | undefined, action: Action): State => {

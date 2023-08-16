@@ -1,7 +1,6 @@
 import queryString from "query-string";
 import isEmpty from "lodash/isEmpty";
 import { QueryParameters } from "shared/interface";
-import store from "store";
 
 export const API_CONFIG = {
   baseUrl: `${process.env.REACT_APP_BASE_URL}`,
@@ -9,11 +8,13 @@ export const API_CONFIG = {
   path: {
     login: "auth/login",
     getUserDetails: "web/userDetails",
+    checkIn: "web/checkIn",
+    getTimeSheet: "timesheet",
   },
 };
 
 export const getUrl = (url: string, params: QueryParameters = {}): string => {
-  const state = store.getState();
+  // const state = store.getState();
   const baseUrl = API_CONFIG.baseUrl;
 
   if (!url.includes("https")) {

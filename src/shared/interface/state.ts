@@ -55,6 +55,7 @@ export interface SortingConfig {
 export interface State {
   //   auth: AuthState;
   loading: LoadingState;
+  userDetails: IUserDetails;
   // breadcrumbs: IBreadcrumbState;
   // user: User;
   // payouts: Payouts;
@@ -67,6 +68,14 @@ export interface State {
   // adminUser: AdminUser;
   // kyc: KYC;
   // hackHistory: HackHistory;
+}
+
+export interface IUserDetails {
+  avtar: string;
+  bio: string;
+  email: string;
+  joiningDate: string;
+  realName: string;
 }
 
 export interface Action {

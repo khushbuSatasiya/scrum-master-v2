@@ -14,8 +14,7 @@ const checkLogin = (): boolean => {
 };
 
 const setAuthData = (data: any): void => {
-  console.log("KEY:", process.env);
-
+  console.log("data:", data);
   const cipherText = CryptoJS.AES.encrypt(JSON.stringify(data), KEY);
   localStorage.setItem("authData", cipherText.toString());
 };
@@ -28,7 +27,6 @@ const getAuthData = () => {
       const decryptedData = JSON.parse(
         bytes.toString(CryptoJS.enc.Utf8)
       ) as any;
-      console.log("decryptedData:", decryptedData);
       return decryptedData;
     } else {
       return false;

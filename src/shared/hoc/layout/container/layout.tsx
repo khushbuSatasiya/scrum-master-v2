@@ -1,10 +1,6 @@
 import React, { useState, PropsWithChildren, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { IconLogout, IconUserStar } from "@tabler/icons-react";
 import {
   AppShell,
-  Navbar,
   MediaQuery,
   Burger,
   useMantineTheme,
@@ -12,30 +8,9 @@ import {
   Space,
   Flex,
   Box,
-  Menu,
-  ThemeIcon,
 } from "@mantine/core";
 
-import { State } from "shared/interface";
-import { createAction } from "shared/util/utility";
-import authService from "shared/services/auth.service";
-import { Gonext, Scaletech } from "shared/icons/icons";
-
-import * as actionTypes from "store/action-types";
-import { NavLinks } from "../component/NavLinks";
-import { Brand } from "../component/brand";
 import "../styles/layout.scss";
-
-const handleOrg = (dataArr = []) => {
-  let updateArr = [];
-  dataArr.map((data) => {
-    updateArr.push({
-      label: data.name,
-      value: data.id,
-    });
-  });
-  return updateArr;
-};
 
 const Layout: React.FC<PropsWithChildren> = (props) => {
   const theme = useMantineTheme();
@@ -43,10 +18,9 @@ const Layout: React.FC<PropsWithChildren> = (props) => {
   // const organizationData = useSelector((state: State) => state?.auth?.user.organizations);
   // const selectedOrg = useSelector((state: State) => state?.auth?.selectedOrg);
 
-  const dispatch = useDispatch();
-
   //   const [orgArray, setOrgArray] = useState<
-  //     {
+  //     {import { useParams } from "react-router-dom";
+
   //       label: string;
   //       value: string;
   //     }[]

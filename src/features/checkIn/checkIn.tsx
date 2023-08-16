@@ -1,30 +1,29 @@
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+
 import {
   ActionIcon,
   Box,
   Button,
-  Code,
   Flex,
   Group,
   Paper,
   Select,
   Space,
-  Text,
-  TextInput,
   Textarea,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
 import { IconClock, IconTrash } from "@tabler/icons-react";
-import { values } from "lodash";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+
+import { API_CONFIG } from "shared/constants/api";
+import httpService from "shared/services/http.service";
 
 interface IProps {
-  token: any;
   projectArray: any;
 }
 
-const CheckIn: FC<IProps> = ({ token, projectArray }) => {
+const CheckIn: FC<IProps> = ({ projectArray }) => {
   const ref = useRef<HTMLInputElement>();
 
   const [projectName, setProjectName] = useState<any>([]);
@@ -50,6 +49,14 @@ const CheckIn: FC<IProps> = ({ token, projectArray }) => {
   useEffect(() => {
     getProject();
   }, [getProject]);
+
+  const handleCheckIn = useCallback(async (values: any) => {
+    try {
+      await httpService.post(API_CONFIG.path.checkIn, values);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   const fields = form.values.employees.map(
     (item, index) =>
@@ -113,7 +120,7 @@ const CheckIn: FC<IProps> = ({ token, projectArray }) => {
 
   return (
     <Flex direction="column" justify="center">
-      <form onSubmit={form.onSubmit((values) => console.log(values))}>
+      <form onSubmit={form.onSubmit((values) => handleCheckIn(values))}>
         <Flex align="center" justify={"center"}>
           <TimeInput
             label="Time (24 hour)"
@@ -123,6 +130,7 @@ const CheckIn: FC<IProps> = ({ token, projectArray }) => {
                 <IconClock size="1rem" stroke={1.5} />
               </ActionIcon>
             }
+            {...form.getInputProps("time")}
             maw={105}
             withAsterisk
           />

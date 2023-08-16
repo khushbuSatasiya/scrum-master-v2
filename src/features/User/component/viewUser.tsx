@@ -1,28 +1,14 @@
-import React, { FC, Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import {
-  Box,
-  Flex,
-  Image,
-  Paper,
-  Space,
-  Tabs,
-  Text,
-  useMantineTheme,
-} from "@mantine/core";
+import React, { FC, Fragment, useState } from "react";
+import { Box, Flex, Image, Paper, Space, Tabs, Text } from "@mantine/core";
 import { IconMail, IconUserStar } from "@tabler/icons-react";
 import { isEmpty } from "lodash";
 
-import { API_CONFIG } from "shared/constants/api";
-import httpService from "shared/services/http.service";
 import { getTotalWorkingHourColor } from "shared/util/utility";
 
 import { IUserInfo } from "../interface/user";
 import { USERINFO } from "../constants/userConstants";
 
 const ViewUser: FC = () => {
-  const params = useParams();
-
   const [userData, setUserData] = useState<IUserInfo>(USERINFO);
   const [activeTab, setActiveTab] = useState<string | null>("overview");
   const [LeaveDetails, setLeaveDetails] = useState<Record<string, any>>({});
@@ -42,26 +28,26 @@ const ViewUser: FC = () => {
 
   const totalExperience = userData.experience / 365;
 
-  const handleLeaveDetails = (leaveInfo) => {
-    const {
-      grantedLeaves,
-      usedLeaves,
-      remainingLeaves,
-      vacationLeaves,
-      compensationLeaves,
-    } = leaveInfo;
-    setLeaveDetails({
-      grantedLeaves,
-      usedLeaves,
-      remainingLeaves,
-      vacationLeaves,
-      compensationLeaves,
-    });
-  };
+  // const handleLeaveDetails = (leaveInfo) => {
+  //   const {
+  //     grantedLeaves,
+  //     usedLeaves,
+  //     remainingLeaves,
+  //     vacationLeaves,
+  //     compensationLeaves,
+  //   } = leaveInfo;
+  //   setLeaveDetails({
+  //     grantedLeaves,
+  //     usedLeaves,
+  //     remainingLeaves,
+  //     vacationLeaves,
+  //     compensationLeaves,
+  //   });
+  // };
 
-  const handleTimeSheetDetails = (workingHours) => {
-    setTotalWorkingHour(workingHours);
-  };
+  // const handleTimeSheetDetails = (workingHours) => {
+  //   setTotalWorkingHour(workingHours);
+  // };
 
   const renderPaper = (label, value, color) => (
     <Paper

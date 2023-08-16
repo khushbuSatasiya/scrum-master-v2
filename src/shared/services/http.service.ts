@@ -125,14 +125,14 @@ const commonAxios = ({
 
   if (token) {
     headers["x-access-token"] = `${token}`;
+    headers["organizationId"] = "0125f93d-12b5-4935-98e6-8d455fdf1793";
   } else {
     headers["x-request-language"] = localStorage.getItem("lang");
   }
 
   // const selectedOrg = AuthService.getSelectedOrg();
   // if (selectedOrg) {
-
-  // 	headers.organizationId = selectedOrg.value;
+  //   headers.organizationId = selectedOrg.value;
   // }
 
   let body: any = null;
