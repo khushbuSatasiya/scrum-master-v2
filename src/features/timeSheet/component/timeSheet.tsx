@@ -3,8 +3,9 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 import moment from "moment";
 
 import { MonthPickerInput } from "@mantine/dates";
-import { IconCalendar } from "@tabler/icons-react";
-import { Box, Flex, Space } from "@mantine/core";
+import { IconCalendar, IconDownload } from "@tabler/icons-react";
+import { Box, Flex, Space, ThemeIcon, Tooltip } from "@mantine/core";
+import fileSever from "file-saver";
 
 import { TableSelection } from "shared/components/table/container/table";
 import { API_CONFIG } from "shared/constants/api";
@@ -52,34 +53,34 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
     [uId]
   );
 
-  /* API call for get user timesheet Excel */
-  // const getTimeSheetExcel = useCallback(
-  //   (date?) => {
-  //     const params = {
-  //       startDate: value
-  //         ? moment(value).startOf("month").format("YYYY-DD-MM")
-  //         : "",
-  //       endDate: value ? moment(value).endOf("month").format("YYYY-DD-MM") : "",
-  //     };
+  //  API call for get user timesheet Excel
+  const getTimeSheetExcel = useCallback(
+    (date?) => {
+      const params = {
+        startDate: value
+          ? moment(value).startOf("month").format("YYYY-DD-MM")
+          : "",
+        endDate: value ? moment(value).endOf("month").format("YYYY-DD-MM") : "",
+      };
 
-  //     httpService
-  //       .get(`${API_CONFIG.path.excelTimeSheet}/${id}`, params, {
-  //         responseType: "blob",
-  //       })
+      httpService
+        .get(`${API_CONFIG.path.timeSheetExcel}/${uId}`, params, {
+          responseType: "blob",
+        })
 
-  //       .then((res) => {
-  //         const blob = new Blob([res], {
-  //           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  //         });
+        .then((res) => {
+          const blob = new Blob([res], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
 
-  //         fileSever.saveAs(blob, "timesheet.xlsx");
-  //       })
-  //       .catch((err: Error) => {
-  //         console.error("Error", err);
-  //       });
-  //   },
-  //   [value]
-  // );
+          fileSever.saveAs(blob, "timesheet.xlsx");
+        })
+        .catch((err: Error) => {
+          console.error("Error", err);
+        });
+    },
+    [value]
+  );
 
   useEffect(() => {
     getUerTimeSheet();
@@ -106,7 +107,7 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
           icon={<IconCalendar size={16} />}
         />
         <Space w="20px" />
-        {/* <Tooltip
+        <Tooltip
           label="Download Excel"
           color="blue"
           position="bottom"
@@ -122,7 +123,7 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
           >
             <IconDownload cursor="pointer" />
           </ThemeIcon>
-        </Tooltip> */}
+        </Tooltip>
       </Flex>
 
       <Box ml="-20px">

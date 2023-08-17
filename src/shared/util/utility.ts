@@ -175,3 +175,16 @@ export const capitalizeFirstLetter = (string: string) => {
 export const getDay = (date: Moment) => {
   return moment(date).format("dddd");
 };
+
+export const sortProjectList = (projectArray: any) => {
+  const sortedProjects = [...projectArray].sort((a, b) => {
+    if (a.isAssigned && !b.isAssigned) {
+      return -1;
+    }
+    if (!a.isAssigned && b.isAssigned) {
+      return 1;
+    }
+    return a.id - b.id;
+  });
+  return sortedProjects;
+};

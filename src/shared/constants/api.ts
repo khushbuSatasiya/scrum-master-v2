@@ -7,9 +7,11 @@ export const API_CONFIG = {
   //   authBaseUrl: `${process.env.REACT_APP_AUTH_BASE_URL}`,
   path: {
     login: "auth/login",
+    status: "web/status",
     getUserDetails: "web/userDetails",
     checkIn: "web/checkIn",
     getTimeSheet: "timesheet",
+    timeSheetExcel: "timesheet/excel",
     leaveList: "leave/list",
     leaveExcel: "leave/excel",
   },

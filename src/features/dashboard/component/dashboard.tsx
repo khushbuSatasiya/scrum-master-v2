@@ -13,18 +13,31 @@ import Leave from "features/leave/component/leave";
 
 import UserInfoTab from "./userInfoTab";
 import UserDetail from "./userDetail";
+import CheckOut from "features/checkOut/component/checkOut";
 
 const Dashboard: FC = () => {
   const { token }: any = useParams();
   const navigate = useNavigate();
 
-  const [actionType, setActionType] = useState();
+  const [actionType, setActionType] = useState("");
   const [activeTab, setActiveTab] = useState<string | null>("check-in");
   const [projectArray, setProjectArray] = useState<any>([]);
   const [newToken, setNewToken] = useState<any>({});
   const [totalWorkingHour, setTotalWorkingHour] = useState("");
   const [leaveDetails, setLeaveDetails] = useState<Record<string, any>>({});
 
+  const checkStatus = useCallback(async () => {
+    try {
+      await httpService.get(API_CONFIG.path.status).then((res) => {
+        setActionType(res.data.action);
+        setProjectArray(res.data.projects);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  console.log("actionType:", actionType);
   const login = useCallback(
     async (token: string) => {
       try {
@@ -35,9 +48,10 @@ const Dashboard: FC = () => {
             token: token,
           })
           .then((res) => {
+            navigate("/");
             authService.setAuthData(res);
+            checkStatus();
           });
-        navigate("/");
       } catch (error) {
         console.error(error);
       }
@@ -49,11 +63,16 @@ const Dashboard: FC = () => {
     if (authService.getAuthData()) {
       const tempToken = authService.getAuthData();
       setNewToken(tempToken);
+      navigate("/");
     } else {
       setNewToken(token);
       login(token);
     }
   }, [login, token]);
+
+  useEffect(() => {
+    !actionType && authService.getAuthData() && checkStatus();
+  }, [actionType, checkStatus]);
 
   const handleTimeSheetDetails = (workingHours) => {
     setTotalWorkingHour(workingHours);
@@ -80,7 +99,12 @@ const Dashboard: FC = () => {
     {
       label: "Check In",
       value: "check-in",
-      content: <CheckIn projectArray={projectArray} />,
+      content: (
+        <>
+          {actionType === "checkIn" && <CheckIn projectArray={projectArray} />}
+          {actionType === "checkOut" && <CheckOut />}
+        </>
+      ),
     },
     {
       label: "Projects",
