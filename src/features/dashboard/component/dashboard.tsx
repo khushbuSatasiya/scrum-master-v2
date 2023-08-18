@@ -25,6 +25,7 @@ const Dashboard: FC = () => {
   const [newToken, setNewToken] = useState<any>({});
   const [totalWorkingHour, setTotalWorkingHour] = useState("");
   const [leaveDetails, setLeaveDetails] = useState<Record<string, any>>({});
+  const [enteredTask, setEnteredTask] = useState<any>({});
 
   const checkStatus = useCallback(async () => {
     try {
@@ -32,15 +33,15 @@ const Dashboard: FC = () => {
         setActionType(res.data.action);
         setProjectArray(res.data.projects);
 
-        res.data.tasks?.findUser &&
-          console.log("res:", res.data.tasks.findUser[0].usertasks);
+        res.data.action === "checkOut" &&
+          res.data.tasks?.findUser &&
+          setEnteredTask(res.data.tasks);
       });
     } catch (error) {
       console.error(error);
     }
   }, []);
 
-  console.log("actionType:", actionType);
   const login = useCallback(
     async (token: string) => {
       try {
@@ -107,9 +108,7 @@ const Dashboard: FC = () => {
           {actionType === "checkIn" && (
             <CheckIn projectArray={projectArray} checkStatus={checkStatus} />
           )}
-          {actionType === "checkOut" && (
-            <CheckOut projectArray={projectArray} />
-          )}
+          {actionType === "checkOut" && <CheckOut enteredTask={enteredTask} />}
         </>
       ),
     },
