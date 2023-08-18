@@ -31,6 +31,9 @@ const Dashboard: FC = () => {
       await httpService.get(API_CONFIG.path.status).then((res) => {
         setActionType(res.data.action);
         setProjectArray(res.data.projects);
+
+        res.data.tasks?.findUser &&
+          console.log("res:", res.data.tasks.findUser[0].usertasks);
       });
     } catch (error) {
       console.error(error);
@@ -101,8 +104,12 @@ const Dashboard: FC = () => {
       value: "check-in",
       content: (
         <>
-          {actionType === "checkIn" && <CheckIn projectArray={projectArray} />}
-          {actionType === "checkOut" && <CheckOut />}
+          {actionType === "checkIn" && (
+            <CheckIn projectArray={projectArray} checkStatus={checkStatus} />
+          )}
+          {actionType === "checkOut" && (
+            <CheckOut projectArray={projectArray} />
+          )}
         </>
       ),
     },

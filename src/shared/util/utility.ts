@@ -188,3 +188,15 @@ export const sortProjectList = (projectArray: any) => {
   });
   return sortedProjects;
 };
+
+export const getProjectList = (projectArray: any) => {
+  const projectNames = sortProjectList(projectArray).map((data: any) => {
+    const label =
+      data.isAssigned === true ? data.projectName + " ⭐️" : data.projectName;
+    return {
+      label: label,
+      value: data.id,
+    };
+  });
+  return projectNames;
+};

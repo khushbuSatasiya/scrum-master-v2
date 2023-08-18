@@ -17,38 +17,48 @@ import { TimeInput } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
 import { IconClock, IconTrash } from "@tabler/icons-react";
 
-import { sortProjectList } from "shared/util/utility";
+import { getProjectList } from "shared/util/utility";
 import { API_CONFIG } from "shared/constants/api";
 import httpService from "shared/services/http.service";
 
 interface IProps {
   projectArray: any;
+  checkStatus: () => void;
 }
 
-const CheckIn: FC<IProps> = ({ projectArray }) => {
+const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
   const ref = useRef<HTMLInputElement>();
 
   const [projectName, setProjectName] = useState<any>([]);
-  const [employeeErrors, setEmployeeErrors] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const validationSchema = Yup.object().shape({
     time: Yup.string().required("Time is required"),
-    // employees: Yup.array().of(
-    //   Yup.object().shape({
-    //     task: Yup.string().when("project", {
-    //       is: (value) => value === "",
-    //       then: Yup.string().notRequired(),
-    //       otherwise: Yup.string().required("Task is required"),
-    //     }),
-    //     // project: Yup.string().when("task", {
-    //     //   is: (value) => value === "",
-    //     //   then: Yup.string().notRequired(),
-    //     //   otherwise: Yup.string().required("Project is required"),
-    //     // }),
-    //     // project: Yup.string().required("Project is required"),
-    //   })
-    // ),
+    employees: Yup.array().of(
+      Yup.object().shape({
+        task: Yup.string().test(
+          "task-required",
+          "Task is required",
+          function (value) {
+            const projectValue = this.parent.project;
+            if (projectValue === "") {
+              return true; // Task validation is skipped when project is empty
+            }
+            return !!value;
+          }
+        ),
+        project: Yup.string()
+          .nullable()
+          .test("project-required", "Project is required", function (value) {
+            const taskValue = this.parent.task;
+            if (taskValue === "") {
+              return true; // Project validation is skipped when task is empty
+            }
+
+            return !!value;
+          }),
+      })
+    ),
   });
 
   const form = useForm({
@@ -58,58 +68,14 @@ const CheckIn: FC<IProps> = ({ projectArray }) => {
         {
           task: "",
           project: "",
-          // project: { label: "", value: "" },
         },
       ],
     },
     validate: yupResolver(validationSchema),
-    // validate: {
-    //   // time: (value: any) => value.time !== "" || "Time is required",
-    //   employees: {
-    //     task: (value: any) => {
-    //       console.log(value);
-
-    //       return "";
-    //     },
-    //     project: (value: any) => "test",
-    //   },
-    // },
-    // validate: {
-    //   // time: (value: any) => value.time !== "" || "Time is required",
-    //   employees: (emp: any) => ({
-    //     task: (value: string) => {
-    //       if (value.trim() === "" && emp.project.value !== "") {
-    //         return "Task is required if Project is specified.";
-    //       }
-    //       return "";
-    //     },
-    //     project: (value: string) => {
-    //       if (value.trim() === "" && emp.task.trim() !== "") {
-    //         return "Project is required if Task is specified.";
-    //       }
-    //       return "";
-    //     },
-    //   }),
-    // },
   });
 
   const getProject = useCallback(() => {
-    const projectNames = sortProjectList(projectArray).map((data: any) => {
-      const label =
-        data.isAssigned === true ? data.projectName + " ⭐️" : data.projectName;
-      return {
-        label: label,
-        value: data.id,
-      };
-    });
-    setProjectName(projectNames);
-
-    setEmployeeErrors(
-      Array.from({ length: projectArray.length }, () => ({
-        task: false,
-        project: false,
-      }))
-    );
+    setProjectName(getProjectList(projectArray));
   }, [projectArray]);
 
   useEffect(() => {
@@ -117,52 +83,38 @@ const CheckIn: FC<IProps> = ({ projectArray }) => {
   }, [getProject]);
 
   const handleCheckIn = useCallback(async (values: any) => {
-    console.log("values:", typeof values.time);
-    form.validate();
-
-    const newEmployeeErrors = values.employees.map((employee: any) => {
+    const updatedValue = values.employees.map((data: any, index: number) => {
       return {
-        task: employee.task === "" && employee.project.value !== "",
-        project: employee.project.value === "" && employee.task !== "",
+        projectId: data.project,
+        taskName: data.task,
       };
     });
-    setEmployeeErrors(newEmployeeErrors);
 
-    const hasErrors = newEmployeeErrors.some(
-      (error: any) => error.task || error.project
-    );
+    const payload = {
+      inTime: values.time,
+      tasks: updatedValue,
+    };
 
-    if (!hasErrors) {
-      const updatedValue = values.employees.map((data: any, index: number) => {
-        return {
-          projectId: data.project,
-          taskName: data.task,
-        };
-      });
-      const payload = {
-        inTime: values.time,
-        tasks: updatedValue,
-      };
-      setIsLoading(true);
-      // try {
-      //   await httpService
-      //     .post(API_CONFIG.path.checkIn, payload)
-      //     .then((res: any) => {
-      //       console.log(res, "res");
-      //       setIsLoading(false);
-      //     });
-      // } catch (error) {
-      //   setIsLoading(false);
-      //   console.error(error);
-      // }
+    setIsLoading(true);
+
+    try {
+      await httpService
+        .post(API_CONFIG.path.checkIn, payload)
+        .then((res: any) => {
+          setIsLoading(false);
+          checkStatus();
+        });
+    } catch (error) {
+      setIsLoading(false);
+      console.error(error);
     }
   }, []);
 
   const isAddButtonDisabled = (employee: any) => {
     return (
       employee.task.trim() === "" ||
-      employee.project.value === "" ||
-      (employee.task.trim() === "" && employee.project.value === "")
+      employee.project === "" ||
+      (employee.task.trim() === "" && employee.project === "")
     );
   };
 
@@ -185,10 +137,6 @@ const CheckIn: FC<IProps> = ({ projectArray }) => {
             data={projectName}
             {...form.getInputProps(`employees.${index}.project`)}
             mb={"20px"}
-
-            // onChange={(data) => console.log(data)}
-            // error={employeeErrors[index]?.project && "Project is required"}
-            // error={form.errors.project}
           />
 
           <Textarea
@@ -205,7 +153,6 @@ const CheckIn: FC<IProps> = ({ projectArray }) => {
                 event.preventDefault();
               }
             }}
-            // error={employeeErrors[index]?.task && "Task is required"}
           />
         </Flex>
         {form.values.employees.length !== 1 && (
@@ -227,7 +174,7 @@ const CheckIn: FC<IProps> = ({ projectArray }) => {
               onClick={() => {
                 form.insertListItem("employees", {
                   task: "",
-                  project: { label: "project names", value: "" },
+                  project: "",
                 });
               }}
               disabled={isAddButtonDisabled(form.values.employees[index])}
@@ -270,8 +217,8 @@ const CheckIn: FC<IProps> = ({ projectArray }) => {
             variant="outline"
             color="cyan"
             sx={{ width: "140px", marginTop: "20px" }}
-            // loading={isLoading}
-            // disabled={isLoading}
+            loading={isLoading}
+            disabled={isLoading}
             loaderPosition="left"
             loaderProps={{ size: "sm", color: "#15aabf", variant: "oval" }}
           >
