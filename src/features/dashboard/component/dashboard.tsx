@@ -10,6 +10,7 @@ import authService from "shared/services/auth.service";
 import CheckIn from "features/checkIn/checkIn";
 import TimeSheet from "features/timeSheet/component/timeSheet";
 import Leave from "features/leave/component/leave";
+import LeaveOrMissingDay from "features/leaveOrMissingDay/component/leaveOrMissingDay";
 
 import UserInfoTab from "./userInfoTab";
 import UserDetail from "./userDetail";
@@ -26,18 +27,26 @@ const Dashboard: FC = () => {
   const [totalWorkingHour, setTotalWorkingHour] = useState("");
   const [leaveDetails, setLeaveDetails] = useState<Record<string, any>>({});
   const [enteredTask, setEnteredTask] = useState<any>({});
+  const [checkOutDate, setCheckOutDate] = useState("");
+  const [isActionLoader, setIsActionLoader] = useState(false);
 
   const checkStatus = useCallback(async () => {
+    setIsActionLoader(true);
     try {
       await httpService.get(API_CONFIG.path.status).then((res) => {
+        setIsActionLoader(false);
+
         setActionType(res.data.action);
         setProjectArray(res.data.projects);
 
         res.data.action === "checkOut" &&
           res.data.tasks?.findUser &&
           setEnteredTask(res.data.tasks);
+
+        res.data.date && setCheckOutDate(res.data.date);
       });
     } catch (error) {
+      setIsActionLoader(false);
       console.error(error);
     }
   }, []);
@@ -108,7 +117,16 @@ const Dashboard: FC = () => {
           {actionType === "checkIn" && (
             <CheckIn projectArray={projectArray} checkStatus={checkStatus} />
           )}
-          {actionType === "checkOut" && <CheckOut enteredTask={enteredTask} />}
+          {actionType === "checkOut" && (
+            <CheckOut
+              enteredTask={enteredTask}
+              checkOutDate={checkOutDate}
+              checkStatus={checkStatus}
+            />
+          )}
+          {actionType === "LeaveApplyOrMissingDay" && (
+            <LeaveOrMissingDay checkOutDate={checkOutDate} />
+          )}
         </>
       ),
     },
@@ -150,6 +168,8 @@ const Dashboard: FC = () => {
         <Tabs
           defaultValue="check-in"
           onTabChange={(data) => {
+            data !== "leavereport" && setLeaveDetails({});
+            data !== "timesheet" && setTotalWorkingHour("");
             setActiveTab(data);
           }}
         >
@@ -161,7 +181,11 @@ const Dashboard: FC = () => {
             leaveDetails={leaveDetails}
           />
 
-          <UserInfoTab activeTab={activeTab} USER_INFO_ARR={USER_INFO_ARR} />
+          <UserInfoTab
+            activeTab={activeTab}
+            USER_INFO_ARR={USER_INFO_ARR}
+            isActionLoader={isActionLoader}
+          />
         </Tabs>
       </Box>
     </div>

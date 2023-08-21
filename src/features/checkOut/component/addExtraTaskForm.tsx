@@ -18,12 +18,14 @@ interface IProps {
   isShowForm: boolean;
   setIsShowForm: (action: boolean) => void;
   handleAddTaskBtn: () => void;
+  projects: any;
 }
 
 const AddExtraTaskForm: FC<IProps> = ({
   form,
   isShowForm,
   handleAddTaskBtn,
+  projects,
 }) => {
   const [hourInputRefs, setHourInputRefs] = useState<
     Array<React.RefObject<any>>
@@ -37,8 +39,19 @@ const AddExtraTaskForm: FC<IProps> = ({
     );
   }, [form.values.employees.length]);
 
-  const fields = form.values.employees.map(
-    (item, index) =>
+  const isAddButtonDisabled = (employee: any) => {
+    return (
+      employee.task.trim() === "" ||
+      employee.project === "" ||
+      employee.projectHours === "" ||
+      (employee.task.trim() === "" &&
+        employee.project === "" &&
+        employee.projectHours === "")
+    );
+  };
+
+  const fields = form.values.employees.map((item, index) => {
+    return (
       isShowForm && (
         <Paper
           p="md"
@@ -57,7 +70,7 @@ const AddExtraTaskForm: FC<IProps> = ({
                   placeholder="Project names"
                   nothingFound="No options"
                   dropdownPosition="bottom"
-                  data={[]}
+                  data={projects}
                   {...form.getInputProps(`employees.${index}.project`)}
                   mb={"20px"}
                 />
@@ -71,13 +84,12 @@ const AddExtraTaskForm: FC<IProps> = ({
                       <IconClock size="1rem" stroke={1.5} />
                     </ActionIcon>
                   }
-                  {...form.getInputProps(`tasks.${index}.projectHours`)}
+                  {...form.getInputProps(`employees.${index}.projectHours`)}
                   maw={180}
                   withAsterisk
                   sx={{ marginLeft: "20px" }}
                 />
               </Flex>
-
               <Textarea
                 placeholder={`- task 1\n- task 2`}
                 autosize
@@ -99,7 +111,6 @@ const AddExtraTaskForm: FC<IProps> = ({
               color="red"
               onClick={() => {
                 form.removeListItem("employees", index);
-
                 index === 0 &&
                   index === form.values.employees.length - 1 &&
                   handleAddTaskBtn();
@@ -117,10 +128,10 @@ const AddExtraTaskForm: FC<IProps> = ({
                   onClick={() => {
                     form.insertListItem("employees", {
                       task: "",
-                      project: { label: "project names", value: "" },
+                      project: form.values.employees[index].project,
                     });
                   }}
-                  // disabled={isAddButtonDisabled(form.values.employees[index])}
+                  disabled={isAddButtonDisabled(form.values.employees[index])}
                 >
                   Add Task
                 </Button>
@@ -129,7 +140,8 @@ const AddExtraTaskForm: FC<IProps> = ({
           </Group>
         </Paper>
       )
-  );
+    );
+  });
 
   return (
     <div>

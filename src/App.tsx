@@ -13,7 +13,7 @@ const App: FC = () => {
       <Suspense
         fallback={
           <Group w="100%" h="500px" position="center" align="center">
-            <Loader size="xl" />
+            {/* <Loader size="xl" /> */}
           </Group>
         }
       >

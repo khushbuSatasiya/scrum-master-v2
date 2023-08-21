@@ -176,9 +176,6 @@ const Leave: FC<ILeaveProps> = ({ handleLeaveDetails, uId }) => {
         handlePagination={handlePagination}
         onRecordsPerPageChange={onRecordsPerPageChange}
         columns={getLeaveColumns(uId)}
-        onRowClick={(data) => {
-          console.log(data);
-        }}
       />
     </Flex>
   );

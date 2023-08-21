@@ -1,18 +1,33 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 
-import { useForm } from "@mantine/form";
-import CheckOutForm from "../checkOutForm";
+import { useForm, yupResolver } from "@mantine/form";
+
+import {
+  checkOutValidationSchema,
+  checkOutValidationWithOptSchema,
+  checkOutwithNoTaskValidationSchema,
+} from "shared/constants/validation-schema";
+
+import httpService from "shared/services/http.service";
+import { API_CONFIG } from "shared/constants/api";
+import CheckOutForm from "./checkOutForm";
 
 interface IProps {
   enteredTask: any;
+  checkOutDate: string;
+  checkStatus: () => void;
 }
 
-const CheckOut: FC<IProps> = ({ enteredTask }) => {
+const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
+  const [projects, setProjects] = useState([]);
+  const [isShowForm, setIsShowForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const formatValues = (userTask: any) => {
     if (userTask.length > 0) {
       const tasksArray = userTask.map((task: any) => {
         return {
-          taskId: task.id,
+          taskId: task.projectId,
           taskName: task.task,
           projectHours: "",
           projectName: task.projectdeatils.projectName,
@@ -45,33 +60,136 @@ const CheckOut: FC<IProps> = ({ enteredTask }) => {
           ],
         ],
         tasks: [
-          {
-            taskId: "",
-            projectId: "",
-            taskName: "",
-            projectHours: "",
-          },
+          // {
+          //   taskId: "",
+          //   projectId: "",
+          //   taskName: "",
+          //   projectHours: "",
+          // },
         ],
       };
     }
   };
 
+  console.log(
+    isShowForm
+      ? enteredTask.findUser[0].usertasks.length > 0
+        ? checkOutValidationWithOptSchema
+        : checkOutwithNoTaskValidationSchema
+      : enteredTask.findUser[0].usertasks.length > 0
+      ? checkOutValidationSchema
+      : "",
+    "..."
+  );
+
   const form = useForm({
     initialValues: formatValues(enteredTask.findUser[0].usertasks),
+    validate: yupResolver(
+      isShowForm
+        ? enteredTask.findUser[0].usertasks.length > 0
+          ? checkOutValidationWithOptSchema
+          : checkOutwithNoTaskValidationSchema
+        : enteredTask.findUser[0].usertasks.length > 0
+        ? checkOutValidationSchema
+        : ""
+    ),
   });
 
-  const handleCheckOut = useCallback(async (values: any) => {
-    console.log(values, ">>>");
+  const getProject = useCallback(() => {
+    const projectArr = enteredTask.projects.map((item) => {
+      return {
+        label: item.projectName,
+        value: item.id,
+      };
+    });
+
+    setProjects(projectArr);
+  }, [enteredTask.projects]);
+
+  useEffect(() => {
+    getProject();
   }, []);
 
+  const handleAddTaskBtn = () => {
+    setIsShowForm(!isShowForm);
+  };
+
+  const handleCheckOut = useCallback(
+    async (values: any) => {
+      const updatedTasks = values.tasks.map((item) => {
+        return {
+          taskId: "",
+          projectId: item.taskId,
+          taskName: item.taskName,
+          projectHours: item.projectHours,
+        };
+      });
+
+      const updatedEmployees = values.employees.map((item) => {
+        return {
+          taskId: "",
+          projectId: item.project,
+          taskName: item.task,
+          projectHours: item.projectHours,
+        };
+      });
+
+      const isAnyValueEmpty = () => {
+        return values.employees.some((item: any) => {
+          return (
+            item.project === undefined ||
+            item.task === undefined ||
+            item.projectHours === undefined
+          );
+        });
+      };
+
+      let tasks;
+
+      if (isAnyValueEmpty()) {
+        tasks = updatedTasks;
+      } else {
+        if (enteredTask.findUser[0].usertasks.length > 0) {
+          tasks = [...updatedTasks, ...updatedEmployees];
+        } else {
+          tasks = [...updatedEmployees];
+        }
+      }
+
+      const payload = {
+        outTime: values.time,
+        date: checkOutDate,
+        tasks: tasks,
+      };
+
+      try {
+        await httpService
+          .post(API_CONFIG.path.checkOut, payload)
+          .then((res: any) => {
+            console.log("res:", res);
+            setIsLoading(false);
+            checkStatus();
+          });
+      } catch (error) {
+        setIsLoading(false);
+        console.error(error);
+      }
+    },
+    [checkOutDate, checkStatus, enteredTask.findUser]
+  );
+
   return (
-    <div>
-      <CheckOutForm
-        handleCheckOut={handleCheckOut}
-        form={form}
-        userTasks={enteredTask.findUser[0].usertasks}
-      />
-    </div>
+    <CheckOutForm
+      handleCheckOut={handleCheckOut}
+      form={form}
+      userTasks={enteredTask.findUser[0].usertasks}
+      projects={projects}
+      isShowForm={isShowForm}
+      setIsShowForm={setIsShowForm}
+      handleAddTaskBtn={handleAddTaskBtn}
+      checkOutDate={checkOutDate}
+      isLoading={isLoading}
+    />
   );
 };
 

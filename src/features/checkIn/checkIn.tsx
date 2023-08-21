@@ -202,6 +202,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
             {...form.getInputProps("time")}
             maw={105}
             withAsterisk
+            // format="12"
           />
           <Space w="lg" />
         </Flex>

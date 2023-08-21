@@ -9,25 +9,44 @@ import {
   Select,
   Space,
   Textarea,
+  Text,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { IconClock } from "@tabler/icons-react";
 
-import AddExtraTaskForm from "./component/addExtraTaskForm";
+import { changedDateFormat } from "shared/util/utility";
+
+import AddExtraTaskForm from "./addExtraTaskForm";
 
 interface IProps {
   handleCheckOut: (values: any) => {};
   form: any;
   userTasks: any;
+  projects: any;
+  isShowForm: boolean;
+  setIsShowForm: (action: boolean) => void;
+  handleAddTaskBtn: () => void;
+  checkOutDate: string;
+  isLoading: boolean;
 }
 
-const CheckOutForm: FC<IProps> = ({ handleCheckOut, form }) => {
+const CheckOutForm: FC<IProps> = (props) => {
+  const {
+    handleCheckOut,
+    form,
+    projects,
+    isShowForm,
+    setIsShowForm,
+    handleAddTaskBtn,
+    checkOutDate,
+    isLoading,
+  } = props;
+
   const timeRef = useRef<HTMLInputElement>();
 
   const [timeInputRefs, setTimeInputRefs] = useState<
     Array<React.RefObject<any>>
   >([]);
-  const [isShowForm, setIsShowForm] = useState(false);
 
   useEffect(() => {
     setTimeInputRefs(
@@ -37,49 +56,55 @@ const CheckOutForm: FC<IProps> = ({ handleCheckOut, form }) => {
     );
   }, [form.values.tasks.length]);
 
-  const handleAddTaskBtn = () => {
-    setIsShowForm(!isShowForm);
-  };
-
   return (
     <div>
       <Flex direction="column" justify="center">
         <form onSubmit={form.onSubmit((values) => handleCheckOut(values))}>
-          <h6>check out</h6>
-          <Flex align="center" justify={"center"}>
-            <TimeInput
-              label="Time (24 hour)"
-              ref={timeRef}
-              rightSection={
-                <ActionIcon onClick={() => timeRef.current.showPicker()}>
-                  <IconClock size="1rem" stroke={1.5} />
-                </ActionIcon>
-              }
-              {...form.getInputProps("time")}
-              maw={105}
-              withAsterisk
-            />
-            <Space w="lg" />
-            {!isShowForm && (
-              <Button
-                variant="outline"
-                color="cyan"
-                sx={{ width: "105px" }}
-                mt="25px"
-                onClick={() => {
-                  setIsShowForm(!isShowForm);
-                  form.setFieldValue("employees", [
-                    {
-                      task: "",
-                      project: "",
-                      projectHours: "",
-                    },
-                  ]);
-                }}
-              >
-                Add Task
-              </Button>
-            )}
+          <Flex align="center" justify={"space-evenly"}>
+            {/* <Text>check out</Text> */}
+            <Text ta="center" fz="lg" weight={500} mt="md">
+              Check out
+            </Text>
+            <Flex>
+              <TimeInput
+                label="Time (24 hour)"
+                ref={timeRef}
+                rightSection={
+                  <ActionIcon onClick={() => timeRef.current.showPicker()}>
+                    <IconClock size="1rem" stroke={1.5} />
+                  </ActionIcon>
+                }
+                {...form.getInputProps("time")}
+                maw={105}
+                withAsterisk
+              />
+
+              <Space w="lg" />
+              {!isShowForm && (
+                <Button
+                  variant="outline"
+                  color="cyan"
+                  sx={{ width: "105px" }}
+                  mt="25px"
+                  onClick={() => {
+                    setIsShowForm(!isShowForm);
+                    form.setFieldValue("employees", [
+                      {
+                        task: "",
+                        project: "",
+                        projectHours: "",
+                        active: false,
+                      },
+                    ]);
+                  }}
+                >
+                  Add Task
+                </Button>
+              )}
+            </Flex>
+            <Text ta="center" fz="lg" weight={500} mt="md">
+              Date:{changedDateFormat(checkOutDate)}
+            </Text>
           </Flex>
 
           {form.values.tasks.map((data: any, index: number) => {
@@ -142,12 +167,14 @@ const CheckOutForm: FC<IProps> = ({ handleCheckOut, form }) => {
                         }
                       }}
                       value={form.values.tasks[index].taskName}
-                      onChange={(event) =>
-                        form.setFieldValue(
-                          `tasks.${index}.taskName`,
-                          event.target.value
-                        )
-                      }
+                      // onChange={
+                      //   // form.setFieldValue(
+                      //   //   `tasks.${index}.taskName`,
+                      //   //   event.target.value
+                      //   // )
+
+                      // }
+                      {...form.getInputProps(`tasks.${index}.taskName`)}
                     />
                   </Flex>
                 </Group>
@@ -160,6 +187,7 @@ const CheckOutForm: FC<IProps> = ({ handleCheckOut, form }) => {
             isShowForm={isShowForm}
             setIsShowForm={() => setIsShowForm}
             handleAddTaskBtn={handleAddTaskBtn}
+            projects={projects}
           />
 
           <Group position="center">
@@ -168,8 +196,8 @@ const CheckOutForm: FC<IProps> = ({ handleCheckOut, form }) => {
               variant="outline"
               color="cyan"
               sx={{ width: "140px", marginTop: "20px" }}
-              //   loading={isLoading}
-              //   disabled={isLoading}
+              loading={isLoading}
+              disabled={isLoading}
               loaderPosition="left"
               loaderProps={{ size: "sm", color: "#15aabf", variant: "oval" }}
             >
