@@ -11,11 +11,11 @@ import CheckIn from 'features/checkIn/checkIn';
 import TimeSheet from 'features/timeSheet/component/timeSheet';
 import Leave from 'features/leave/component/leave';
 import LeaveOrMissingDay from 'features/leaveOrMissingDay/component/leaveOrMissingDay';
+import CheckOut from 'features/checkOut/component/checkOut';
+import Project from 'features/project/components/project';
 
 import UserInfoTab from './userInfoTab';
 import UserDetail from './userDetail';
-import CheckOut from 'features/checkOut/component/checkOut';
-import Project from 'features/project/components/project';
 
 const Dashboard: FC = () => {
     const { token }: any = useParams();
@@ -62,7 +62,6 @@ const Dashboard: FC = () => {
                         token: token,
                     })
                     .then((res) => {
-                        console.log('.then ~ res:', res);
                         navigate('/');
                         authService.setAuthData(res);
                         checkStatus();
@@ -77,7 +76,6 @@ const Dashboard: FC = () => {
     useEffect(() => {
         if (authService.getAuthData()) {
             const tempToken = authService.getAuthData();
-            console.log('useEffect ~ tempToken:', tempToken);
             setNewToken(tempToken);
             navigate('/');
         } else {
@@ -137,11 +135,6 @@ const Dashboard: FC = () => {
             ),
         },
         {
-            label: 'Projects',
-            value: 'projects',
-            content: <Project uId={newToken && newToken.userId} />,
-        },
-        {
             label: 'Time Sheet',
             value: 'timesheet',
             content: (
@@ -160,6 +153,11 @@ const Dashboard: FC = () => {
                     uId={newToken && newToken.userId}
                 />
             ),
+        },
+        {
+            label: 'Projects',
+            value: 'projects',
+            content: <Project uId={newToken && newToken.userId} />,
         },
     ];
 

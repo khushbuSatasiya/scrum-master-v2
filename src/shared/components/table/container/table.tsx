@@ -78,7 +78,7 @@ export const TableSelection = (props: ITableProps) => {
             key={Math.random()}
             classNames={classes}
             minHeight={600}
-            sx={{ margin: '20px 40px', padding: '20px 30px' }}
+            sx={{ padding: '20px 30px' }}
             columns={columns}
             fetching={isLoading}
             loaderBackgroundBlur={3}

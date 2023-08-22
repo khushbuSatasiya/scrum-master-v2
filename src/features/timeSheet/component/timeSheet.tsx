@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import { MonthPickerInput } from '@mantine/dates';
 import { IconCalendar, IconDownload } from '@tabler/icons-react';
-import { Box, Flex, Space, ThemeIcon, Tooltip } from '@mantine/core';
+import { Box, Button, Flex, Space, ThemeIcon, Tooltip } from '@mantine/core';
 import fileSever from 'file-saver';
 
 import { TableSelection } from 'shared/components/table/container/table';
@@ -12,6 +12,7 @@ import { API_CONFIG } from 'shared/constants/api';
 import httpService from 'shared/services/http.service';
 
 import { getUserTimesheetColumns } from '../constant/constant';
+import TimesheetTaskModal from './timesheetTaskModal';
 
 interface IUserTimeSheetProps {
     handleTimeSheetDetails?: (workingHours) => void;
@@ -24,6 +25,9 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
     const [isLoading, setLoading] = useState(false);
     const [value, setValue] = useState<Date | null>(new Date());
     const [timeSheetData, setTimeSheetData] = useState<[]>([]);
+    const [task, setTask] = useState(
+        {} as { plannedTasks: string; completedTasks: string }
+    );
 
     /* API call for get user timesheet data */
 
@@ -57,7 +61,6 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
 
     //  API call for get user timesheet Excel
     const getTimeSheetExcel = useCallback(() => {
-        console.log('value', value);
         const params = {
             startDate: value
                 ? moment(value).startOf('month').format('YYYY-DD-MM')
@@ -73,7 +76,6 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
             })
 
             .then((res) => {
-                console.log('.then ~ res:', res);
                 const blob = new Blob([res], {
                     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 });
@@ -84,6 +86,30 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
                 console.error('Error', err);
             });
     }, [value]);
+
+    const renderModal = (timesheetData) => {
+        return (
+            <Box>
+                <Button
+                    color='blue'
+                    variant='outline'
+                    radius='md'
+                    onClick={() => {
+                        setTask({
+                            plannedTasks: timesheetData.plannedTasks,
+                            completedTasks: timesheetData.completedTasks,
+                        });
+                    }}>
+                    Tasks
+                </Button>
+            </Box>
+        );
+    };
+
+    const onClose = useCallback(
+        () => setTask({} as { plannedTasks: string; completedTasks: string }),
+        []
+    );
 
     useEffect(() => {
         getUerTimeSheet();
@@ -105,7 +131,7 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
                     clearable
                     placeholder='Pick a month'
                     radius='md'
-                    ml='20px'
+                    mb={30}
                     icon={<IconCalendar size={16} />}
                 />
                 <Space w='20px' />
@@ -119,20 +145,20 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
                         h={40}
                         onClick={getTimeSheetExcel}
                         variant='light'
-                        mr='40px'
+                        mb={30}
                         radius='md'>
                         <IconDownload cursor='pointer' />
                     </ThemeIcon>
                 </Tooltip>
             </Flex>
 
-            <Box ml='-20px'>
-                <TableSelection
-                    isLoading={isLoading}
-                    userList={timeSheetData}
-                    columns={getUserTimesheetColumns()}
-                />
-            </Box>
+            <TableSelection
+                isLoading={isLoading}
+                userList={timeSheetData}
+                columns={getUserTimesheetColumns(renderModal)}
+            />
+
+            <TimesheetTaskModal task={task} onClose={onClose} />
         </Box>
     );
 };

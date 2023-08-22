@@ -25,14 +25,19 @@ const UserDetail: FC<IProps> = ({
 }) => {
     const LEAVE_DETAILS = [
         {
-            label: 'Rem... Leave',
-            value: leaveDetails.remainingLeaves,
+            label: 'Granted Leave',
+            value: leaveDetails.grantedLeaves,
             color: '#40c057',
+        },
+        {
+            label: 'Vac... Leave',
+            value: leaveDetails.vacationLeaves,
+            color: '#228be6',
         },
         {
             label: 'Comp... Leave',
             value: leaveDetails.compensationLeaves,
-            color: '#228be6',
+            color: '#FF9B38',
         },
         {
             label: 'Used Leave',
@@ -40,17 +45,11 @@ const UserDetail: FC<IProps> = ({
             color: '#fa5252',
         },
         {
-            label: 'Vacation Leave',
-            value: leaveDetails.vacationLeaves,
-            color: '#228be6',
-        },
-        {
-            label: 'Granted Leave',
-            value: leaveDetails.grantedLeaves,
+            label: 'Rem... Leave',
+            value: leaveDetails.remainingLeaves,
             color: '#40c057',
         },
     ];
-
     const renderPaper = (label, value, color) => (
         <Paper
             sx={{
@@ -59,19 +58,18 @@ const UserDetail: FC<IProps> = ({
                 width: '125px',
                 padding: '6px 10px',
             }}>
-            <Text fw='bold' fz='24px'>
+            <Text fw='bold' fz='22px' c={'#071437'}>
                 {value || '0'}
             </Text>
-            <Text c={color} fw='bold' fz='sm'>
+            <Text c={color} fw='500' fz='sm'>
                 {label}
             </Text>
         </Paper>
     );
-
     const totalExperience = newToken.experience / 365;
 
     return (
-        <Paper shadow='sm' radius='lg' m={40} p='30px 30px 0px'>
+        <Paper shadow='sm' radius='lg' m={'20px 20px 10px'} p='30px 30px 0px'>
             <Flex>
                 <Image
                     maw={160}

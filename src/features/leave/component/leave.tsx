@@ -139,15 +139,14 @@ const Leave: FC<ILeaveProps> = ({ handleLeaveDetails, uId }) => {
                     radius='md'
                     sx={{
                         width: '200px',
-                        margin: '10px 40px',
                         border: '1px solid #dee2e6',
                         borderRadius: '8px',
                     }}
                     data={STATUS_DATA}
                     defaultValue={STATUS_DATA[0].value}
-                    rightSection={<IconChevronDown size='1rem' />}
                     placeholder='Select Status'
                     limit={5}
+                    mb={30}
                     variant='filled'
                     nothingFound='Nobody here'
                     onChange={(e: string) => {
@@ -167,7 +166,7 @@ const Leave: FC<ILeaveProps> = ({ handleLeaveDetails, uId }) => {
                         h={40}
                         onClick={getLeaveExcel}
                         variant='light'
-                        mr='40px'
+                        mb={30}
                         radius='md'>
                         <IconDownload cursor='pointer' />
                     </ThemeIcon>

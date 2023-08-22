@@ -1,3 +1,5 @@
+import React, { FC, Fragment, useCallback, useEffect, useState } from 'react';
+import { isEmpty, isNull } from 'lodash';
 import {
     Avatar,
     Box,
@@ -7,8 +9,7 @@ import {
     Text,
     Tooltip,
 } from '@mantine/core';
-import { isEmpty, isNull } from 'lodash';
-import React, { FC, Fragment, useCallback, useEffect, useState } from 'react';
+
 import NoRecords from 'shared/components/noRecords/noRecords';
 import { API_CONFIG } from 'shared/constants/api';
 import httpService from 'shared/services/http.service';
@@ -40,9 +41,9 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
         getProjectList();
     }, []);
     return (
-        <Box m={'0 20px'}>
+        <Box>
             {/*<Paper shadow='sm' radius='lg' m={'0 20px'} p={20}>*/}
-            <Text mb={15} c={'#071437'} fw={600} fz={'22px'}>
+            <Text mb={30} c={'#071437'} fw={600} fz={'22px'}>
                 My Projects
             </Text>
 
@@ -57,7 +58,7 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
             )}
 
             {!isEmpty(projectInfo) && !isLoading && (
-                <Flex align={'center'} wrap={'wrap'} gap={25}>
+                <Flex align={'center'} wrap={'wrap'} gap={30}>
                     {projectInfo.map(
                         (
                             { projectId, projectName, teamDetails, date, logo },
