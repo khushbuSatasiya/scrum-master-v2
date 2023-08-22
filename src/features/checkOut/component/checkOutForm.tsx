@@ -61,7 +61,6 @@ const CheckOutForm: FC<IProps> = (props) => {
       <Flex direction="column" justify="center">
         <form onSubmit={form.onSubmit((values) => handleCheckOut(values))}>
           <Flex align="center" justify={"space-evenly"}>
-            {/* <Text>check out</Text> */}
             <Text ta="center" fz="lg" weight={500} mt="md">
               Check out
             </Text>

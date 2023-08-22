@@ -211,3 +211,13 @@ export const changedDateFormat = (date: string) => {
     month < 10 ? "0" : ""
   }${month}-${year}`;
 };
+
+export const getTodayDate = () => {
+  const currentDate = new Date();
+  const day = currentDate.getDate();
+  const month = currentDate.getMonth() + 1; // Months are zero-indexed
+  const year = currentDate.getFullYear();
+
+  const formatted = `${day}-${month}-${year}`;
+  return formatted;
+};

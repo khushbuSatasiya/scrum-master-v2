@@ -12,12 +12,14 @@ import {
   Select,
   Space,
   Textarea,
+  Text,
+  Divider,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
 import { IconClock, IconTrash } from "@tabler/icons-react";
 
-import { getProjectList } from "shared/util/utility";
+import { getProjectList, getTodayDate } from "shared/util/utility";
 import { API_CONFIG } from "shared/constants/api";
 import httpService from "shared/services/http.service";
 
@@ -123,7 +125,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
       p="md"
       mt={"10px"}
       withBorder={true}
-      sx={{ width: "900px", margin: "0 auto" }}
+      sx={{ width: "1000px", margin: "0 auto" }}
       key={index}
     >
       <Group mt="xs">
@@ -143,7 +145,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
             placeholder={`- task 1\n- task 2`}
             autosize
             minRows={2}
-            sx={{ width: "700px" }}
+            sx={{ width: "800px" }}
             {...form.getInputProps(`employees.${index}.task`)}
             onKeyDown={(event) => {
               if (
@@ -190,22 +192,47 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
   return (
     <Flex direction="column" justify="center">
       <form onSubmit={form.onSubmit((values) => handleCheckIn(values))}>
-        <Flex align="center" justify={"center"}>
-          <TimeInput
-            label="Time (24 hour)"
-            ref={ref}
-            rightSection={
-              <ActionIcon onClick={() => ref.current.showPicker()}>
-                <IconClock size="1rem" stroke={1.5} />
-              </ActionIcon>
-            }
-            {...form.getInputProps("time")}
-            maw={105}
-            withAsterisk
-            // format="12"
-          />
-          <Space w="lg" />
+        <Flex
+          align={"center"}
+          justify={"space-between"}
+          sx={{ width: "1000px" }}
+          pb={"10px"}
+          pt={"10px"}
+        >
+          <Text fz="lg" weight={500} mt="md" sx={{ marginRight: "15px" }}>
+            Check In
+          </Text>
+          <Flex align="center">
+            <TimeInput
+              label="Time (24 hour)"
+              ref={ref}
+              rightSection={
+                <ActionIcon onClick={() => ref.current.showPicker()}>
+                  <IconClock size="1rem" stroke={1.5} />
+                </ActionIcon>
+              }
+              {...form.getInputProps("time")}
+              maw={105}
+              withAsterisk
+              // format="12"
+            />
+            <Space w="lg" />
+          </Flex>
+
+          <Text ta="center" fz="lg" weight={500} mt="md">
+            Date: {getTodayDate()}
+          </Text>
+
+          {/* <Text
+            fz="lg"
+            weight={500}
+            mt="md"
+            sx={{ marginRight: "15px", visibility: "hidden" }}
+          >
+            Check In
+          </Text> */}
         </Flex>
+        <Divider my="sm" />
 
         <Box mx="auto">
           {fields.length > 0 ? <Group mb="xs"></Group> : <></>}

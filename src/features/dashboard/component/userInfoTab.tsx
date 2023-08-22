@@ -29,7 +29,7 @@ const UserInfoTab: FC<IProps> = ({
           return (
             <Fragment key={index}>
               {activeTab === value && (
-                <Tabs.Panel value={value} pt="lg" pl="20px" pb="lg">
+                <Tabs.Panel value={value} pt="lg" pl="60px" pr="60px" pb="lg">
                   {content}
                 </Tabs.Panel>
               )}
