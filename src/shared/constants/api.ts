@@ -15,6 +15,7 @@ export const API_CONFIG = {
     leaveList: "leave/list",
     leaveExcel: "leave/excel",
     checkOut: "web/checkOut",
+	projectList:'project/list'
   },
 };
 
