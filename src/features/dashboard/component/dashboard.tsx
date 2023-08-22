@@ -185,6 +185,7 @@ const Dashboard: FC = () => {
             activeTab={activeTab}
             USER_INFO_ARR={USER_INFO_ARR}
             isActionLoader={isActionLoader}
+            actionType={actionType}
           />
         </Tabs>
       </Box>
