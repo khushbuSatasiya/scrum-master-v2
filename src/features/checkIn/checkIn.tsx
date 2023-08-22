@@ -14,6 +14,7 @@ import {
   Textarea,
   Text,
   Divider,
+  createStyles,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
@@ -120,34 +121,43 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
     );
   };
 
+  const useStyles = createStyles(() => ({
+    input: {
+      backgroundColor: "#f5f8fa",
+      color: " 5e6278 ",
+      fontWight: " 500 ",
+      border: " none ",
+    },
+  }));
+
+  const { classes } = useStyles();
+
   const fields = form.values.employees.map((item, index) => (
     <Paper key={index}>
-      <Group
-        mt="xs"
-        sx={{ alignItems: "end", justifyContent: "space-between" }}
-      >
-        <Flex direction={"column"}>
-          <Select
-            clearable
-            searchable
-            placeholder="Project names"
-            nothingFound="No options"
-            dropdownPosition="bottom"
-            data={projectName}
-            {...form.getInputProps(`employees.${index}.project`)}
-            mb={"20px"}
-            sx={{
-              backgroundColor: "#f5f8fa !important",
-              width: "40%",
-              border: "none",
-            }}
-          />
-
+      <Group mt="xs" sx={{ alignItems: "end" }}>
+        <Select
+          clearable
+          searchable
+          placeholder="Project names"
+          nothingFound="No options"
+          dropdownPosition="bottom"
+          data={projectName}
+          {...form.getInputProps(`employees.${index}.project`)}
+          mb={"20px"}
+          sx={{
+            width: "40%",
+            border: "none",
+          }}
+          classNames={{
+            input: classes.input,
+          }}
+        />
+        <Flex align={"center"}>
           <Textarea
             autosize
             placeholder={`- task 1\n- task 2`}
             minRows={2}
-            sx={{ width: "650px", backgroundColor: "#f5f8fa !important" }}
+            sx={{ width: "730px" }}
             {...form.getInputProps(`employees.${index}.task`)}
             onKeyDown={(event) => {
               if (
@@ -157,34 +167,45 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
                 event.preventDefault();
               }
             }}
-          />
-        </Flex>
-
-        {index === form.values.employees.length - 1 && (
-          <Group position="center" mt="md">
-            <Button
-              onClick={() => {
-                form.insertListItem("employees", {
-                  task: "",
-                  project: "",
-                });
-              }}
-              disabled={isAddButtonDisabled(form.values.employees[index])}
-            >
-              <IconPlus size="1.5rem" stroke={"3px"} />
-            </Button>
-          </Group>
-        )}
-        {form.values.employees.length !== 1 && (
-          <ActionIcon
-            color="red"
-            onClick={() => {
-              form.removeListItem("employees", index);
+            classNames={{
+              input: classes.input,
             }}
-          >
-            <IconTrash size="1.5rem" />
-          </ActionIcon>
-        )}
+          />
+
+          {index === form.values.employees.length - 1 && (
+            <Group position="center">
+              <Button
+                ml={15}
+                sx={{
+                  width: "35px",
+                  height: "35px",
+                  padding: "0",
+                  borderRadius: "50%",
+                }}
+                onClick={() => {
+                  form.insertListItem("employees", {
+                    task: "",
+                    project: "",
+                  });
+                }}
+                disabled={isAddButtonDisabled(form.values.employees[index])}
+              >
+                <IconPlus size="1.5rem" stroke={"3px"} />
+              </Button>
+            </Group>
+          )}
+          {form.values.employees.length !== 1 && (
+            <ActionIcon
+              color="red"
+              ml={15}
+              onClick={() => {
+                form.removeListItem("employees", index);
+              }}
+            >
+              <IconTrash size="1.5rem" color="black" />
+            </ActionIcon>
+          )}
+        </Flex>
       </Group>
 
       <Divider my="sm" variant="dashed" />
@@ -193,16 +214,16 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
 
   return (
     <>
-      <Flex direction="column" justify="center">
+      <Flex direction="column" justify="center" mt={30}>
         <form onSubmit={form.onSubmit((values) => handleCheckIn(values))}>
           <Flex justify={"space-between"}>
             <Paper
               shadow="sm"
               radius="lg"
-              m={20}
+              mr={30}
               p="lg"
               sx={{
-                width: "70%",
+                width: "75%",
                 overflowY: "scroll",
                 height: "auto",
                 maxHeight: "500px",
@@ -237,7 +258,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
                   Check In
                 </Text>
               </Flex>
-              <Divider my="sm" variant="dotted" />
+              <Divider my="sm" variant="dashed" />
               {fields.length > 0 ? <Group mb="xs"></Group> : <></>}
               {fields.length > 0 && <Box>{fields}</Box>}
             </Paper>
@@ -245,7 +266,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
             <Paper
               shadow="sm"
               radius="lg"
-              m={20}
+              // m={20}
               p="lg"
               sx={{
                 width: "25%",
@@ -264,6 +285,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
                 align={"center"}
                 justify={"space-between"}
                 sx={{ height: "180px" }}
+                mt={"10px"}
               >
                 <TimeInput
                   label="Time (24 hour)"
@@ -276,7 +298,11 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
                   {...form.getInputProps("time")}
                   maw={105}
                   withAsterisk
+                  classNames={{
+                    input: classes.input,
+                  }}
                 />
+
                 <Space w="lg" />
                 <Group position="center">
                   <Button

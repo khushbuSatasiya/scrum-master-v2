@@ -116,7 +116,14 @@ const Layout: React.FC<PropsWithChildren> = (props) => {
       // 	</Header>
       // }
     >
-      <ScrollArea sx={{ backgroundColor: "#fcfcfc", height: "100%" }}>
+      <ScrollArea
+        sx={{
+          backgroundColor: "#F0F3F4",
+          height: "100%",
+          scrollbarWidth: "none",
+        }}
+        // scrollbarSize={"5px"}
+      >
         <Box p="md" pb={0}>
           <Flex align={"center"} justify="space-between">
             <MediaQuery largerThan="sm" styles={{ display: "none" }}>

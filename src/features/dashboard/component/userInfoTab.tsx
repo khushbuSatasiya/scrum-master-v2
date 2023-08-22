@@ -18,13 +18,13 @@ const UserInfoTab: FC<IProps> = ({
 }) => {
   return (
     <Fragment>
-      {/*<LoadingOverlay
+      <LoadingOverlay
         loaderProps={{
           size: "xl",
         }}
         visible={isActionLoader}
         overlayBlur={2}
-      />*/}
+      />
 
       {USER_INFO_ARR.map(({ content, value }, index) => {
         return (
