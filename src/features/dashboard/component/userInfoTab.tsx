@@ -23,24 +23,6 @@ const UserInfoTab: FC<IProps> = ({
         }}
         visible={isActionLoader}
         overlayBlur={2}
-<<<<<<< HEAD
-      />
-      <Paper shadow="sm" radius="lg" m={40}>
-        {USER_INFO_ARR.map(({ content, value }, index) => {
-          return (
-            <Fragment key={index}>
-              {activeTab === value && (
-                <Tabs.Panel value={value} pt="lg" pl="60px" pr="60px" pb="lg">
-                  {content}
-                </Tabs.Panel>
-              )}
-            </Fragment>
-          );
-        })}
-      </Paper>
-    </Fragment>
-  );
-=======
       />*/}
             {/*<Paper shadow='sm' radius='lg' m={40}>*/}
             {USER_INFO_ARR.map(({ content, value }, index) => {
@@ -57,7 +39,6 @@ const UserInfoTab: FC<IProps> = ({
             {/*</Paper>*/}
         </Fragment>
     );
->>>>>>> design/project
 };
 
 export default UserInfoTab;
