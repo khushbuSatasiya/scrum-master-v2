@@ -125,7 +125,6 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
           }}
           maw={200}
           // variant="filled"
-          clearable
           placeholder="Pick a month"
           radius="md"
           mb={15}

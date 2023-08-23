@@ -7,12 +7,12 @@ import httpService from "shared/services/http.service";
 import { API_CONFIG } from "shared/constants/api";
 import authService from "shared/services/auth.service";
 
-import CheckIn from "features/checkIn/checkIn";
 import TimeSheet from "features/timeSheet/component/timeSheet";
 import Leave from "features/leave/component/leave";
 import LeaveOrMissingDay from "features/leaveOrMissingDay/component/leaveOrMissingDay";
 import CheckOut from "features/checkOut/component/checkOut";
 import Project from "features/project/components/project";
+import CheckIn from "features/checkIn/component/checkIn";
 
 import UserInfoTab from "./userInfoTab";
 import UserDetail from "./userDetail";

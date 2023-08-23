@@ -1,6 +1,6 @@
 import { FC, Suspense } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { Group, Loader } from "@mantine/core";
+import { Group } from "@mantine/core";
 
 import Layout from "shared/hoc/layout/container/layout";
 import { Dashboard, User } from "shared/hoc/asyncComponents";
