@@ -19,10 +19,12 @@ import { checkInValidationSchema } from "shared/constants/validation-schema";
 import { API_CONFIG } from "shared/constants/api";
 import httpService from "shared/services/http.service";
 
+import { IProjectArray } from "features/dashboard/interface/dashboard";
+
 import CheckInForm from "./checkInForm";
 
 interface IProps {
-  projectArray: any;
+  projectArray: IProjectArray[];
   checkStatus: () => void;
 }
 
@@ -188,7 +190,6 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
     let formattedTime = e.target.value.replace(/\D/g, "");
     if (formattedTime.length > 2) {
       formattedTime = `${formattedTime.slice(0, 2)}:${formattedTime.slice(2)}`;
-      console.log("formattedTime:", formattedTime);
     }
     if (formattedTime.length > 5) {
       return;

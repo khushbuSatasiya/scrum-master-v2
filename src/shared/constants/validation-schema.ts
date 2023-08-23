@@ -77,7 +77,20 @@ const checkInValidationSchema = Yup.object().shape({
 });
 
 const checkOutValidationWithOptSchema = Yup.object().shape({
-  time: Yup.string().required("Time is required"),
+  time: Yup.string()
+    .matches(/^[0-9]{2}:[0-9]{2}$/, "Please enter valid time format (hh:mm)")
+    .test("valid-time", "Invalid time value", (value) => {
+      if (!value) return true;
+
+      const [hours, minutes] = value.split(":").map(Number);
+
+      if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+        return false;
+      }
+
+      return true;
+    })
+    .required("Time is required"),
   tasks: Yup.array().of(
     Yup.object().shape({
       taskName: Yup.string().required("Task name is required"),
@@ -94,7 +107,20 @@ const checkOutValidationWithOptSchema = Yup.object().shape({
 });
 
 const checkOutValidationSchema = Yup.object().shape({
-  time: Yup.string().required("Time is required"),
+  time: Yup.string()
+    .matches(/^[0-9]{2}:[0-9]{2}$/, "Please enter valid time format (hh:mm)")
+    .test("valid-time", "Invalid time value", (value) => {
+      if (!value) return true;
+
+      const [hours, minutes] = value.split(":").map(Number);
+
+      if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+        return false;
+      }
+
+      return true;
+    })
+    .required("Time is required"),
   tasks: Yup.array().of(
     Yup.object().shape({
       taskName: Yup.string().required("Task name is required"),
@@ -104,7 +130,20 @@ const checkOutValidationSchema = Yup.object().shape({
 });
 
 const checkOutwithNoTaskValidationSchema = Yup.object().shape({
-  time: Yup.string().required("Time is required"),
+  time: Yup.string()
+    .matches(/^[0-9]{2}:[0-9]{2}$/, "Please enter valid time format (hh:mm)")
+    .test("valid-time", "Invalid time value", (value) => {
+      if (!value) return true;
+
+      const [hours, minutes] = value.split(":").map(Number);
+
+      if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+        return false;
+      }
+
+      return true;
+    })
+    .required("Time is required"),
   employees: Yup.array().of(
     Yup.object().shape({
       project: Yup.string().nullable().required("Project is required"),

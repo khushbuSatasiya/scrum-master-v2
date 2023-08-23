@@ -83,7 +83,6 @@ const CheckInForm: FC<IProps> = ({
         <Paper
           shadow="sm"
           radius="lg"
-          // m={20}
           p="lg"
           sx={{
             width: "25%",

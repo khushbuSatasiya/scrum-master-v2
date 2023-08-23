@@ -6,14 +6,14 @@ import { IconMail, IconUserStar } from "@tabler/icons-react";
 
 import { getTotalWorkingHourColor } from "shared/util/utility";
 
-import { IUserInfoArr } from "../interface/dashboard";
+import { IUserDetail, IUserInfoArr } from "../interface/dashboard";
 
 interface IProps {
   activeTab: string;
   USER_INFO_ARR: IUserInfoArr[];
-  newToken: any;
+  newToken: IUserDetail;
   totalWorkingHour: string;
-  leaveDetails: any;
+  leaveDetails: Record<string, any>;
 }
 
 const UserDetail: FC<IProps> = ({

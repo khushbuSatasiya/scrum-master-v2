@@ -28,7 +28,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
       const tasksArray = userTask.map((task: any) => {
         return {
           taskId: task.projectId,
-          taskName: task.task,
+          taskName: task.taskCreate,
           projectHours: "",
           projectName: task.projectdeatils.projectName,
         };
@@ -71,17 +71,25 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
     }
   };
 
+  const selectedValidationSchema = () => {
+    if (isShowForm) {
+      if (enteredTask.findUser[0].usertasks.length > 0) {
+        return checkOutValidationWithOptSchema;
+      } else {
+        return checkOutwithNoTaskValidationSchema;
+      }
+    } else {
+      if (enteredTask.findUser[0].usertasks.length > 0) {
+        return checkOutValidationSchema;
+      }
+    }
+  };
+
+  const validationSchema = selectedValidationSchema();
+
   const form = useForm({
     initialValues: formatValues(enteredTask.findUser[0].usertasks),
-    validate: yupResolver(
-      isShowForm
-        ? enteredTask.findUser[0].usertasks.length > 0
-          ? checkOutValidationWithOptSchema
-          : checkOutwithNoTaskValidationSchema
-        : enteredTask.findUser[0].usertasks.length > 0
-        ? checkOutValidationSchema
-        : ""
-    ),
+    validate: yupResolver(validationSchema),
   });
 
   const getProject = useCallback(() => {
@@ -151,19 +159,19 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
         tasks: tasks,
       };
 
-      try {
-        await httpService
-          .post(API_CONFIG.path.checkOut, payload)
-          .then((res: any) => {
-            setIsLoading(false);
-            checkStatus();
-          });
-      } catch (error) {
-        setIsLoading(false);
-        console.error(error);
-      }
+      // try {
+      //   await httpService
+      //     .post(API_CONFIG.path.checkOut, payload)
+      //     .then((res: any) => {
+      //       setIsLoading(false);
+      //       checkStatus();
+      //     });
+      // } catch (error) {
+      //   setIsLoading(false);
+      //   console.error(error);
+      // }
     },
-    [checkOutDate, checkStatus, enteredTask.findUser]
+    [checkOutDate, enteredTask.findUser]
   );
 
   return (

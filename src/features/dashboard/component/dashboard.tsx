@@ -14,17 +14,20 @@ import CheckOut from "features/checkOut/component/checkOut";
 import Project from "features/project/components/project";
 import CheckIn from "features/checkIn/component/checkIn";
 
+import { IProjectArray, IUserDetail } from "../interface/dashboard";
+
 import UserInfoTab from "./userInfoTab";
 import UserDetail from "./userDetail";
 
 const Dashboard: FC = () => {
-  const { token }: any = useParams();
+  const { token } = useParams<{ token: string }>();
+
   const navigate = useNavigate();
 
   const [actionType, setActionType] = useState("");
   const [activeTab, setActiveTab] = useState<string | null>("check-in");
-  const [projectArray, setProjectArray] = useState<any>([]);
-  const [newToken, setNewToken] = useState<any>({});
+  const [projectArray, setProjectArray] = useState<IProjectArray[]>([]);
+  const [newToken, setNewToken] = useState<IUserDetail>({} as IUserDetail);
   const [totalWorkingHour, setTotalWorkingHour] = useState("");
   const [leaveDetails, setLeaveDetails] = useState<Record<string, any>>({});
   const [enteredTask, setEnteredTask] = useState<any>({});
@@ -79,7 +82,7 @@ const Dashboard: FC = () => {
       setNewToken(tempToken);
       navigate("/");
     } else {
-      setNewToken(token);
+      setNewToken(token as any);
       login(token);
     }
   }, [login, token]);

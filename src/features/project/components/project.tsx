@@ -26,7 +26,7 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
   const getProjectList = useCallback(() => {
     setLoading(true);
     httpService
-      .get(`${API_CONFIG.path.projectList}/?userId=${uId ? uId : ""}`)
+      .get(`${API_CONFIG.path.projectList}`)
       .then((res) => {
         setProjectInfo(res.data);
         setLoading(false);

@@ -4,13 +4,14 @@ import {
   ActionIcon,
   Box,
   Button,
+  Divider,
   Flex,
   Group,
   Paper,
   Select,
   Textarea,
 } from "@mantine/core";
-import { IconClock, IconTrash } from "@tabler/icons-react";
+import { IconClock, IconPlus, IconTrash } from "@tabler/icons-react";
 import { TimeInput } from "@mantine/dates";
 
 interface IProps {
@@ -52,16 +53,10 @@ const AddExtraTaskForm: FC<IProps> = ({
 
   const fields = form.values.employees.map((item, index) => {
     return (
-      isShowForm && (
-        <Paper
-          p="md"
-          mt={"10px"}
-          withBorder={true}
-          sx={{ width: "850px", margin: "0 auto" }}
-          key={index}
-        >
-          <Group mt="xs" sx={{ display: "flex", justifyContent: "start" }}>
-            <Flex direction={"column"} justify={"start"}>
+      <Box key={index}>
+        {(isShowForm || form.values.tasks.length === 0) && (
+          <Paper>
+            <Group mt="xs" sx={{ alignItems: "end" }}>
               <Flex justify={"start"}>
                 <Select
                   clearable
@@ -72,7 +67,6 @@ const AddExtraTaskForm: FC<IProps> = ({
                   dropdownPosition="bottom"
                   data={projects}
                   {...form.getInputProps(`employees.${index}.project`)}
-                  mb={"20px"}
                 />
                 <TimeInput
                   label="Enter project spend hours"
@@ -86,7 +80,6 @@ const AddExtraTaskForm: FC<IProps> = ({
                   }
                   {...form.getInputProps(`employees.${index}.projectHours`)}
                   maw={180}
-                  withAsterisk
                   sx={{ marginLeft: "20px" }}
                 />
               </Flex>
@@ -104,42 +97,54 @@ const AddExtraTaskForm: FC<IProps> = ({
                     event.preventDefault();
                   }
                 }}
+                value={""}
               />
-            </Flex>
 
-            <ActionIcon
-              color="red"
-              onClick={() => {
-                form.removeListItem("employees", index);
-                index === 0 &&
-                  index === form.values.employees.length - 1 &&
-                  handleAddTaskBtn();
-              }}
-            >
-              <IconTrash size="1rem" />
-            </ActionIcon>
+              {(isShowForm || form.values.tasks.length === 0) &&
+                index === form.values.employees.length - 1 && (
+                  <Group position="center">
+                    <Button
+                      variant="outline"
+                      color="cyan"
+                      sx={{
+                        width: "35px",
+                        height: "35px",
+                        padding: "0",
+                        borderRadius: "50%",
+                      }}
+                      onClick={() => {
+                        form.insertListItem("employees", {
+                          task: "",
+                          project: form.values.employees[index].project,
+                        });
+                      }}
+                      disabled={
+                        isShowForm
+                          ? isAddButtonDisabled(form.values.employees[index])
+                          : false
+                      }
+                    >
+                      <IconPlus size="1.5rem" stroke={"3px"} />
+                    </Button>
+                  </Group>
+                )}
 
-            {isShowForm && index === form.values.employees.length - 1 && (
-              <Group position="center" mt="md">
-                <Button
-                  variant="outline"
-                  color="cyan"
-                  sx={{ width: "105px" }}
-                  onClick={() => {
-                    form.insertListItem("employees", {
-                      task: "",
-                      project: form.values.employees[index].project,
-                    });
-                  }}
-                  disabled={isAddButtonDisabled(form.values.employees[index])}
-                >
-                  Add Task
-                </Button>
-              </Group>
-            )}
-          </Group>
-        </Paper>
-      )
+              <ActionIcon
+                color="red"
+                onClick={() => {
+                  form.removeListItem("employees", index);
+                  index === 0 &&
+                    index === form.values.employees.length - 1 &&
+                    handleAddTaskBtn();
+                }}
+              >
+                <IconTrash size="1.5rem" color="black" />
+              </ActionIcon>
+            </Group>
+            <Divider my="lg" variant="dashed" />
+          </Paper>
+        )}
+      </Box>
     );
   });
 
