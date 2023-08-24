@@ -14,7 +14,7 @@ import {
 import { useForm, yupResolver } from "@mantine/form";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 
-import { getProjectList } from "shared/util/utility";
+import { getCurrentTime, getProjectList } from "shared/util/utility";
 import { checkInValidationSchema } from "shared/constants/validation-schema";
 import { API_CONFIG } from "shared/constants/api";
 import httpService from "shared/services/http.service";
@@ -29,12 +29,6 @@ interface IProps {
 }
 
 const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
-  const currentTime = new Date().toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  const cleanedTime = currentTime.replace(/(am|pm)/i, "");
-
   const [projectName, setProjectName] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -51,7 +45,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
 
   const form = useForm({
     initialValues: {
-      time: cleanedTime,
+      time: getCurrentTime(),
       employees: [
         {
           task: "",

@@ -223,3 +223,12 @@ export const getTodayDate = () => {
   }${month}-${year}`;
   return formatted;
 };
+
+export const getCurrentTime = () => {
+  const currentTime = new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const cleanedTime = currentTime.replace(/(am|pm)/i, "");
+  return cleanedTime;
+};

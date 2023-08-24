@@ -44,7 +44,7 @@ const Dashboard: FC = () => {
         setProjectArray(res.data.projects);
 
         res.data.action === "checkOut" &&
-          res.data.tasks?.findUser &&
+          res.data?.tasks &&
           setEnteredTask(res.data.tasks);
 
         res.data.date && setCheckOutDate(res.data.date);
@@ -126,6 +126,7 @@ const Dashboard: FC = () => {
               enteredTask={enteredTask}
               checkOutDate={checkOutDate}
               checkStatus={checkStatus}
+              projectArray={projectArray}
             />
           )}
           {actionType === "LeaveApplyOrMissingDay" && (

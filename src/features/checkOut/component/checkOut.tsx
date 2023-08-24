@@ -11,14 +11,21 @@ import {
 import httpService from "shared/services/http.service";
 import { API_CONFIG } from "shared/constants/api";
 import CheckOutForm from "./checkOutForm";
+import { getCurrentTime } from "shared/util/utility";
 
 interface IProps {
   enteredTask: any;
   checkOutDate: string;
   checkStatus: () => void;
+  projectArray: any;
 }
 
-const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
+const CheckOut: FC<IProps> = ({
+  enteredTask,
+  checkOutDate,
+  checkStatus,
+  projectArray,
+}) => {
   const [projects, setProjects] = useState([]);
   const [isShowForm, setIsShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,12 +37,13 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
           taskId: task.projectId,
           taskName: task.taskCreate,
           projectHours: "",
-          projectName: task.projectdeatils.projectName,
+          projectName: task.projectDetails.projectName,
+          id: task.id,
         };
       });
 
       return {
-        time: "",
+        time: getCurrentTime(),
         employees: [
           [
             {
@@ -49,7 +57,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
       };
     } else {
       return {
-        time: "",
+        time: getCurrentTime(),
         employees: [
           [
             {
@@ -72,14 +80,14 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
   };
 
   const selectedValidationSchema = () => {
-    if (isShowForm) {
-      if (enteredTask.findUser[0].usertasks.length > 0) {
+    if (isShowForm || enteredTask.length === 0) {
+      if (enteredTask.length > 0) {
         return checkOutValidationWithOptSchema;
       } else {
         return checkOutwithNoTaskValidationSchema;
       }
     } else {
-      if (enteredTask.findUser[0].usertasks.length > 0) {
+      if (enteredTask.length > 0) {
         return checkOutValidationSchema;
       }
     }
@@ -88,12 +96,12 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
   const validationSchema = selectedValidationSchema();
 
   const form = useForm({
-    initialValues: formatValues(enteredTask.findUser[0].usertasks),
+    initialValues: formatValues(enteredTask),
     validate: yupResolver(validationSchema),
   });
 
   const getProject = useCallback(() => {
-    const projectArr = enteredTask.projects.map((item) => {
+    const projectArr = projectArray.map((item) => {
       return {
         label: item.projectName,
         value: item.id,
@@ -101,7 +109,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
     });
 
     setProjects(projectArr);
-  }, [enteredTask.projects]);
+  }, [projectArray]);
 
   useEffect(() => {
     getProject();
@@ -115,7 +123,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
     async (values: any) => {
       const updatedTasks = values.tasks.map((item) => {
         return {
-          taskId: "",
+          taskId: item.id,
           projectId: item.taskId,
           taskName: item.taskName,
           projectHours: item.projectHours,
@@ -146,7 +154,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
       if (isAnyValueEmpty()) {
         tasks = updatedTasks;
       } else {
-        if (enteredTask.findUser[0].usertasks.length > 0) {
+        if (enteredTask.length > 0) {
           tasks = [...updatedTasks, ...updatedEmployees];
         } else {
           tasks = [...updatedEmployees];
@@ -159,26 +167,26 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
         tasks: tasks,
       };
 
-      // try {
-      //   await httpService
-      //     .post(API_CONFIG.path.checkOut, payload)
-      //     .then((res: any) => {
-      //       setIsLoading(false);
-      //       checkStatus();
-      //     });
-      // } catch (error) {
-      //   setIsLoading(false);
-      //   console.error(error);
-      // }
+      try {
+        await httpService
+          .post(API_CONFIG.path.checkOut, payload)
+          .then((res: any) => {
+            setIsLoading(false);
+            checkStatus();
+          });
+      } catch (error) {
+        setIsLoading(false);
+        console.error(error);
+      }
     },
-    [checkOutDate, enteredTask.findUser]
+    [checkOutDate, checkStatus, enteredTask.length]
   );
 
   return (
     <CheckOutForm
       handleCheckOut={handleCheckOut}
       form={form}
-      userTasks={enteredTask.findUser[0].usertasks}
+      userTasks={enteredTask}
       projects={projects}
       isShowForm={isShowForm}
       setIsShowForm={setIsShowForm}
