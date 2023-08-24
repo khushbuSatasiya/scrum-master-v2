@@ -34,8 +34,22 @@ export const formatDate = (date: any, format?: string) => {
   }
   return moment(date)
     .local()
-    .format(format || "DD-MM-YYYY | HH:mm:ss");
+    .format(format || "DD-MM-YYYY ");
 };
+
+/**
+ * function which returns formatted time
+ * @param time
+ */
+export const formatTime = (time: any, format?: string) => {
+	if (!time) {
+	  return "";
+	}
+	return moment(time,'hh:mm:ss')
+	  .local()
+	  .format(format || "HH:mm");
+  };
+  /**
 /**
  * function to convert date to iso string and set seconds/milliseconds to zero
  * @param date
