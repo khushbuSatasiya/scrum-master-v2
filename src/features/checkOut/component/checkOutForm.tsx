@@ -1,7 +1,6 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC } from "react";
 
 import {
-  ActionIcon,
   Button,
   Flex,
   Group,
@@ -10,9 +9,10 @@ import {
   Space,
   Textarea,
   Text,
+  Divider,
+  TextInput,
+  createStyles,
 } from "@mantine/core";
-import { TimeInput } from "@mantine/dates";
-import { IconClock } from "@tabler/icons-react";
 
 import { changedDateFormat } from "shared/util/utility";
 
@@ -40,51 +40,132 @@ const CheckOutForm: FC<IProps> = (props) => {
     handleAddTaskBtn,
     checkOutDate,
     isLoading,
+    userTasks,
   } = props;
 
-  const timeRef = useRef<HTMLInputElement>();
+  const useStyles = createStyles(() => ({
+    input: {
+      backgroundColor: "#f5f8fa",
+      color: "5e6278",
+      fontWight: "500",
+      border: "transparent",
+      // border: "transparent",
+    },
+  }));
 
-  const [timeInputRefs, setTimeInputRefs] = useState<
-    Array<React.RefObject<any>>
-  >([]);
-
-  useEffect(() => {
-    setTimeInputRefs(
-      Array.from({ length: form.values.tasks.length }).map(() =>
-        React.createRef()
-      )
-    );
-  }, [form.values.tasks.length]);
+  const { classes } = useStyles();
 
   return (
-    <div>
-      <Flex direction="column" justify="center">
-        <form onSubmit={form.onSubmit((values) => handleCheckOut(values))}>
-          <Flex align="center" justify={"space-evenly"}>
-            <Text ta="center" fz="lg" weight={500} mt="md">
-              Check out
-            </Text>
-            <Flex>
-              <TimeInput
-                label="Time (24 hour)"
-                ref={timeRef}
-                rightSection={
-                  <ActionIcon onClick={() => timeRef.current.showPicker()}>
-                    <IconClock size="1rem" stroke={1.5} />
-                  </ActionIcon>
-                }
-                {...form.getInputProps("time")}
-                maw={105}
-                withAsterisk
-              />
+    <Flex direction="column" justify="center" mt={30}>
+      <form onSubmit={form.onSubmit((values) => handleCheckOut(values))}>
+        <Flex justify={"space-between"}>
+          <Paper
+            shadow="sm"
+            radius="lg"
+            mr={30}
+            p="lg"
+            sx={{
+              width: "75%",
+              overflowY: "scroll",
+              height: "auto",
+              maxHeight: "500px",
+              scrollbarWidth: "none",
+              "::-webkit-scrollbar": {
+                width: "0.5em",
+                display: "none",
+              },
+              "::-webkit-scrollbar-thumb": {
+                backgroundColor: "#888",
+              },
+            }}
+          >
+            <Flex align="center" justify={"space-between"}>
+              <Text fz="lg" weight={600} color="#5e6278">
+                Task
+              </Text>
+              <Text ta="center" fz="lg" weight={500}>
+                {changedDateFormat(checkOutDate)}
+              </Text>
+              <Text
+                ta="center"
+                fz="lg"
+                weight={500}
+                sx={{ visibility: "hidden" }}
+              >
+                {changedDateFormat(checkOutDate)}
+              </Text>
+            </Flex>
+            <Divider my="sm" variant="dashed" />
+            {form.values.tasks.map((data: any, index: number) => {
+              return (
+                <Flex direction={"column"} key={index}>
+                  <Group
+                    mt="xs"
+                    mb="xs"
+                    sx={{ display: "flex", justifyContent: "start" }}
+                  >
+                    <Flex direction={"column"} justify={"start"}>
+                      <Flex justify={"start"}>
+                        <Select
+                          placeholder="Project names"
+                          dropdownPosition="bottom"
+                          mb={"20px"}
+                          classNames={{
+                            input: classes.input,
+                          }}
+                          data={[
+                            {
+                              label: data.projectName,
+                              value: data.projectName,
+                            },
+                          ]}
+                          value={data.projectName}
+                        />
 
-              <Space w="lg" />
-              {!isShowForm && (
+                        <TextInput
+                          withAsterisk
+                          placeholder="00:00"
+                          maxLength={5}
+                          maw={270}
+                          classNames={{
+                            input: classes.input,
+                          }}
+                          sx={{ marginLeft: "20px" }}
+                          // value={form.values.time}
+                          {...form.getInputProps(`tasks.${index}.projectHours`)}
+                        />
+                      </Flex>
+
+                      <Textarea
+                        placeholder={`- task 1\n- task 2`}
+                        autosize
+                        minRows={2}
+                        sx={{ width: "700px" }}
+                        classNames={{
+                          input: classes.input,
+                        }}
+                        onKeyDown={(event) => {
+                          if (
+                            event.key === " " &&
+                            event.currentTarget.selectionStart === 0
+                          ) {
+                            event.preventDefault();
+                          }
+                        }}
+                        value={form.values.tasks[index].taskName || ""}
+                        {...form.getInputProps(`tasks.${index}.taskName`)}
+                      />
+                    </Flex>
+                  </Group>
+
+                  <Divider my="sm" variant="dashed" />
+                </Flex>
+              );
+            })}
+            <Flex justify={"end"}>
+              {!isShowForm && userTasks.length > 0 && (
                 <Button
-                  variant="outline"
-                  color="cyan"
                   sx={{ width: "105px" }}
-                  mt="25px"
                   onClick={() => {
                     setIsShowForm(!isShowForm);
                     form.setFieldValue("employees", [
@@ -101,111 +182,75 @@ const CheckOutForm: FC<IProps> = (props) => {
                 </Button>
               )}
             </Flex>
-            <Text ta="center" fz="lg" weight={500} mt="md">
-              Date:{changedDateFormat(checkOutDate)}
-            </Text>
-          </Flex>
+            <AddExtraTaskForm
+              form={form}
+              isShowForm={isShowForm}
+              setIsShowForm={() => setIsShowForm}
+              handleAddTaskBtn={handleAddTaskBtn}
+              projects={projects}
+              classes={classes}
+            />
+          </Paper>
 
-          {form.values.tasks.map((data: any, index: number) => {
-            return (
-              <Paper
-                p="md"
-                mt={"10px"}
-                withBorder={true}
-                sx={{ width: "850px", margin: "0 auto" }}
-                key={index}
-              >
-                <Group
-                  mt="xs"
-                  sx={{ display: "flex", justifyContent: "start" }}
-                >
-                  <Flex direction={"column"} justify={"start"}>
-                    <Flex justify={"start"}>
-                      <Select
-                        // variant="unstyled"
-                        label="Project name"
-                        placeholder="Project names"
-                        dropdownPosition="bottom"
-                        mb={"20px"}
-                        data={[
-                          { label: data.projectName, value: data.projectName },
-                        ]}
-                        // disabled
-                        value={data.projectName}
-                      />
-                      <TimeInput
-                        label="Enter project spend hours"
-                        ref={timeInputRefs[index]}
-                        rightSection={
-                          <ActionIcon
-                            onClick={() =>
-                              timeInputRefs[index].current.showPicker()
-                            }
-                          >
-                            <IconClock size="1rem" stroke={1.5} />
-                          </ActionIcon>
-                        }
-                        {...form.getInputProps(`tasks.${index}.projectHours`)}
-                        maw={180}
-                        withAsterisk
-                        sx={{ marginLeft: "20px" }}
-                      />
-                    </Flex>
+          <Paper
+            shadow="sm"
+            radius="lg"
+            p="lg"
+            sx={{
+              width: "25%",
+              height: "300px",
+            }}
+          >
+            <Flex align={"center"} justify={"center"}>
+              <Text fz="lg" weight={600} color="#5e6278" p={0}>
+                Time
+              </Text>
+            </Flex>
 
-                    <Textarea
-                      placeholder={`- task 1\n- task 2`}
-                      autosize
-                      minRows={2}
-                      sx={{ width: "700px" }}
-                      onKeyDown={(event) => {
-                        if (
-                          event.key === " " &&
-                          event.currentTarget.selectionStart === 0
-                        ) {
-                          event.preventDefault();
-                        }
-                      }}
-                      value={form.values.tasks[index].taskName}
-                      // onChange={
-                      //   // form.setFieldValue(
-                      //   //   `tasks.${index}.taskName`,
-                      //   //   event.target.value
-                      //   // )
+            <Divider my="sm" variant="dashed" />
 
-                      // }
-                      {...form.getInputProps(`tasks.${index}.taskName`)}
-                    />
-                  </Flex>
-                </Group>
-              </Paper>
-            );
-          })}
-
-          <AddExtraTaskForm
-            form={form}
-            isShowForm={isShowForm}
-            setIsShowForm={() => setIsShowForm}
-            handleAddTaskBtn={handleAddTaskBtn}
-            projects={projects}
-          />
-
-          <Group position="center">
-            <Button
-              type="submit"
-              variant="outline"
-              color="cyan"
-              sx={{ width: "140px", marginTop: "20px" }}
-              loading={isLoading}
-              disabled={isLoading}
-              loaderPosition="left"
-              loaderProps={{ size: "sm", color: "#15aabf", variant: "oval" }}
+            <Flex
+              direction={"column"}
+              align={"center"}
+              justify={"space-between"}
+              sx={{ height: "180px" }}
+              mt={"10px"}
             >
-              Check Out
-            </Button>
-          </Group>
-        </form>
-      </Flex>
-    </div>
+              <TextInput
+                withAsterisk
+                placeholder="00:00"
+                maxLength={5}
+                mt={24}
+                classNames={{
+                  input: classes.input,
+                }}
+                label="Time (24 hour)"
+                value={form.values.time}
+                // onChange={(e) => handleTimeChange(e)}
+                {...form.getInputProps("time")}
+              />
+              <Space w="lg" />
+              <Group position="center">
+                <Button
+                  type="submit"
+                  sx={{ width: "140px", marginTop: "20px" }}
+                  loading={isLoading}
+                  disabled={isLoading}
+                  loaderPosition="left"
+                  loaderProps={{
+                    size: "sm",
+                    color: "#15aabf",
+                    variant: "oval",
+                  }}
+                >
+                  Check Out
+                </Button>
+              </Group>
+            </Flex>
+          </Paper>
+        </Flex>
+      </form>
+    </Flex>
   );
 };
 

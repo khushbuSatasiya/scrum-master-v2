@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 
 import { useForm, yupResolver } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 
 import {
   checkOutValidationSchema,
@@ -16,9 +17,17 @@ interface IProps {
   enteredTask: any;
   checkOutDate: string;
   checkStatus: () => void;
+  projectArray: any;
+  currentTime: string;
 }
 
-const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
+const CheckOut: FC<IProps> = ({
+  enteredTask,
+  checkOutDate,
+  checkStatus,
+  projectArray,
+  currentTime,
+}) => {
   const [projects, setProjects] = useState([]);
   const [isShowForm, setIsShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,14 +37,15 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
       const tasksArray = userTask.map((task: any) => {
         return {
           taskId: task.projectId,
-          taskName: task.task,
+          taskName: task.taskCreate,
           projectHours: "",
-          projectName: task.projectdeatils.projectName,
+          projectName: task.projectDetails.projectName,
+          id: task.id,
         };
       });
 
       return {
-        time: "",
+        time: currentTime,
         employees: [
           [
             {
@@ -49,7 +59,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
       };
     } else {
       return {
-        time: "",
+        time: currentTime,
         employees: [
           [
             {
@@ -71,21 +81,29 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
     }
   };
 
+  const selectedValidationSchema = () => {
+    if (isShowForm || enteredTask.length === 0) {
+      if (enteredTask.length > 0) {
+        return checkOutValidationWithOptSchema;
+      } else {
+        return checkOutwithNoTaskValidationSchema;
+      }
+    } else {
+      if (enteredTask.length > 0) {
+        return checkOutValidationSchema;
+      }
+    }
+  };
+
+  const validationSchema = selectedValidationSchema();
+
   const form = useForm({
-    initialValues: formatValues(enteredTask.findUser[0].usertasks),
-    validate: yupResolver(
-      isShowForm
-        ? enteredTask.findUser[0].usertasks.length > 0
-          ? checkOutValidationWithOptSchema
-          : checkOutwithNoTaskValidationSchema
-        : enteredTask.findUser[0].usertasks.length > 0
-        ? checkOutValidationSchema
-        : ""
-    ),
+    initialValues: formatValues(enteredTask),
+    validate: yupResolver(validationSchema),
   });
 
   const getProject = useCallback(() => {
-    const projectArr = enteredTask.projects.map((item) => {
+    const projectArr = projectArray.map((item) => {
       return {
         label: item.projectName,
         value: item.id,
@@ -93,7 +111,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
     });
 
     setProjects(projectArr);
-  }, [enteredTask.projects]);
+  }, [projectArray]);
 
   useEffect(() => {
     getProject();
@@ -107,7 +125,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
     async (values: any) => {
       const updatedTasks = values.tasks.map((item) => {
         return {
-          taskId: "",
+          taskId: item.id,
           projectId: item.taskId,
           taskName: item.taskName,
           projectHours: item.projectHours,
@@ -138,7 +156,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
       if (isAnyValueEmpty()) {
         tasks = updatedTasks;
       } else {
-        if (enteredTask.findUser[0].usertasks.length > 0) {
+        if (enteredTask.length > 0) {
           tasks = [...updatedTasks, ...updatedEmployees];
         } else {
           tasks = [...updatedEmployees];
@@ -156,6 +174,24 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
           .post(API_CONFIG.path.checkOut, payload)
           .then((res: any) => {
             setIsLoading(false);
+            notifications.show({
+              message: res.message,
+              styles: (theme) => ({
+                root: {
+                  backgroundColor: theme.colors.blue[6],
+                  borderColor: theme.colors.blue[6],
+
+                  "&::before": { backgroundColor: theme.white },
+                },
+
+                title: { color: theme.white },
+                description: { color: theme.white },
+                closeButton: {
+                  color: theme.white,
+                  "&:hover": { backgroundColor: theme.colors.blue[7] },
+                },
+              }),
+            });
             checkStatus();
           });
       } catch (error) {
@@ -163,14 +199,14 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus }) => {
         console.error(error);
       }
     },
-    [checkOutDate, checkStatus, enteredTask.findUser]
+    [checkOutDate, checkStatus, enteredTask.length]
   );
 
   return (
     <CheckOutForm
       handleCheckOut={handleCheckOut}
       form={form}
-      userTasks={enteredTask.findUser[0].usertasks}
+      userTasks={enteredTask}
       projects={projects}
       isShowForm={isShowForm}
       setIsShowForm={setIsShowForm}

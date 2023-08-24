@@ -1,17 +1,18 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 
 import {
   ActionIcon,
   Box,
   Button,
+  Divider,
   Flex,
   Group,
   Paper,
   Select,
+  TextInput,
   Textarea,
 } from "@mantine/core";
-import { IconClock, IconTrash } from "@tabler/icons-react";
-import { TimeInput } from "@mantine/dates";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
 
 interface IProps {
   form: any;
@@ -19,25 +20,11 @@ interface IProps {
   setIsShowForm: (action: boolean) => void;
   handleAddTaskBtn: () => void;
   projects: any;
+  classes: any;
 }
 
-const AddExtraTaskForm: FC<IProps> = ({
-  form,
-  isShowForm,
-  handleAddTaskBtn,
-  projects,
-}) => {
-  const [hourInputRefs, setHourInputRefs] = useState<
-    Array<React.RefObject<any>>
-  >([]);
-
-  useEffect(() => {
-    setHourInputRefs(
-      Array.from({ length: form.values.employees.length }).map(() =>
-        React.createRef()
-      )
-    );
-  }, [form.values.employees.length]);
+const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
+  const { form, isShowForm, handleAddTaskBtn, projects, classes } = props;
 
   const isAddButtonDisabled = (employee: any) => {
     return (
@@ -52,94 +39,101 @@ const AddExtraTaskForm: FC<IProps> = ({
 
   const fields = form.values.employees.map((item, index) => {
     return (
-      isShowForm && (
-        <Paper
-          p="md"
-          mt={"10px"}
-          withBorder={true}
-          sx={{ width: "850px", margin: "0 auto" }}
-          key={index}
-        >
-          <Group mt="xs" sx={{ display: "flex", justifyContent: "start" }}>
-            <Flex direction={"column"} justify={"start"}>
-              <Flex justify={"start"}>
-                <Select
-                  clearable
-                  searchable
-                  label="Project name"
-                  placeholder="Project names"
-                  nothingFound="No options"
-                  dropdownPosition="bottom"
-                  data={projects}
-                  {...form.getInputProps(`employees.${index}.project`)}
-                  mb={"20px"}
-                />
-                <TimeInput
-                  label="Enter project spend hours"
-                  ref={hourInputRefs[index]}
-                  rightSection={
-                    <ActionIcon
-                      onClick={() => hourInputRefs[index].current.showPicker()}
-                    >
-                      <IconClock size="1rem" stroke={1.5} />
-                    </ActionIcon>
-                  }
-                  {...form.getInputProps(`employees.${index}.projectHours`)}
-                  maw={180}
-                  withAsterisk
-                  sx={{ marginLeft: "20px" }}
-                />
-              </Flex>
-              <Textarea
-                placeholder={`- task 1\n- task 2`}
-                autosize
-                minRows={2}
-                sx={{ width: "650px" }}
-                {...form.getInputProps(`employees.${index}.task`)}
-                onKeyDown={(event) => {
-                  if (
-                    event.key === " " &&
-                    event.currentTarget.selectionStart === 0
-                  ) {
-                    event.preventDefault();
-                  }
-                }}
-              />
-            </Flex>
+      <Box key={index}>
+        {(isShowForm || form.values.tasks.length === 0) && (
+          <Flex direction={"column-reverse"}>
+            <Paper>
+              <Group mt="xs" sx={{ alignItems: "end" }}>
+                <Flex justify={"start"}>
+                  <Select
+                    clearable
+                    searchable
+                    placeholder="Project names"
+                    nothingFound="No options"
+                    dropdownPosition="bottom"
+                    classNames={{
+                      input: classes.input,
+                    }}
+                    data={projects}
+                    {...form.getInputProps(`employees.${index}.project`)}
+                  />
 
-            <ActionIcon
-              color="red"
-              onClick={() => {
-                form.removeListItem("employees", index);
-                index === 0 &&
-                  index === form.values.employees.length - 1 &&
-                  handleAddTaskBtn();
-              }}
-            >
-              <IconTrash size="1rem" />
-            </ActionIcon>
-
-            {isShowForm && index === form.values.employees.length - 1 && (
-              <Group position="center" mt="md">
-                <Button
-                  variant="outline"
-                  color="cyan"
-                  sx={{ width: "105px" }}
-                  onClick={() => {
-                    form.insertListItem("employees", {
-                      task: "",
-                      project: form.values.employees[index].project,
-                    });
+                  <TextInput
+                    withAsterisk
+                    placeholder="00:00"
+                    maxLength={5}
+                    maw={270}
+                    sx={{ marginLeft: "20px" }}
+                    classNames={{
+                      input: classes.input,
+                    }}
+                    // value={form.values.time}
+                    {...form.getInputProps(`employees.${index}.projectHours`)}
+                  />
+                </Flex>
+                <Textarea
+                  placeholder={`- task 1\n- task 2`}
+                  autosize
+                  minRows={2}
+                  sx={{ width: "700px" }}
+                  classNames={{
+                    input: classes.input,
                   }}
-                  disabled={isAddButtonDisabled(form.values.employees[index])}
+                  {...form.getInputProps(`employees.${index}.task`)}
+                  onKeyDown={(event) => {
+                    if (
+                      event.key === " " &&
+                      event.currentTarget.selectionStart === 0
+                    ) {
+                      event.preventDefault();
+                    }
+                  }}
+                />
+
+                {(isShowForm || form.values.tasks.length === 0) &&
+                  index === form.values.employees.length - 1 && (
+                    <Group position="center">
+                      <Button
+                        sx={{
+                          width: "35px",
+                          height: "35px",
+                          padding: "0",
+                          borderRadius: "50%",
+                        }}
+                        onClick={() => {
+                          form.insertListItem("employees", {
+                            task: "",
+                            project: form.values.employees[index].project,
+                          });
+                        }}
+                        disabled={
+                          isShowForm
+                            ? isAddButtonDisabled(form.values.employees[index])
+                            : false
+                        }
+                      >
+                        <IconPlus size="1.5rem" stroke={"3px"} />
+                      </Button>
+                    </Group>
+                  )}
+
+                <ActionIcon
+                  color="red"
+                  onClick={() => {
+                    form.removeListItem("employees", index);
+                    index === 0 &&
+                      index === form.values.employees.length - 1 &&
+                      handleAddTaskBtn();
+                  }}
                 >
-                  Add Task
-                </Button>
+                  <IconTrash size="1.5rem" color="black" />
+                </ActionIcon>
               </Group>
-            )}
-          </Group>
-        </Paper>
-      )
+              <Divider my="lg" variant="dashed" />
+            </Paper>
+          </Flex>
+        )}
+      </Box>
     );
   });
 
