@@ -33,21 +33,24 @@ const Dashboard: FC = () => {
   const [enteredTask, setEnteredTask] = useState<any>({});
   const [checkOutDate, setCheckOutDate] = useState("");
   const [isActionLoader, setIsActionLoader] = useState(false);
+  const [currentTime, setCurrentTime] = useState("");
 
   const checkStatus = useCallback(async () => {
     setIsActionLoader(true);
     try {
       await httpService.get(API_CONFIG.path.status).then((res) => {
+        setActionType(res.data.action);
         setIsActionLoader(false);
 
-        setActionType(res.data.action);
-        setProjectArray(res.data.projects);
+        if (actionType === "checkOut" || actionType === "checkIn") {
+          setCurrentTime(res.data.currentTime);
+          res.data.date && setCheckOutDate(res.data.date);
+          setProjectArray(res.data.projects);
+        }
 
         res.data.action === "checkOut" &&
           res.data?.tasks &&
           setEnteredTask(res.data.tasks);
-
-        res.data.date && setCheckOutDate(res.data.date);
       });
     } catch (error) {
       setIsActionLoader(false);
@@ -119,7 +122,11 @@ const Dashboard: FC = () => {
       content: (
         <>
           {actionType === "checkIn" && (
-            <CheckIn projectArray={projectArray} checkStatus={checkStatus} />
+            <CheckIn
+              projectArray={projectArray}
+              checkStatus={checkStatus}
+              currentTime={currentTime}
+            />
           )}
           {actionType === "checkOut" && (
             <CheckOut
@@ -127,6 +134,7 @@ const Dashboard: FC = () => {
               checkOutDate={checkOutDate}
               checkStatus={checkStatus}
               projectArray={projectArray}
+              currentTime={currentTime}
             />
           )}
           {actionType === "LeaveApplyOrMissingDay" && (

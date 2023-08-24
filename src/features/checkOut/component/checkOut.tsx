@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 
 import { useForm, yupResolver } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 
 import {
   checkOutValidationSchema,
@@ -11,13 +12,13 @@ import {
 import httpService from "shared/services/http.service";
 import { API_CONFIG } from "shared/constants/api";
 import CheckOutForm from "./checkOutForm";
-import { getCurrentTime } from "shared/util/utility";
 
 interface IProps {
   enteredTask: any;
   checkOutDate: string;
   checkStatus: () => void;
   projectArray: any;
+  currentTime: string;
 }
 
 const CheckOut: FC<IProps> = ({
@@ -25,6 +26,7 @@ const CheckOut: FC<IProps> = ({
   checkOutDate,
   checkStatus,
   projectArray,
+  currentTime,
 }) => {
   const [projects, setProjects] = useState([]);
   const [isShowForm, setIsShowForm] = useState(false);
@@ -43,7 +45,7 @@ const CheckOut: FC<IProps> = ({
       });
 
       return {
-        time: getCurrentTime(),
+        time: currentTime,
         employees: [
           [
             {
@@ -57,7 +59,7 @@ const CheckOut: FC<IProps> = ({
       };
     } else {
       return {
-        time: getCurrentTime(),
+        time: currentTime,
         employees: [
           [
             {
@@ -172,6 +174,24 @@ const CheckOut: FC<IProps> = ({
           .post(API_CONFIG.path.checkOut, payload)
           .then((res: any) => {
             setIsLoading(false);
+            notifications.show({
+              message: res.message,
+              styles: (theme) => ({
+                root: {
+                  backgroundColor: theme.colors.blue[6],
+                  borderColor: theme.colors.blue[6],
+
+                  "&::before": { backgroundColor: theme.white },
+                },
+
+                title: { color: theme.white },
+                description: { color: theme.white },
+                closeButton: {
+                  color: theme.white,
+                  "&:hover": { backgroundColor: theme.colors.blue[7] },
+                },
+              }),
+            });
             checkStatus();
           });
       } catch (error) {

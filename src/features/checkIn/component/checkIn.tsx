@@ -10,11 +10,14 @@ import {
   Textarea,
   Divider,
   createStyles,
+  Modal,
+  Text,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
-import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconAlertTriangle, IconPlus, IconTrash } from "@tabler/icons-react";
+import { notifications } from "@mantine/notifications";
 
-import { getCurrentTime, getProjectList } from "shared/util/utility";
+import { getProjectList } from "shared/util/utility";
 import { checkInValidationSchema } from "shared/constants/validation-schema";
 import { API_CONFIG } from "shared/constants/api";
 import httpService from "shared/services/http.service";
@@ -26,11 +29,14 @@ import CheckInForm from "./checkInForm";
 interface IProps {
   projectArray: IProjectArray[];
   checkStatus: () => void;
+  currentTime: string;
 }
 
-const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
+const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
   const [projectName, setProjectName] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isConfirm, setIsConfirm] = useState(false);
+  const [checkInValue, setCheckInValue] = useState(false);
 
   const useStyles = createStyles(() => ({
     input: {
@@ -45,7 +51,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
 
   const form = useForm({
     initialValues: {
-      time: getCurrentTime(),
+      time: currentTime,
       employees: [
         {
           task: "",
@@ -66,32 +72,70 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
   }, [getProject]);
 
   const handleCheckIn = useCallback(async (values: any) => {
-    const updatedValue = values.employees.map((data: any, index: number) => {
-      return {
-        projectId: data.project,
-        taskName: data.task,
-      };
+    const isEmptyOrNot = values.employees.map((data, index) => {
+      const isCheck =
+        (data.project === "" && data.task === "") ||
+        (data.project !== "" && data.task === "") ||
+        (data.task !== "" && data.project === "");
+      return isCheck;
     });
 
-    const payload = {
-      inTime: values.time,
-      tasks: updatedValue,
-    };
-
-    setIsLoading(true);
-
-    try {
-      await httpService
-        .post(API_CONFIG.path.checkIn, payload)
-        .then((res: any) => {
-          setIsLoading(false);
-          checkStatus();
-        });
-    } catch (error) {
-      setIsLoading(false);
-      console.error(error);
+    if (values.employees.length === 1 && isEmptyOrNot[0]) {
+      setIsConfirm(true);
+      setCheckInValue(values);
+    } else {
+      confirmCheckIn(values);
     }
   }, []);
+
+  const confirmCheckIn = useCallback(
+    async (values) => {
+      const updatedValue = values.employees.map((data: any, index: number) => {
+        return {
+          projectId: data.project,
+          taskName: data.task,
+        };
+      });
+
+      const payload = {
+        inTime: values.time,
+        tasks: updatedValue,
+      };
+
+      setIsLoading(true);
+
+      try {
+        await httpService
+          .post(API_CONFIG.path.checkIn, payload)
+          .then((res: any) => {
+            setIsLoading(false);
+            notifications.show({
+              message: res.message,
+              styles: (theme) => ({
+                root: {
+                  backgroundColor: theme.colors.blue[6],
+                  borderColor: theme.colors.blue[6],
+
+                  "&::before": { backgroundColor: theme.white },
+                },
+
+                title: { color: theme.white },
+                description: { color: theme.white },
+                closeButton: {
+                  color: theme.white,
+                  "&:hover": { backgroundColor: theme.colors.blue[7] },
+                },
+              }),
+            });
+            checkStatus();
+          });
+      } catch (error) {
+        setIsLoading(false);
+        console.error(error);
+      }
+    },
+    [checkStatus]
+  );
 
   const isAddButtonDisabled = (employee: any) => {
     return (
@@ -192,16 +236,55 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
   };
 
   return (
-    <Flex direction="column" justify="center" mt={30}>
-      <CheckInForm
-        form={form}
-        handleCheckIn={handleCheckIn}
-        fields={fields}
-        handleTimeChange={handleTimeChange}
-        isLoading={isLoading}
-        classes={classes}
-      />
-    </Flex>
+    <>
+      <Flex direction="column" justify="center" mt={30}>
+        <CheckInForm
+          form={form}
+          handleCheckIn={handleCheckIn}
+          fields={fields}
+          handleTimeChange={handleTimeChange}
+          isLoading={isLoading}
+          classes={classes}
+        />
+      </Flex>
+
+      <Modal
+        size="auto"
+        opened={isConfirm}
+        onClose={() => setIsConfirm(false)}
+        centered
+        padding={40}
+        radius="lg"
+        withCloseButton={false}
+      >
+        <Paper radius="lg">
+          <Flex align={"center"} direction={"column"}>
+            <Flex justify="center" align="center" direction="column" mb={20}>
+              <IconAlertTriangle size="120" color="Orange" />
+            </Flex>
+            <Text ta="center" mb={30} weight={600} color="#99A1B7">
+              Do you want to check in without adding tasks?
+            </Text>
+            <Flex>
+              <Button
+                variant="outline"
+                mr={18}
+                onClick={() => confirmCheckIn(checkInValue)}
+              >
+                Yes
+              </Button>
+              <Button
+                variant="outline"
+                color="red"
+                onClick={() => setIsConfirm(false)}
+              >
+                Cancel
+              </Button>
+            </Flex>
+          </Flex>
+        </Paper>
+      </Modal>
+    </>
   );
 };
 

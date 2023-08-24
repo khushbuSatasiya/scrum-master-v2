@@ -95,7 +95,7 @@ const checkOutValidationWithOptSchema = Yup.object().shape({
     .required("Time is required"),
   tasks: Yup.array().of(
     Yup.object().shape({
-      taskName: Yup.string().required(" "),
+      taskName: Yup.string().required("Task is required"),
       projectHours: Yup.string()
         .matches(
           /^[0-9]{2}:[0-9]{2}$/,
@@ -142,7 +142,7 @@ const checkOutValidationSchema = Yup.object().shape({
     .required("Time is required"),
   tasks: Yup.array().of(
     Yup.object().shape({
-      taskName: Yup.string().nullable().required("  "),
+      taskName: Yup.string().nullable().required("Task is required"),
       projectHours: Yup.string()
         .matches(
           /^[0-9]{2}:[0-9]{2}$/,
