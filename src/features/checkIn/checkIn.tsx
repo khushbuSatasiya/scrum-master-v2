@@ -117,6 +117,9 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus }) => {
                 authService.removeAuthData();
                 navigate('/token-expired');
             }
+            if (error?.response?.status === 409) {
+                checkStatus();
+            }
             console.error('Error', error);
         }
     }, []);

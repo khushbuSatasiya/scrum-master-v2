@@ -13,6 +13,7 @@ import Leave from 'features/leave/component/leave';
 import LeaveOrMissingDay from 'features/leaveOrMissingDay/component/leaveOrMissingDay';
 import CheckOut from 'features/checkOut/component/checkOut';
 import Project from 'features/project/components/project';
+import NoActionRequired from 'features/noActionRequired/noActionRequired';
 
 import UserInfoTab from './userInfoTab';
 import UserDetail from './userDetail';
@@ -23,6 +24,7 @@ const Dashboard: FC = () => {
     const { pathname } = useLocation();
 
     const [actionType, setActionType] = useState('');
+
     const [activeTab, setActiveTab] = useState<string | null>('check-in');
     const [projectArray, setProjectArray] = useState<any>([]);
     const [newToken, setNewToken] = useState<any>({});
@@ -32,15 +34,32 @@ const Dashboard: FC = () => {
     const [enteredTask, setEnteredTask] = useState<any>({});
     const [checkOutDate, setCheckOutDate] = useState('');
     const [isActionLoader, setIsActionLoader] = useState(false);
+    const [actionTime, setActionTime] = useState({
+        inTime: '',
+        outTime: '',
+    });
+    const [tasks, setTasks] = useState([]);
+    const [date, setDate] = useState();
+    const [totalHours, setTotalHours] = useState('');
 
     const checkStatus = useCallback(async () => {
         setIsActionLoader(true);
         try {
             await httpService.get(API_CONFIG.path.status).then((res) => {
                 setIsActionLoader(false);
-
+                setTotalHours(res.data.totalHours);
                 setActionType(res.data.action);
                 setProjectArray(res.data.projects);
+
+                if (res.data.action === 'noActionRequired') {
+                    const { inTime, outTime } = res.data.timeSheet;
+                    setActionTime({
+                        inTime: inTime,
+                        outTime: outTime,
+                    });
+                    setTasks(res.data.tasks);
+                    setDate(res.data.date);
+                }
 
                 res.data.action === 'checkOut' &&
                     res.data.tasks?.findUser &&
@@ -50,7 +69,7 @@ const Dashboard: FC = () => {
             });
         } catch (error) {
             setIsActionLoader(false);
-            if (error.response.status === 401) {
+            if (error?.response?.status === 401) {
                 authService.removeAuthData();
                 navigate('/token-expired');
             }
@@ -74,7 +93,6 @@ const Dashboard: FC = () => {
                     });
             } catch (error) {
                 console.error(error);
-
                 if (error.response.status === 401) {
                     authService.removeAuthData();
                     navigate('/token-expired');
@@ -119,10 +137,9 @@ const Dashboard: FC = () => {
             compensationLeaves,
         });
     };
-
     const USER_INFO_ARR = [
         {
-            label: 'Check In',
+            label: 'Check In/Out',
             value: 'check-in',
             content: (
                 <>
@@ -141,6 +158,14 @@ const Dashboard: FC = () => {
                     )}
                     {actionType === 'LeaveApplyOrMissingDay' && (
                         <LeaveOrMissingDay checkOutDate={checkOutDate} />
+                    )}
+                    {actionType === 'noActionRequired' && (
+                        <NoActionRequired
+                            actionTime={actionTime}
+                            date={date}
+                            tasks={tasks}
+                            totalHours={totalHours}
+                        />
                     )}
                 </>
             ),

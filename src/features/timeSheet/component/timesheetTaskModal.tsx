@@ -43,13 +43,19 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
                         }>
                         {task &&
                             task.plannedTasks &&
-                            task.plannedTasks.split('\n').map((item) => (
-                                <List.Item
-                                    key={item}
-                                    sx={{ fontSize: '14px', fontWeight: 600 }}>
-                                    {item}
-                                </List.Item>
-                            ))}
+                            task.plannedTasks
+                                .split('\n')
+                                .filter((task) => task.trim() !== '')
+                                .map((item) => (
+                                    <List.Item
+                                        key={item}
+                                        sx={{
+                                            fontSize: '14px',
+                                            fontWeight: 600,
+                                        }}>
+                                        {item}
+                                    </List.Item>
+                                ))}
                     </List>
                 </Flex>
                 <Flex direction='column'>
@@ -71,13 +77,19 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
                         }>
                         {task &&
                             task.completedTasks &&
-                            task.completedTasks.split('\n').map((item) => (
-                                <List.Item
-                                    key={item}
-                                    sx={{ fontSize: '14px', fontWeight: 600 }}>
-                                    {item}
-                                </List.Item>
-                            ))}
+                            task.completedTasks
+                                .split('\n')
+                                .filter((task) => task.trim() !== '')
+                                .map((item) => (
+                                    <List.Item
+                                        key={item}
+                                        sx={{
+                                            fontSize: '14px',
+                                            fontWeight: 600,
+                                        }}>
+                                        {item}
+                                    </List.Item>
+                                ))}
                     </List>
                 </Flex>
             </Flex>

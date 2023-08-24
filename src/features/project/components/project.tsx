@@ -1,15 +1,7 @@
 import React, { FC, Fragment, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isEmpty, isNull } from 'lodash';
-import {
-    Avatar,
-    Box,
-    Flex,
-    LoadingOverlay,
-    Paper,
-    Text,
-    Tooltip,
-} from '@mantine/core';
+import { Avatar, Box, Flex, Paper, Text, Tooltip } from '@mantine/core';
 
 import NoRecords from 'shared/components/noRecords/noRecords';
 import { API_CONFIG } from 'shared/constants/api';
@@ -29,7 +21,7 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
     const getProjectList = useCallback(() => {
         setLoading(true);
         httpService
-            .get(`${API_CONFIG.path.projectList}/?userId=${uId ? uId : ''}`)
+            .get(`${API_CONFIG.path.projectList}`)
             .then((res) => {
                 setProjectInfo(res.data);
                 setLoading(false);

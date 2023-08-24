@@ -5,7 +5,15 @@ import moment from 'moment';
 import { MonthPickerInput } from '@mantine/dates';
 import { IconCalendar, IconDownload } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Flex, Space, ThemeIcon, Tooltip } from '@mantine/core';
+import {
+    Box,
+    Button,
+    Flex,
+    Space,
+    Text,
+    ThemeIcon,
+    Tooltip,
+} from '@mantine/core';
 import fileSever from 'file-saver';
 
 import { TableSelection } from 'shared/components/table/container/table';
@@ -96,18 +104,22 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
     const renderModal = (timesheetData) => {
         return (
             <Box>
-                <Button
-                    color='blue'
-                    variant='outline'
-                    radius='md'
-                    onClick={() => {
-                        setTask({
-                            plannedTasks: timesheetData.plannedTasks,
-                            completedTasks: timesheetData.completedTasks,
-                        });
-                    }}>
-                    Tasks
-                </Button>
+                {timesheetData.inTime !== '' ? (
+                    <Button
+                        color='blue'
+                        variant='outline'
+                        radius='md'
+                        onClick={() => {
+                            setTask({
+                                plannedTasks: timesheetData.plannedTasks,
+                                completedTasks: timesheetData.completedTasks,
+                            });
+                        }}>
+                        Tasks
+                    </Button>
+                ) : (
+                    <Text c={'red'}>-</Text>
+                )}
             </Box>
         );
     };
