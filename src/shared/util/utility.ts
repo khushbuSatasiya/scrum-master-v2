@@ -42,14 +42,14 @@ export const formatDate = (date: any, format?: string) => {
  * @param time
  */
 export const formatTime = (time: any, format?: string) => {
-	if (!time) {
-	  return "";
-	}
-	return moment(time,'hh:mm:ss')
-	  .local()
-	  .format(format || "HH:mm");
-  };
-  /**
+  if (!time) {
+    return "";
+  }
+  return moment(time, "hh:mm:ss")
+    .local()
+    .format(format || "HH:mm");
+};
+/**
 /**
  * function to convert date to iso string and set seconds/milliseconds to zero
  * @param date

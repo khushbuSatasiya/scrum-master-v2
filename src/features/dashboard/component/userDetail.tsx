@@ -81,8 +81,6 @@ const UserDetail: FC<IProps> = ({
         />
         <Space w="xl" />
 
-        {/*sdj*/}
-
         <Flex direction="column">
           <Text fw="600" fz="xl" color="#071437">
             {newToken?.realName}
