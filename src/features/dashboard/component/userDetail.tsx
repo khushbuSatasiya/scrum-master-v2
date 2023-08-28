@@ -1,7 +1,16 @@
 import React, { FC, Fragment, useState } from "react";
 import isEmpty from "lodash/isEmpty";
 
-import { Flex, Image, Paper, Space, Tabs, Text } from "@mantine/core";
+import {
+  Anchor,
+  Button,
+  Flex,
+  Image,
+  Paper,
+  Space,
+  Tabs,
+  Text,
+} from "@mantine/core";
 import { IconMail, IconUserStar } from "@tabler/icons-react";
 
 import { getTotalWorkingHourColor } from "shared/util/utility";
@@ -71,7 +80,13 @@ const UserDetail: FC<IProps> = ({
   const totalExperience = newToken?.experience / 365;
 
   return (
-    <Paper shadow="sm" radius="lg" m={"20px 20px 10px"} p="30px 30px 0px">
+    <Paper
+      shadow="sm"
+      radius="lg"
+      m={"20px 20px 10px"}
+      p="30px 30px 0px"
+      pos={"relative"}
+    >
       <Flex>
         <Image
           maw={160}
@@ -80,8 +95,6 @@ const UserDetail: FC<IProps> = ({
           alt={newToken?.realName}
         />
         <Space w="xl" />
-
-        {/*sdj*/}
 
         <Flex direction="column">
           <Text fw="600" fz="xl" color="#071437">
@@ -170,7 +183,55 @@ const UserDetail: FC<IProps> = ({
           </Flex>
         </Flex>
       </Flex>
-
+      <Flex sx={{ position: "absolute", top: 15, right: 15 }}>
+        <Button compact>
+          <Anchor
+            href="https://docs.google.com/document/d/1TfUVxotVmZ1Ctj2flcuOwzVNUr-UL99H/edit"
+            target="_blank"
+            sx={{
+              color: "white",
+              "&:hover": {
+                textDecoration: "none",
+              },
+            }}
+            fw={"lighter"}
+          >
+            Leave Policy
+          </Anchor>
+        </Button>
+        <Button compact ml={8}>
+          <Anchor
+            href="https://drive.google.com/file/d/1rEK3UmEOAmegnf11vKrHzG1RJD5WKHyi/view?usp=share_link"
+            target="_blank"
+            sx={{
+              color: "white",
+              border: "none",
+              "&:hover": {
+                textDecoration: "none",
+              },
+            }}
+            fw={"lighter"}
+          >
+            Handbook
+          </Anchor>
+        </Button>
+        <Button compact ml={8}>
+          <Anchor
+            href="https://docs.google.com/document/d/1bDzOoZI8itijukUC_VeAnPKv6rf0dOfKgWJlGFjVRXA/edit"
+            target="_blank"
+            sx={{
+              color: "white",
+              border: "none",
+              "&:hover": {
+                textDecoration: "none",
+              },
+            }}
+            fw={"lighter"}
+          >
+            Healthy Workplace
+          </Anchor>
+        </Button>
+      </Flex>
       <Tabs.List sx={{ borderBottom: "1px solid transparent" }} mt="20px">
         {USER_INFO_ARR.map(({ label, value }, index) => {
           return (
