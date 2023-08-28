@@ -81,17 +81,17 @@ const Dashboard: FC = () => {
     } catch (error) {
       setIsActionLoader(false);
       setIsTokenLoader(true);
-      // if (error.code === "ERR_NETWORK") {
+
+      // if (error.code && error.code === "ERR_NETWORK") {
       //   setIsTokenLoader(false);
-      //   authService.removeAuthData();
       //   navigate("/token-expired");
       // }
-      if (error.response.status === 401) {
+
+      if (error.response.status && error.response.status === 401) {
         setIsTokenLoader(false);
         authService.removeAuthData();
         navigate("/token-expired");
       }
-      console.log("in");
 
       console.error(error);
     }
@@ -114,7 +114,13 @@ const Dashboard: FC = () => {
       } catch (error) {
         console.error(error);
         setIsTokenLoader(true);
-        if (error.response.status === 401) {
+
+        // if (error.code && error.code === "ERR_NETWORK") {
+        //   setIsTokenLoader(false);
+        //   navigate("/token-expired");
+        // }
+
+        if (error.response.status && error.response.status === 401) {
           setIsTokenLoader(false);
           authService.removeAuthData();
           navigate("/token-expired");
