@@ -227,7 +227,7 @@ const CheckOutForm: FC<IProps> = (props) => {
                 classNames={{
                   input: classes.input,
                 }}
-                label="Time (24 hour)"
+                label="(24 hour)"
                 ta={"center"}
                 labelProps={{ style: { color: "#5e6278" } }}
                 value={form.values.time}

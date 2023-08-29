@@ -61,7 +61,6 @@ const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
                   <TextInput
                     withAsterisk
                     placeholder="00:00"
-                    label="(24 hour)"
                     maxLength={5}
                     maw={270}
                     sx={{ marginLeft: "20px" }}
