@@ -96,7 +96,7 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
                       fz={14}
                       fw={600}
                       ml={5}
-                      c={"green"}
+                      // c={"green"}
                       color={
                         task.isHalfLeave === true
                           ? "green"
@@ -182,7 +182,7 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
                                   tt="uppercase"
                                   c={"#99A1B7"}
                                 >
-                                  Total Hours :{" "}
+                                  Project Hours :{" "}
                                   <span
                                     style={{
                                       fontWeight: "600",
