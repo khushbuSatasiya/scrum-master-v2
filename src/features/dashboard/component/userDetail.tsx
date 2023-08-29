@@ -107,7 +107,12 @@ const UserDetail: FC<IProps> = (props: IProps) => {
             fw="600"
             fz="xl"
             color="#071437"
-            sx={{ cursor: "pointer" }}
+            sx={{
+              cursor: "pointer",
+              "&:hover": {
+                color: "#228be6",
+              },
+            }}
             onClick={() => setIsShowUserDetails(!isShowUserDetails)}
           >
             {newToken?.realName ? newToken.realName : "-"}

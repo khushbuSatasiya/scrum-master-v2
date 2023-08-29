@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { Box, LoadingOverlay, Tabs } from "@mantine/core";
+import { Box, Tabs } from "@mantine/core";
 
 import httpService from "shared/services/http.service";
 import { API_CONFIG } from "shared/constants/api";
@@ -13,6 +13,7 @@ import LeaveOrMissingDay from "features/leaveOrMissingDay/component/leaveOrMissi
 import CheckOut from "features/checkOut/component/checkOut";
 import Project from "features/project/components/project";
 import CheckIn from "features/checkIn/component/checkIn";
+import GuestUser from "features/guestUser/component/guestUser";
 import NoActionRequired from "features/noActionRequired/noActionRequired";
 
 import { IProjectArray, IUserDetail } from "../interface/dashboard";
@@ -200,6 +201,7 @@ const Dashboard: FC = () => {
               totalHours={totalHours}
             />
           )}
+          {actionType === "guestUser" && <GuestUser />}
         </>
       ),
     },
