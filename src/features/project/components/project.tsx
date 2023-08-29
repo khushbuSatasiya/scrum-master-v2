@@ -25,6 +25,7 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
   const navigate = useNavigate();
 
 
+
   /* API call to get Project list */
   const getProjectList = useCallback(() => {
     setLoading(true);
@@ -66,7 +67,7 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
       )}
 
       {!isEmpty(projectInfo) && !isLoading && (
-        <ProjectCard projectInfo={projectInfo} setTeamInfo={setTeamInfo } setExcelData={setExcelData}/>
+        <ProjectCard projectInfo={projectInfo} setTeamInfo={setTeamInfo } setExcelData={setExcelData} uId={uId}/>
       )}
 
     {!isEmpty(teamInfo) && <TeamProfile teamInfo={teamInfo} setTeamInfo={setTeamInfo}/>}

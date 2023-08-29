@@ -4,22 +4,24 @@ import moment from "moment";
 import {
   Box,
   Button,
+  Divider,
   Flex,
   Modal,
   Select,
   Text,
   TextInput,
+  createStyles,
 } from "@mantine/core";
-import {  MonthPickerInput } from "@mantine/dates";
+import { MonthPickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { IconCalendar } from "@tabler/icons-react";
 import { isEmpty } from "lodash";
 
 import httpService from "shared/services/http.service";
 import { API_CONFIG } from "shared/constants/api";
-import { dateFormat } from "shared/util/utility";
 
 import { IExcelProps } from "../interface/project";
+
 interface IExcelDownloadProps {
   excelData: IExcelProps;
   setExcelData: (value) => void;
@@ -40,34 +42,30 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
     }[]
   >();
 
-
   const { date, projectName, teamDetails, projectId } = excelData;
-
-
-  useEffect(() => {
-    let teamArray = teamDetails.map(({ realName, id }) => ({
-      label: realName,
-      value: id,
-    }));
-    setTeamInfo(teamArray as any);
-  }, []);
-
   const form = useForm({
     initialValues: {
-      date: isEmpty(date) ? null : new Date(date),
-      projectName: isEmpty(projectName) ? "" : projectName,
+      date: new Date(date),
       userId: isEmpty(teamInfo) ? "" : teamInfo,
-    },
-    validate: {
-      projectName: (value) =>
-        value === "" ? "Project name is required" : null,
     },
   });
 
-  const handleSubmit = (values: FormValues) => {
-    const startDate = dateFormat(values.date);
-    const endDate = dateFormat(values.date);
+  const useStyles = createStyles(() => ({
+    header:{
+      padding:'0px'
+    },
+    close:{
+      marginTop:'10px ',
+      marginRight:'20px'
+    }
+  }));
 
+  const { classes } = useStyles();
+
+  const handleSubmit = (values: FormValues) => {
+    const startDate= moment(values.date).startOf("month").format("YYYY-MM-DD")
+    const endDate =  moment(values.date).endOf("month").format("YYYY-MM-DD");
+  
     const params = {
       projectId: projectId,
       startDate: startDate,
@@ -76,90 +74,92 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
     };
 
     httpService
-      .get(`${API_CONFIG.path.project}/excel`,params ,{
-        responseType: 'blob',
-    })
+      .get(`${API_CONFIG.path.project}/excel`, params, {
+        responseType: "blob",
+      })
       .then((res) => {
-
         const blob = new Blob([res], {
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
 
-      fileSever.saveAs(blob, `${new Date(startDate)}.xlsx`);
-      ;
+        fileSever.saveAs(blob, `${moment(startDate).format('MMMM')}.xlsx`);
       })
       .catch((error) => {
         console.error("Error", error);
       });
   };
+
+  useEffect(() => {
+    let teamArray =
+      teamDetails.length > 0 &&
+      Object.values(teamDetails).map(({ realName, id }) => ({
+        label: realName,
+        value: id,
+      }));
+    setTeamInfo(teamArray as any);
+  }, []);
   return (
-    <Modal
-      shadow="sm"
+  
+      <Modal
+      classNames={{header:classes.header,close:classes.close}}
+        shadow="sm"
+        size={"450px"}
+        pos={"relative"}
+        centered
+        padding={20}
+        radius="lg"
+        withCloseButton={true}
+        opened={true}
+        onClose={() => {
+          setExcelData({});
+        }}
+      >
+        <Box>
+          <form onSubmit={form.onSubmit(handleSubmit)}>
+            <Text ta={"center"} fw={600} c={'#071437'} fz={22}>{projectName}</Text>
+            <Divider  variant="dashed" mt={10} mb={10}/>
 
-      pos={"relative"}
-      centered
-      padding={20}
-      radius="lg"
-      withCloseButton={false}
-      opened={true}
-      onClose={() => {
-        setExcelData({});
-      }}
-    >
-      <Box>
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <TextInput
-            variant="filled"
-            mt="sm"
-            placeholder="Project Name"
-            label="Project Name"
-            radius="md"
-            disabled
-            {...form.getInputProps("projectName")}
-          />
-
-         {!isEmpty(teamInfo) && teamInfo.length > 0 &&
-            <Select
-              label={"Select Employee"}
-              searchable
-              mt="lg"
-              radius="md"
-              data={teamInfo}
-              placeholder="Select employee "
-              transitionProps={{
-                transition: "pop-top-left",
-                duration: 80,
-                timingFunction: "ease",
-              }}
-             withinPortal
-               nothingFound='Nobody here'
+            <MonthPickerInput
+            label={"Select Month"}
+              size="sm"
+              monthsListFormat="MMM"
               variant="filled"
-              {...form.getInputProps("teamMate")}
-            />}
+              mt="15px"
+              placeholder="Pick a month"
+              radius="md"
+              sx={{ border: "none !important" }}
+              icon={<IconCalendar size={16} />}
+              {...form.getInputProps("date")}
+            />
 
-       
+            {!isEmpty(teamInfo) && (
+              <Select
+                label={"Select Employee"}
+                placeholder="Select Employee"
+                searchable
+                data={teamInfo}
+                variant="filled"
+                mt="lg"
+                radius="md"
+                withinPortal
+                transitionProps={{
+                  transition: "pop-top-left",
+                  duration: 80,
+                  timingFunction: "ease",
+                }}
+                clearable
+                autoFocus={false}
+                {...form.getInputProps("teamMate")}
+              />
+            )}
 
-          <MonthPickerInput
-            size="sm"     
-            monthsListFormat="MMM"
-            variant="filled"
-            clearable
-            mt="35px"
-            placeholder="Pick a month"
-            radius="md"
-            sx={{ border: "none !important" }}
-            icon={<IconCalendar size={16} />}
-            {...form.getInputProps("date")}
-          />
-
-         <Flex justify={'center'} mt={30} mb={10}>
-         <Button type="submit" >
-            Excel Download
-          </Button>
-         </Flex>
-        </form>
-      </Box>
-    </Modal>
+            <Flex justify={"center"} mt={30} mb={10}>
+              <Button type="submit">Excel Download</Button>
+            </Flex>
+          </form>
+        </Box>
+      </Modal>
+    
   );
 };
 

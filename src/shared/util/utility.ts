@@ -189,9 +189,7 @@ export const capitalizeFirstLetter = (string: string) => {
 export const getDay = (date: Moment) => {
   return moment(date).format("dddd");
 };
-// export const getMonth = (date: Moment) => {
-//   return moment(date).format("mm");
-// };
+
 
 export const sortProjectList = (projectArray: any) => {
   const sortedProjects = [...projectArray].sort((a, b) => {

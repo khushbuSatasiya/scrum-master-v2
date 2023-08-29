@@ -1,6 +1,5 @@
-import { Avatar, Box, Flex, Image, Modal, Text } from "@mantine/core";
-import { IconOctagon } from "@tabler/icons-react";
 import React, { FC } from "react";
+import { Avatar, Box, Divider, Flex, Image, Modal, Text } from "@mantine/core";
 
 interface ITeamProfileProps {
   teamInfo: any;
@@ -24,7 +23,8 @@ const TeamProfile: FC<ITeamProfileProps> = ({ teamInfo, setTeamInfo }) => {
       
     >
 
-     <Text ta="center" mb={20} c={"#071437"} fz={32} fw={600}>Our Great Team</Text>
+     <Text ta="center"  c={"#071437"} fz={26} fw={600}>Our Great Team</Text>
+     <Divider  variant="dashed" mb={20} mt={15}/>
     <Box >
     <Flex wrap={"wrap"} justify={"center"} align={'center'} m={'0 auto'} w={'100%'}>
         {teamInfo.map(({ avatar, realName, id }) => {
@@ -49,7 +49,7 @@ const TeamProfile: FC<ITeamProfileProps> = ({ teamInfo, setTeamInfo }) => {
                 src={avatar}
               />
 
-              <Text mt={10} c={"#071437"} fz={18} fw={600}>
+              <Text ta={'center'} mt={10} c={"#071437"} fz={14} fw={600}>
                 {realName}
               </Text>
             </Flex>

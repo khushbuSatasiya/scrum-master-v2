@@ -22,7 +22,7 @@ const App: FC = () => {
           <Route path="/user/list" element={<User />} />
           <Route path="verify-token/:token" element={<Dashboard />} />
           <Route path="/token-expired" element={<TokenExpired />} />
-          {/* <Route path="/" element={<Dashboard />} /> */}
+          <Route path="/" element={<Dashboard />} />
 
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>

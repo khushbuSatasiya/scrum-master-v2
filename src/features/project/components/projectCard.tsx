@@ -14,17 +14,20 @@ interface IProjectCardProps {
   projectInfo: IProjectProps[];
   setTeamInfo: (teamDetails) => void;
   setExcelData: (value) => void;
+  uId:string
 }
 
 const ProjectCard: FC<IProjectCardProps> = ({
   projectInfo,
   setTeamInfo,
   setExcelData,
+  uId
 }) => {
+ 
   return (
     <Flex align={"center"} wrap={"wrap"} gap={30}>
       {projectInfo.map(
-        ({ projectId, projectName, teamDetails, date, logo }, index) => {
+        ({ projectId, projectName, teamDetails, date, logo ,leadDetails }, index) => {
           return (
             <Paper
               shadow="sm"
@@ -69,7 +72,7 @@ const ProjectCard: FC<IProjectCardProps> = ({
                         onClick={() => setTeamInfo(teamDetails)}
                         icon={<IconUserCircle color="#228be6" />}
                       ></Menu.Item>
-                      <Menu.Item
+                    {leadDetails.id===uId &&  <Menu.Item
                         onClick={() =>
                           setExcelData({
                             projectName: projectName,
@@ -79,7 +82,7 @@ const ProjectCard: FC<IProjectCardProps> = ({
                           })
                         }
                         icon={<IconFileDownload color="#40bf4a" />}
-                      ></Menu.Item>
+                      ></Menu.Item>}
                     </Menu.Dropdown>
                   </Menu>
                 </Flex>
