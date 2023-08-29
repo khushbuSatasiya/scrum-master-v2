@@ -20,6 +20,7 @@ import ProjectCard from "./projectCard";
 const Project: FC<IProjectsProps> = ({ uId }) => {
   const [isLoading, setLoading] = useState(true);
   const [projectInfo, setProjectInfo] = useState<IProjectProps[]>();
+
   const[teamInfo,setTeamInfo]=useState([])
   const[excelData,setExcelData]=useState<IExcelProps>()
   const navigate = useNavigate();

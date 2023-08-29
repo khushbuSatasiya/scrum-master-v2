@@ -1,8 +1,9 @@
 import React, { FC } from "react";
-import { Avatar, Box, Divider, Flex, Image, Modal, Text, createStyles } from "@mantine/core";
+import { Avatar, Box, Divider, Flex, Modal, Text, createStyles } from "@mantine/core";
+import { IProjectProps, TeamDetail } from "../interface/project";
 
 interface ITeamProfileProps {
-  teamInfo: any;
+  teamInfo: TeamDetail[];
   setTeamInfo: (value) => void;
 }
 const TeamProfile: FC<ITeamProfileProps> = ({ teamInfo, setTeamInfo }) => {
@@ -41,7 +42,7 @@ const TeamProfile: FC<ITeamProfileProps> = ({ teamInfo, setTeamInfo }) => {
      <Divider  variant="dashed" mb={20} mt={10}/>
     <Box >
     <Flex wrap={"wrap"} justify={"center"} align={'center'} m={'0 auto'} w={'100%'}>
-        {teamInfo.map(({ avatar, realName, id }) => {
+        {teamInfo.map(({ avatar, realName, id ,designation}:TeamDetail) => {
           return (
             <Flex
               w={180}
@@ -65,6 +66,10 @@ const TeamProfile: FC<ITeamProfileProps> = ({ teamInfo, setTeamInfo }) => {
 
               <Text ta={'center'} mt={10} c={"#071437"} fz={14} fw={600}>
                 {realName}
+              </Text>
+              <Text truncate w={150}
+               ta={'center'}  c={"#99A1B7"} fz={12} fw={600}>
+                {designation ? designation :'Employee'}
               </Text>
             </Flex>
           );

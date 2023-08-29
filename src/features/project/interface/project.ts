@@ -13,6 +13,7 @@ export interface IProjectsProps {
       id: string;
       realName: string;
       avatar: string;
+      designation?:string
   }
 
   export interface IProjectProps {

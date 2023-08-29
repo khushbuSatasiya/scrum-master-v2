@@ -58,6 +58,10 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
       overflowY:'unset',
       padding:'5px'
     },
+    close:{
+      marginTop:'5px',
+      marginRight:'5px'
+    }
    
   }));
 
@@ -102,7 +106,7 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
   return (
   
       <Modal
-      classNames={{header:classes.header,content:classes.content}}
+      classNames={{header:classes.header,content:classes.content,close:classes.close}}
         shadow="sm"
         size={"450px"}
         pos={"relative"}
