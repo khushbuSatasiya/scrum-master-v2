@@ -1,6 +1,6 @@
 import React, { FC, Fragment } from "react";
 import { isNull } from "lodash";
-import { Avatar, Box, Flex, Menu, Paper, Text, Tooltip } from "@mantine/core";
+import { Avatar, Box, Flex, Menu, Paper, Text, Tooltip, createStyles } from "@mantine/core";
 import {
   IconDotsVertical,
   IconFileDownload,
@@ -23,6 +23,20 @@ const ProjectCard: FC<IProjectCardProps> = ({
   setExcelData,
   uId
 }) => {
+
+  const useStyles = createStyles(() => ({
+    itemIcon:{
+     marginRight:'0px'
+    },
+    item:{
+      padding:'5px',
+      justifyContent:'center',
+      alignItems:'center',
+     
+    }
+    
+  }));
+  const { classes } = useStyles();
  
   return (
     <Flex align={"center"} wrap={"wrap"} gap={30}>
@@ -59,8 +73,10 @@ const ProjectCard: FC<IProjectCardProps> = ({
                     withArrow
                     position="bottom-end"
                     trigger="hover"
+                    classNames={{itemIcon:classes.itemIcon,item:classes.item}}
                   >
-                    <Menu.Target>
+                    <Menu.Target 
+                  >
                       <IconDotsVertical
                         size={20}
                         style={{ cursor: "pointer" }}
@@ -84,6 +100,7 @@ const ProjectCard: FC<IProjectCardProps> = ({
                         icon={<IconFileDownload color="#40bf4a" />}
                       ></Menu.Item>}
                     </Menu.Dropdown>
+
                   </Menu>
                 </Flex>
                 <Box mt={5}>
