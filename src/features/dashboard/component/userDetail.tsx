@@ -121,7 +121,7 @@ const UserDetail: FC<IProps> = (props: IProps) => {
             <IconUserStar size="16" color="#B5B5C3" />
             <Space w="5px" />
             <Text fz="14px" fw={500} c="#B5B5C3">
-              {newToken?.bio ? newToken?.bio : "Employee"}
+              {newToken?.bio ? newToken?.bio : "Team Member"}
             </Text>
             <Space w="xl" />
             <IconMail size={16} color="#B5B5C3" />
