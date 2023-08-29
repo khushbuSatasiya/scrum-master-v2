@@ -1,8 +1,10 @@
 import React, { FC, Fragment } from "react";
 
-import { LoadingOverlay, Tabs } from "@mantine/core";
+import { Group, Loader, Tabs } from "@mantine/core";
 
 import { IUserInfoArr } from "../interface/dashboard";
+import isEmpty from "lodash/isEmpty";
+import NoRecords from "shared/components/noRecords/noRecords";
 
 interface IProps {
   activeTab: string;
@@ -15,28 +17,35 @@ const UserInfoTab: FC<IProps> = ({
   activeTab,
   USER_INFO_ARR,
   isActionLoader,
+  actionType,
 }) => {
   return (
     <Fragment>
-      <LoadingOverlay
-        loaderProps={{
-          size: "xl",
+      <Group
+        sx={{
+          height: `${isActionLoader && "500px"}`,
+          display: `${isActionLoader ? "flex" : "unset"}`,
+          justifyContent: `${isActionLoader && "center"}`,
         }}
-        visible={isActionLoader}
-        overlayBlur={2}
-      />
+      >
+        {isActionLoader && <Loader variant="dots" />}
 
-      {USER_INFO_ARR.map(({ content, value }, index) => {
-        return (
-          <Fragment key={index}>
-            {activeTab === value && (
-              <Tabs.Panel value={value} pl="20px" pr="20px" pb="lg">
-                {content}
-              </Tabs.Panel>
-            )}
-          </Fragment>
-        );
-      })}
+        {!isActionLoader &&
+          !isEmpty(actionType) &&
+          USER_INFO_ARR.map(({ content, value }, index) => {
+            return (
+              <Fragment key={index}>
+                {activeTab === value && (
+                  <Tabs.Panel value={value} pl="20px" pr="20px" pb="lg">
+                    {content}
+                  </Tabs.Panel>
+                )}
+              </Fragment>
+            );
+          })}
+
+        {isEmpty(actionType) && !isActionLoader && <NoRecords />}
+      </Group>
     </Fragment>
   );
 };

@@ -43,7 +43,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
   const useStyles = createStyles(() => ({
     input: {
       backgroundColor: "#f5f8fa",
-      color: " 5e6278 ",
+      color: "#5e6278 ",
       fontWight: " 500 ",
       border: " none ",
     },

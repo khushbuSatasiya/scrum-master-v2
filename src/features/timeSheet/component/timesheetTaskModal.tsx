@@ -18,7 +18,6 @@ import {
   formatDate,
   formatTime,
   getCheckInColor,
-  getCheckOutColor,
   getTotalWorkingHourColor,
 } from "shared/util/utility";
 import { useStyles } from "../constant/constant";
@@ -56,7 +55,7 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
           }}
         >
           <Box>
-            <Paper p={20} radius={"lg"}>
+            <Paper radius={"lg"}>
               <Flex justify={"space-between"} align={"center"} p={"10px 0px"}>
                 <Flex>
                   <Flex>
@@ -98,7 +97,11 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
                       fw={600}
                       ml={5}
                       c={"green"}
-                      color={getTotalWorkingHourColor(task.totalHour)}
+                      color={
+                        task.isHalfLeave === true
+                          ? "green"
+                          : getTotalWorkingHourColor(task.totalHour)
+                      }
                     >
                       {task.totalHour}
                     </Text>
@@ -157,18 +160,41 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
                               backgroundColor: "#f5f8fa",
                             }}
                           >
-                            <Flex>
-                              <ThemeIcon
-                                color="white"
-                                size={24}
-                                radius="xl"
-                                mr={5}
-                              >
-                                <IconChecklist size="25px" color="#228be6" />
-                              </ThemeIcon>
-                              <Text fw={600} mb={10} fz={17} color="#99A1B7">
-                                {item.projectName}
-                              </Text>
+                            <Flex justify={"space-between"}>
+                              <Flex>
+                                <ThemeIcon
+                                  color="white"
+                                  size={24}
+                                  radius="xl"
+                                  mr={5}
+                                >
+                                  <IconChecklist size="25px" color="#228be6" />
+                                </ThemeIcon>
+                                <Text fw={600} mb={10} fz={17} color="#99A1B7">
+                                  {item.projectName}
+                                </Text>
+                              </Flex>
+
+                              {item.totalHours !== null && (
+                                <Text
+                                  fz={14}
+                                  fw={600}
+                                  tt="uppercase"
+                                  c={"#99A1B7"}
+                                >
+                                  Total Hours :{" "}
+                                  <span
+                                    style={{
+                                      fontWeight: "600",
+                                      marginLeft: "5px",
+                                      fontSize: "14px",
+                                      color: "#40c057",
+                                    }}
+                                  >
+                                    {item.totalHours}
+                                  </span>
+                                </Text>
+                              )}
                             </Flex>
                             <Flex justify={"space-between"} w={"100%"} gap={30}>
                               <Box sx={{ width: "50%" }}>
