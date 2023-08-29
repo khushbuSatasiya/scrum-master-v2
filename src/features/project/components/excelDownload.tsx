@@ -89,7 +89,6 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
       ;
       })
       .catch((error) => {
-
         console.error("Error", error);
       });
   };

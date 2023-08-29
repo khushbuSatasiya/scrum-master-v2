@@ -14,3 +14,22 @@ export interface IProjectsProps {
       realName: string;
       avatar: string;
   }
+
+  export interface IProjectProps {
+	projectId: string;
+	projectName: string;
+	logo: string;
+	date: string;
+	status: string;
+	type: string;
+	leadDetails: LeadDetails;
+	teamDetails: TeamDetail[];
+}
+
+export interface LeadDetails {
+	id: string;
+	realName: string;
+	avatar: string;
+}
+
+
