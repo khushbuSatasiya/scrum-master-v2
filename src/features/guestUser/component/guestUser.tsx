@@ -27,7 +27,7 @@ const GuestUser: FC = () => {
         justify={"center"}
         sx={{
           border: "1px dashed #228be6",
-          background: "#d6d6fec2",
+          background: "#F1FAFF",
           borderRadius: "16px",
         }}
         p={15}

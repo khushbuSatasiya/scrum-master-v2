@@ -90,7 +90,7 @@ const UserInfoPopup: FC<IProps> = ({
                 {realName}
               </Text>
               <Text mb={4} fw={500} size={14} color="#B5B5C3">
-                {designation}
+                {designation ? designation : "Team Member"}
               </Text>
               <Text fw={500} color="#B5B5C3" size={14}>
                 {email}
