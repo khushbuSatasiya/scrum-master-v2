@@ -19,6 +19,7 @@ import { IProjectArray, IUserDetail } from "../interface/dashboard";
 
 import UserInfoTab from "./userInfoTab";
 import UserDetail from "./userDetail";
+import UserInfoPopup from "./userInfoPopup";
 
 const Dashboard: FC = () => {
   const { token } = useParams<{ token: string }>();
@@ -44,14 +45,15 @@ const Dashboard: FC = () => {
   const [date, setDate] = useState();
   const [totalHours, setTotalHours] = useState("");
   const [isTokenLoader, setIsTokenLoader] = useState(true);
+  const [isShowUserDetails, setIsShowUserDetails] = useState(false);
 
   const checkStatus = useCallback(async () => {
     setIsActionLoader(true);
     setIsTokenLoader(false);
     try {
       await httpService.get(API_CONFIG.path.status).then((res) => {
-        setActionType(res.data.action);
         setIsActionLoader(false);
+        setActionType(res.data.action);
 
         if (res.data.action === "noActionRequired") {
           const { inTime, outTime } = res.data.timeSheet;
@@ -230,47 +232,51 @@ const Dashboard: FC = () => {
 
   return (
     <>
-      <LoadingOverlay
+      {/* <LoadingOverlay
         loaderProps={{
           size: "xl",
         }}
         visible={isTokenLoader}
         overlayBlur={2}
-      />
-
-      {!isTokenLoader && (
-        <Box
-          sx={{
-            width: "1250px",
-            margin: "0 auto",
+      /> */}
+      <Box
+        sx={{
+          width: "1250px",
+          margin: "0 auto",
+        }}
+      >
+        <Tabs
+          defaultValue="check-in"
+          onTabChange={(data) => {
+            data !== "leavereport" && setLeaveDetails({});
+            data !== "timesheet" && setTotalWorkingHour("");
+            data === "check-in" && checkStatus();
+            setActiveTab(data);
           }}
         >
-          <Tabs
-            defaultValue="check-in"
-            onTabChange={(data) => {
-              data !== "leavereport" && setLeaveDetails({});
-              data !== "timesheet" && setTotalWorkingHour("");
-              data === "check-in" && checkStatus();
-              setActiveTab(data);
-            }}
-          >
-            <UserDetail
-              activeTab={activeTab}
-              USER_INFO_ARR={USER_INFO_ARR}
-              newToken={newToken}
-              totalWorkingHour={totalWorkingHour}
-              leaveDetails={leaveDetails}
-            />
+          <UserDetail
+            activeTab={activeTab}
+            USER_INFO_ARR={USER_INFO_ARR}
+            newToken={newToken}
+            totalWorkingHour={totalWorkingHour}
+            leaveDetails={leaveDetails}
+            setIsShowUserDetails={setIsShowUserDetails}
+            isShowUserDetails={isShowUserDetails}
+          />
 
-            <UserInfoTab
-              activeTab={activeTab}
-              USER_INFO_ARR={USER_INFO_ARR}
-              isActionLoader={isActionLoader}
-              actionType={actionType}
-            />
-          </Tabs>
-        </Box>
-      )}
+          <UserInfoTab
+            activeTab={activeTab}
+            USER_INFO_ARR={USER_INFO_ARR}
+            isActionLoader={isActionLoader}
+            actionType={actionType}
+          />
+        </Tabs>
+
+        <UserInfoPopup
+          isShowUserDetails={isShowUserDetails}
+          setIsShowUserDetails={setIsShowUserDetails}
+        />
+      </Box>
     </>
   );
 };

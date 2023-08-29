@@ -16,6 +16,7 @@ export const API_CONFIG = {
     leaveExcel: "leave/excel",
     checkOut: "web/checkOut",
     projectList: "project/list",
+    profile: "users/profile",
   },
 };
 

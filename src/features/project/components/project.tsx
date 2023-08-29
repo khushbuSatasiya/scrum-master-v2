@@ -1,15 +1,7 @@
 import React, { FC, Fragment, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { isEmpty, isNull } from "lodash";
-import {
-  Avatar,
-  Box,
-  Flex,
-  LoadingOverlay,
-  Paper,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { Avatar, Box, Flex, Loader, Paper, Text, Tooltip } from "@mantine/core";
 
 import NoRecords from "shared/components/noRecords/noRecords";
 import { API_CONFIG } from "shared/constants/api";
@@ -54,19 +46,25 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
         My Projects
       </Text>
 
-      {isLoading && (
-        <LoadingOverlay
-          loaderProps={{
-            size: "xl",
-          }}
-          visible={isLoading}
-          overlayBlur={2}
-        />
-      )}
-
-      {!isEmpty(projectInfo) && !isLoading && (
-        <Flex align={"center"} wrap={"wrap"} gap={30}>
-          {projectInfo.map(
+      <Flex
+        align={"center"}
+        wrap={"wrap"}
+        gap={30}
+        justify={`${isLoading && "center"}`}
+      >
+        {isLoading && (
+          <Loader
+            variant="dots"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              height: 500,
+            }}
+          />
+        )}
+        {!isEmpty(projectInfo) &&
+          !isLoading &&
+          projectInfo.map(
             ({ projectId, projectName, teamDetails, date, logo }, index) => {
               return (
                 <Paper
@@ -143,8 +141,7 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
               );
             }
           )}
-        </Flex>
-      )}
+      </Flex>
 
       {isEmpty(projectInfo) && !isLoading && <NoRecords />}
       {/*</Paper>*/}

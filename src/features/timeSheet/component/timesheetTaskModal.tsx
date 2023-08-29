@@ -56,7 +56,7 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
           }}
         >
           <Box>
-            <Paper p={20} radius={"lg"}>
+            <Paper radius={"lg"}>
               <Flex justify={"space-between"} align={"center"} p={"10px 0px"}>
                 <Flex>
                   <Flex>

@@ -108,12 +108,14 @@ const CheckInForm: FC<IProps> = ({
               placeholder="00:00"
               maxLength={5}
               mt={24}
-              label="Time (24 hour)"
+              label="(24 hour)"
               value={form.values.time}
               onChange={(e) => handleTimeChange(e)}
               classNames={{
                 input: classes.input,
               }}
+              ta={"center"}
+              labelProps={{ style: { color: "#5e6278" } }}
               {...form.getInputProps("time")}
             />
 

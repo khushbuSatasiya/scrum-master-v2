@@ -23,15 +23,21 @@ interface IProps {
   newToken: IUserDetail;
   totalWorkingHour: string;
   leaveDetails: Record<string, any>;
+  setIsShowUserDetails: (action: boolean) => void;
+  isShowUserDetails: boolean;
 }
 
-const UserDetail: FC<IProps> = ({
-  USER_INFO_ARR,
-  activeTab,
-  newToken,
-  totalWorkingHour,
-  leaveDetails,
-}) => {
+const UserDetail: FC<IProps> = (props: IProps) => {
+  const {
+    USER_INFO_ARR,
+    activeTab,
+    newToken,
+    totalWorkingHour,
+    leaveDetails,
+    setIsShowUserDetails,
+    isShowUserDetails,
+  } = props;
+
   const LEAVE_DETAILS = [
     {
       label: "Granted Leave",
@@ -97,8 +103,14 @@ const UserDetail: FC<IProps> = ({
         <Space w="xl" />
 
         <Flex direction="column">
-          <Text fw="600" fz="xl" color="#071437">
-            {newToken?.realName}
+          <Text
+            fw="600"
+            fz="xl"
+            color="#071437"
+            sx={{ cursor: "pointer" }}
+            onClick={() => setIsShowUserDetails(!isShowUserDetails)}
+          >
+            {newToken?.realName ? newToken.realName : "-"}
           </Text>
           <Flex mt={5} direction="row" justify="start" align="center">
             <IconUserStar size="16" color="#B5B5C3" />
@@ -124,7 +136,7 @@ const UserDetail: FC<IProps> = ({
               }}
             >
               <Text fw="bold" fz="22px" c={"#071437"}>
-                {newToken?.projectCount}
+                {newToken?.projectCount || 0}
               </Text>
               <Text c="#B5B5C3" fz="sm" fw={500}>
                 Projects
@@ -139,7 +151,7 @@ const UserDetail: FC<IProps> = ({
               }}
             >
               <Text fw="bold" fz="22px" c={"#071437"}>
-                {totalExperience.toFixed(1)}
+                {totalExperience.toFixed(1) || 0}
               </Text>
               <Text c="#B5B5C3" fz="sm" fw={500}>
                 Experience
