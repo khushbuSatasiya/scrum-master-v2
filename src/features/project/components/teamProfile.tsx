@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Avatar, Box, Divider, Flex, Image, Modal, Text } from "@mantine/core";
+import { Avatar, Box, Divider, Flex, Image, Modal, Text, createStyles } from "@mantine/core";
 
 interface ITeamProfileProps {
   teamInfo: any;
@@ -7,7 +7,20 @@ interface ITeamProfileProps {
 }
 const TeamProfile: FC<ITeamProfileProps> = ({ teamInfo, setTeamInfo }) => {
 
+  const useStyles = createStyles(() => ({
+    content:{
+      overflow:'auto',
+      '::-webkit-scrollbar' :{
+        display:'none'
+        
+      }
+    },
+   
+  }));
+
+  const { classes } = useStyles();
   return (
+
     <Modal
     shadow='sm'
       size={"1000px"}
@@ -20,11 +33,12 @@ const TeamProfile: FC<ITeamProfileProps> = ({ teamInfo, setTeamInfo }) => {
       onClose={() => {
         setTeamInfo([]);
       }}
+      classNames={{content:classes.content}}
       
     >
 
      <Text ta="center"  c={"#071437"} fz={26} fw={600}>Our Great Team</Text>
-     <Divider  variant="dashed" mb={20} mt={15}/>
+     <Divider  variant="dashed" mb={20} mt={10}/>
     <Box >
     <Flex wrap={"wrap"} justify={"center"} align={'center'} m={'0 auto'} w={'100%'}>
         {teamInfo.map(({ avatar, realName, id }) => {
