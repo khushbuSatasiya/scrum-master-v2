@@ -130,7 +130,7 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
 
   return (
     <Box
-      mt={"30px"}
+      mt={30}
       sx={{
         scrollbarWidth: "none",
         "::-webkit-scrollbar": {

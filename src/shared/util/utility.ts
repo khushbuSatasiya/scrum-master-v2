@@ -142,7 +142,7 @@ export const toRoundTwoDecimal = (num: number) => {
   return Math.round(num * 100) / 100 || 0;
 };
 
-export const dateFormate = (date: Moment|string) => {
+export const dateFormate = (date: Moment | string) => {
   return moment(date).format("DD/MM/YYYY");
 };
 
@@ -189,7 +189,6 @@ export const capitalizeFirstLetter = (string: string) => {
 export const getDay = (date: Moment) => {
   return moment(date).format("dddd");
 };
-
 
 export const sortProjectList = (projectArray: any) => {
   const sortedProjects = [...projectArray].sort((a, b) => {

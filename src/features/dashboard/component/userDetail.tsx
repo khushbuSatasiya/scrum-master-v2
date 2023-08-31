@@ -156,7 +156,7 @@ const UserDetail: FC<IProps> = (props: IProps) => {
               }}
             >
               <Text fw="bold" fz="22px" c={"#071437"}>
-                {totalExperience.toFixed(1) || 0}
+                {totalExperience ? totalExperience.toFixed(1) : 0}
               </Text>
               <Text c="#B5B5C3" fz="sm" fw={500}>
                 Experience

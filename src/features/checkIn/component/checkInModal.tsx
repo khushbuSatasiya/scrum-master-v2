@@ -1,15 +1,20 @@
+import React, { FC } from "react";
+
 import { Button, Flex, Modal, Paper, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
-import React, { FC } from "react";
+
+import { ICheckInValues } from "../interface/checkIn";
 
 interface IProps {
   isConfirm: boolean;
   setIsConfirm: (action: boolean) => void;
-  confirmCheckIn: (values: any) => void;
+  confirmCheckIn: (values: ICheckInValues) => void;
   isAlreadyCheckIn: boolean;
   setIsAlreadyCheckIn: (action: boolean) => void;
   checkStatus: () => void;
-  checkInValue: any;
+  checkInValue: ICheckInValues;
+  isLoading: boolean;
+  setIsLoading: (action: boolean) => void;
 }
 
 const CheckInModal: FC<IProps> = (props: IProps) => {
@@ -21,6 +26,8 @@ const CheckInModal: FC<IProps> = (props: IProps) => {
     setIsAlreadyCheckIn,
     checkStatus,
     checkInValue,
+    isLoading,
+    setIsLoading,
   } = props;
   return (
     <div>
@@ -45,6 +52,13 @@ const CheckInModal: FC<IProps> = (props: IProps) => {
               <Button
                 variant="outline"
                 mr={18}
+                loading={isLoading}
+                loaderPosition="left"
+                loaderProps={{
+                  size: "sm",
+                  color: "#15aabf",
+                  variant: "oval",
+                }}
                 onClick={() => confirmCheckIn(checkInValue)}
               >
                 Yes
@@ -52,7 +66,10 @@ const CheckInModal: FC<IProps> = (props: IProps) => {
               <Button
                 variant="outline"
                 color="red"
-                onClick={() => setIsConfirm(false)}
+                onClick={() => {
+                  setIsConfirm(false);
+                  setIsLoading(false);
+                }}
               >
                 Cancel
               </Button>

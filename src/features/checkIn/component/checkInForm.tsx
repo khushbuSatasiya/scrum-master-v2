@@ -14,13 +14,18 @@ import {
 
 import { getTodayDate } from "shared/util/utility";
 
+import { ICheckInValues } from "../interface/checkIn";
+
 interface IProps {
   form: any;
-  handleCheckIn: (values: any) => void;
+  handleCheckIn: (values: ICheckInValues) => void;
   fields: any;
-  handleTimeChange: (e: any) => void;
+  handleTimeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isLoading: boolean;
-  classes: any;
+  classes: {
+    input: string;
+  };
+  isConfirm: boolean;
 }
 
 const CheckInForm: FC<IProps> = ({
@@ -30,6 +35,7 @@ const CheckInForm: FC<IProps> = ({
   handleTimeChange,
   isLoading,
   classes,
+  isConfirm,
 }) => {
   return (
     <form onSubmit={form.onSubmit((values) => handleCheckIn(values))}>
@@ -77,7 +83,7 @@ const CheckInForm: FC<IProps> = ({
           </Flex>
           <Divider my="sm" variant="dashed" />
           {fields.length > 0 ? <Group mb="xs"></Group> : <></>}
-          {fields.length > 0 && <Box>{fields}</Box>}
+          {fields.length > 0 && <Box>{fields.reverse()}</Box>}
         </Paper>
 
         <Paper
@@ -124,7 +130,7 @@ const CheckInForm: FC<IProps> = ({
               <Button
                 type="submit"
                 sx={{ width: "140px", marginTop: "20px" }}
-                loading={isLoading}
+                loading={!isConfirm && isLoading}
                 disabled={isLoading}
                 loaderPosition="left"
                 loaderProps={{

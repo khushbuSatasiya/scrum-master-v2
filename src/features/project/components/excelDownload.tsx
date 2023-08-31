@@ -51,26 +51,25 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
   });
 
   const useStyles = createStyles(() => ({
-    header:{
-      padding:'0px'
+    header: {
+      padding: "0px",
     },
-    content:{
-      overflowY:'unset',
-      padding:'5px'
+    content: {
+      overflowY: "unset",
+      padding: "5px",
     },
-    close:{
-      marginTop:'5px',
-      marginRight:'5px'
-    }
-   
+    close: {
+      marginTop: "5px",
+      marginRight: "5px",
+    },
   }));
 
   const { classes } = useStyles();
 
   const handleSubmit = (values: FormValues) => {
-    const startDate= moment(values.date).startOf("month").format("YYYY-MM-DD")
-    const endDate =  moment(values.date).endOf("month").format("YYYY-MM-DD");
-  
+    const startDate = moment(values.date).startOf("month").format("YYYY-MM-DD");
+    const endDate = moment(values.date).endOf("month").format("YYYY-MM-DD");
+
     const params = {
       projectId: projectId,
       startDate: startDate,
@@ -87,7 +86,7 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
 
-        fileSever.saveAs(blob, `${moment(startDate).format('MMMM')}.xlsx`);
+        fileSever.saveAs(blob, `${moment(startDate).format("MMMM")}.xlsx`);
       })
       .catch((error) => {
         console.error("Error", error);
@@ -104,67 +103,72 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
     setTeamInfo(teamArray as any);
   }, []);
   return (
-  
-      <Modal
-      classNames={{header:classes.header,content:classes.content,close:classes.close}}
-        shadow="sm"
-        size={"450px"}
-        pos={"relative"}
-        centered
-        padding={20}
-        radius="lg"
-        withCloseButton={true}
-        opened={true}
-        onClose={() => {
-          setExcelData({});
-        }}
-      >
-        <Box>
-          <form onSubmit={form.onSubmit(handleSubmit)}>
-            <Text ta={"center"} fw={600} c={'#071437'} fz={22}>{projectName}</Text>
-            <Divider  variant="dashed" mt={10} mb={10}/>
+    <Modal
+      classNames={{
+        header: classes.header,
+        content: classes.content,
+        close: classes.close,
+      }}
+      shadow="sm"
+      size={"450px"}
+      pos={"relative"}
+      centered
+      padding={20}
+      radius="lg"
+      withCloseButton={true}
+      opened={true}
+      onClose={() => {
+        setExcelData({});
+      }}
+    >
+      <Box>
+        <form onSubmit={form.onSubmit(handleSubmit)}>
+          <Text ta={"center"} fw={600} c={"#071437"} fz={22}>
+            {projectName}
+          </Text>
+          <Divider variant="dashed" mt={10} mb={10} />
 
-            <MonthPickerInput
+          <MonthPickerInput
             label={"Select Month"}
-              size="sm"
-              monthsListFormat="MMM"
+            size="sm"
+            monthsListFormat="MMM"
+            variant="filled"
+            mt="15px"
+            placeholder="Pick a month"
+            radius="md"
+            minDate={new Date("01-08-2023")}
+            sx={{ border: "none !important" }}
+            icon={<IconCalendar size={16} />}
+            {...form.getInputProps("date")}
+          />
+
+          {!isEmpty(teamInfo) && (
+            <Select
+              label={"Select Employee"}
+              placeholder="Select Team Member"
+              searchable
+              data={teamInfo}
               variant="filled"
-              mt="15px"
-              placeholder="Pick a month"
+              mt="lg"
               radius="md"
-              sx={{ border: "none !important" }}
-              icon={<IconCalendar size={16} />}
-              {...form.getInputProps("date")}
+              withinPortal
+              transitionProps={{
+                transition: "pop-top-left",
+                duration: 80,
+                timingFunction: "ease",
+              }}
+              clearable
+              autoFocus={false}
+              {...form.getInputProps("teamMate")}
             />
+          )}
 
-            {!isEmpty(teamInfo) && (
-              <Select
-                label={"Select Employee"}
-                placeholder="Select Employee"
-                searchable
-                data={teamInfo}
-                variant="filled"
-                mt="lg"
-                radius="md"
-                withinPortal
-                transitionProps={{
-                  transition: "pop-top-left",
-                  duration: 80,
-                  timingFunction: "ease",
-                }}
-                clearable
-                autoFocus={false}
-                {...form.getInputProps("teamMate")}
-              />
-            )}
-
-            <Flex justify={"center"} mt={30} mb={10}>
-              <Button type="submit">Excel Download</Button>
-            </Flex>
-          </form>
-        </Box>
-      </Modal>
-    
+          <Flex justify={"center"} mt={30} mb={10}>
+            <Button type="submit">Excel Download</Button>
+          </Flex>
+        </form>
+      </Box>
+    </Modal>
   );
 };
 

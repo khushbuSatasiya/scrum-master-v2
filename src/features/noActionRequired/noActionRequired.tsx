@@ -14,7 +14,10 @@ import { IconChecklist } from "@tabler/icons-react";
 import { formatDate, formatTime } from "shared/util/utility";
 
 interface IProps {
-  actionTime: any;
+  actionTime: {
+    inTime: string;
+    outTime: string;
+  };
   date: string;
   tasks: any;
   totalHours: string;

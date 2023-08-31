@@ -140,8 +140,8 @@ const CheckOutForm: FC<IProps> = (props) => {
                       </Flex>
 
                       <Textarea
-                        placeholder={`- task 1\n- task 2`}
                         autosize
+                        placeholder={`- task 1\n- task 2`}
                         minRows={2}
                         sx={{ width: "700px" }}
                         classNames={{

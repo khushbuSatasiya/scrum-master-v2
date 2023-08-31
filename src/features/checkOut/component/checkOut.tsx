@@ -1,19 +1,21 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 
 import { useForm, yupResolver } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
+
+import { Button, Flex, Modal, Paper, Text } from "@mantine/core";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 import {
   checkOutValidationSchema,
   checkOutValidationWithOptSchema,
   checkOutwithNoTaskValidationSchema,
 } from "shared/constants/validation-schema";
-
 import httpService from "shared/services/http.service";
+import Notification from "shared/components/notification/notification";
 import { API_CONFIG } from "shared/constants/api";
+
 import CheckOutForm from "./checkOutForm";
-import { Button, Flex, Modal, Paper, Text } from "@mantine/core";
-import { IconAlertTriangle } from "@tabler/icons-react";
+import { getProjectList } from "shared/util/utility";
 
 interface IProps {
   enteredTask: any;
@@ -106,19 +108,12 @@ const CheckOut: FC<IProps> = ({
   });
 
   const getProject = useCallback(() => {
-    const projectArr = projectArray.map((item) => {
-      return {
-        label: item.projectName,
-        value: item.id,
-      };
-    });
-
-    setProjects(projectArr);
+    setProjects(getProjectList(projectArray));
   }, [projectArray]);
 
   useEffect(() => {
     getProject();
-  }, []);
+  }, [getProject]);
 
   const handleAddTaskBtn = () => {
     setIsShowForm(!isShowForm);
@@ -177,28 +172,7 @@ const CheckOut: FC<IProps> = ({
           .post(API_CONFIG.path.checkOut, payload)
           .then((res: any) => {
             setIsLoading(false);
-            notifications.show({
-              message: res.message,
-              styles: (theme) => ({
-                root: {
-                  backgroundColor: theme.colors.blue[6],
-                  borderColor: theme.colors.blue[6],
-
-                  "&::before": {
-                    backgroundColor: theme.white,
-                  },
-                },
-
-                title: { color: theme.white },
-                description: { color: theme.white },
-                closeButton: {
-                  color: theme.white,
-                  "&:hover": {
-                    backgroundColor: theme.colors.blue[7],
-                  },
-                },
-              }),
-            });
+            Notification(res);
             checkStatus();
           });
       } catch (error) {

@@ -10,22 +10,23 @@ import {
   Textarea,
   Divider,
   createStyles,
-  Modal,
-  Text,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
-import { IconAlertTriangle, IconPlus, IconTrash } from "@tabler/icons-react";
-import { notifications } from "@mantine/notifications";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
 
 import { getProjectList } from "shared/util/utility";
 import { checkInValidationSchema } from "shared/constants/validation-schema";
 import { API_CONFIG } from "shared/constants/api";
 import httpService from "shared/services/http.service";
+import Notification from "shared/components/notification/notification";
 
 import { IProjectArray } from "features/dashboard/interface/dashboard";
 
 import CheckInForm from "./checkInForm";
 import CheckInModal from "./checkInModal";
+
+import { ICheckInValues, IProject } from "../interface/checkIn";
+import { VerifiedIcon } from "shared/icons/icons";
 
 interface IProps {
   projectArray: IProjectArray[];
@@ -34,10 +35,12 @@ interface IProps {
 }
 
 const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
-  const [projectName, setProjectName] = useState<any>([]);
+  const [projectName, setProjectName] = useState<IProject[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
-  const [checkInValue, setCheckInValue] = useState(false);
+  const [checkInValue, setCheckInValue] = useState<ICheckInValues>(
+    {} as ICheckInValues
+  );
   const [isAlreadyCheckIn, setIsAlreadyCheckIn] = useState(false);
 
   const useStyles = createStyles(() => ({
@@ -45,7 +48,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
       backgroundColor: "#f5f8fa",
       color: "#5e6278 ",
       fontWight: " 500 ",
-      border: " none ",
+      border: "none ",
     },
   }));
 
@@ -73,16 +76,10 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
     getProject();
   }, [getProject]);
 
-  const handleCheckIn = useCallback(async (values: any) => {
-    const isEmptyOrNot = values.employees.map((data, index) => {
-      const isCheck =
-        (data.project === "" && data.task === "") ||
-        (data.project !== "" && data.task === "") ||
-        (data.task !== "" && data.project === "");
-      return isCheck;
-    });
+  const handleCheckIn = useCallback(async (values) => {
+    const project = values.employees.filter((e) => e.project && e.task);
 
-    if (values.employees.length === 1 && isEmptyOrNot[0]) {
+    if (!project.length) {
       setIsConfirm(true);
       setCheckInValue(values);
     } else {
@@ -91,8 +88,8 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
   }, []);
 
   const confirmCheckIn = useCallback(
-    async (values) => {
-      const updatedValue = values.employees.map((data: any, index: number) => {
+    async (values: ICheckInValues) => {
+      const updatedValue = values.employees.map((data) => {
         return {
           projectId: data.project,
           taskName: data.task,
@@ -111,28 +108,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
           .post(API_CONFIG.path.checkIn, payload)
           .then((res: any) => {
             setIsLoading(false);
-            notifications.show({
-              message: res.message,
-              styles: (theme) => ({
-                root: {
-                  backgroundColor: theme.colors.blue[6],
-                  borderColor: theme.colors.blue[6],
-
-                  "&::before": {
-                    backgroundColor: theme.white,
-                  },
-                },
-
-                title: { color: theme.white },
-                description: { color: theme.white },
-                closeButton: {
-                  color: theme.white,
-                  "&:hover": {
-                    backgroundColor: theme.colors.blue[7],
-                  },
-                },
-              }),
-            });
+            Notification(res);
             checkStatus();
           });
       } catch (error) {
@@ -154,6 +130,13 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
     );
   };
 
+  const renderRightSection = (optionValue: any) => {
+    if (optionValue === "option2") {
+      return <VerifiedIcon />;
+    }
+    return null;
+  };
+
   const fields = form.values.employees.map((item, index) => (
     <Paper key={index}>
       <Group mt="xs" sx={{ alignItems: "end" }}>
@@ -172,6 +155,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
           classNames={{
             input: classes.input,
           }}
+          rightSectionProps={renderRightSection}
         />
         <Flex align={"center"}>
           <Textarea
@@ -254,6 +238,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
           handleTimeChange={handleTimeChange}
           isLoading={isLoading}
           classes={classes}
+          isConfirm={isConfirm}
         />
       </Flex>
 
@@ -265,6 +250,8 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
         setIsAlreadyCheckIn={setIsAlreadyCheckIn}
         checkStatus={checkStatus}
         checkInValue={checkInValue}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
       />
     </>
   );

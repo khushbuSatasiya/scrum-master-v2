@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+
 import { Flex, Paper, Text } from "@mantine/core";
 
 const GuestUser: FC = () => {

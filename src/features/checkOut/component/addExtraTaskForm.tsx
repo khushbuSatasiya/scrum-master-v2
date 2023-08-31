@@ -139,7 +139,7 @@ const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
 
   return (
     <div>
-      <Box mx="auto">{fields}</Box>
+      <Box mx="auto">{fields.reverse()}</Box>
     </div>
   );
 };

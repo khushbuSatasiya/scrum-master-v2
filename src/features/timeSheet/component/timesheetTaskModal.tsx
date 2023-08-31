@@ -176,12 +176,7 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
                               </Flex>
 
                               {item.totalHours !== null && (
-                                <Text
-                                  fz={14}
-                                  fw={600}
-                                  tt="uppercase"
-                                  c={"#99A1B7"}
-                                >
+                                <Text fz={14} fw={600} c={"#99A1B7"}>
                                   Project Hours :{" "}
                                   <span
                                     style={{
