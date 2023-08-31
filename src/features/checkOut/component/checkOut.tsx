@@ -10,12 +10,17 @@ import {
   checkOutValidationWithOptSchema,
   checkOutwithNoTaskValidationSchema,
 } from "shared/constants/validation-schema";
+import {
+  ErrNotification,
+  SuccessNotification,
+} from "shared/components/notification/notification";
 import httpService from "shared/services/http.service";
-import Notification from "shared/components/notification/notification";
+
 import { API_CONFIG } from "shared/constants/api";
 
 import CheckOutForm from "./checkOutForm";
 import { getProjectList } from "shared/util/utility";
+import CheckoutModals from "./checkoutModals";
 
 interface IProps {
   enteredTask: any;
@@ -36,6 +41,7 @@ const CheckOut: FC<IProps> = ({
   const [isShowForm, setIsShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isAlreadyCheckOut, setIsAlreadyCheckOut] = useState(false);
+  const [isConfirm, setIsConfirm] = useState(false);
 
   const formatValues = (userTask: any) => {
     if (userTask.length > 0) {
@@ -121,66 +127,78 @@ const CheckOut: FC<IProps> = ({
 
   const handleCheckOut = useCallback(
     async (values: any) => {
-      const updatedTasks = values.tasks.map((item) => {
-        return {
-          taskId: item.id,
-          projectId: item.taskId,
-          taskName: item.taskName,
-          projectHours: item.projectHours,
-        };
-      });
+      const project = values.employees.filter(
+        (value) => value.project && value.task && value.projectHours
+      );
 
-      const updatedEmployees = values.employees.map((item) => {
-        return {
-          taskId: "",
-          projectId: item.project,
-          taskName: item.task,
-          projectHours: item.projectHours,
-        };
-      });
-
-      const isAnyValueEmpty = () => {
-        return values.employees.some((item: any) => {
-          return (
-            item.project === undefined ||
-            item.task === undefined ||
-            item.projectHours === undefined
-          );
-        });
-      };
-
-      let tasks;
-
-      if (isAnyValueEmpty()) {
-        tasks = updatedTasks;
+      if (!project.length && !values.tasks.length) {
+        setIsConfirm(true);
       } else {
+        const updatedTasks = values.tasks.map((item) => {
+          return {
+            taskId: item.id,
+            projectId: item.taskId,
+            taskName: item.taskName,
+            projectHours: item.projectHours,
+          };
+        });
+
+        const updatedEmployees = values.employees.map((item) => {
+          return {
+            taskId: "",
+            projectId: item.project,
+            taskName: item.task,
+            projectHours: item.projectHours,
+          };
+        });
+
+        // const isAnyValueEmpty = () => {
+        //   return values.employees.some((item: any) => {
+        //     return (
+        //       item.project === undefined ||
+        //       item.task === undefined ||
+        //       item.projectHours === undefined
+        //     );
+        //   });
+        // };
+
+        let tasks;
+
+        // if (isAnyValueEmpty()) {
+        //   tasks = updatedTasks;
+        // }
+        // else {
         if (enteredTask.length > 0) {
           tasks = [...updatedTasks, ...updatedEmployees];
         } else {
           tasks = [...updatedEmployees];
         }
-      }
+        // }
 
-      const payload = {
-        outTime: values.time,
-        date: checkOutDate,
-        tasks: tasks,
-      };
-
-      try {
-        await httpService
-          .post(API_CONFIG.path.checkOut, payload)
-          .then((res: any) => {
-            setIsLoading(false);
-            Notification(res);
-            checkStatus();
-          });
-      } catch (error) {
-        setIsLoading(false);
-        if (error?.response?.status === 409) {
-          setIsAlreadyCheckOut(true);
+        const payload = {
+          outTime: values.time,
+          date: checkOutDate,
+          tasks: tasks.filter(
+            (value) => value.projectHours && value.projectId && value.taskName
+          ),
+        };
+        setIsLoading(true);
+        try {
+          await httpService
+            .post(API_CONFIG.path.checkOut, payload)
+            .then((res: any) => {
+              setIsLoading(false);
+              SuccessNotification(res);
+              checkStatus();
+            });
+        } catch (error) {
+          setIsLoading(false);
+          ErrNotification(error);
+          if (error?.response?.status === 409) {
+            setIsAlreadyCheckOut(true);
+          }
+          console.error(error);
         }
-        console.error(error);
       }
     },
     [checkOutDate, checkStatus, enteredTask.length]
@@ -231,6 +249,8 @@ const CheckOut: FC<IProps> = ({
           </Flex>
         </Paper>
       </Modal>
+
+      <CheckoutModals isConfirm={isConfirm} setIsConfirm={setIsConfirm} />
     </>
   );
 };

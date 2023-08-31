@@ -81,7 +81,7 @@ const Root: React.FC = (props) => {
               }}
               emotionCache={dir === "rtl" ? rtlCache : undefined}
             >
-              <Notifications position="top-right" />
+              <Notifications position="bottom-right" />
               <App {...props} />
             </MantineProvider>
           </ColorSchemeProvider>

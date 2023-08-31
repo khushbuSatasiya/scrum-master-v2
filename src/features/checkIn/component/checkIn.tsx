@@ -18,7 +18,7 @@ import { getProjectList } from "shared/util/utility";
 import { checkInValidationSchema } from "shared/constants/validation-schema";
 import { API_CONFIG } from "shared/constants/api";
 import httpService from "shared/services/http.service";
-import Notification from "shared/components/notification/notification";
+import { SuccessNotification } from "shared/components/notification/notification";
 
 import { IProjectArray } from "features/dashboard/interface/dashboard";
 
@@ -26,7 +26,6 @@ import CheckInForm from "./checkInForm";
 import CheckInModal from "./checkInModal";
 
 import { ICheckInValues, IProject } from "../interface/checkIn";
-import { VerifiedIcon } from "shared/icons/icons";
 
 interface IProps {
   projectArray: IProjectArray[];
@@ -46,7 +45,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
   const useStyles = createStyles(() => ({
     input: {
       backgroundColor: "#f5f8fa",
-      color: "#5e6278 ",
+      color: "black ",
       fontWight: " 500 ",
       border: "none ",
     },
@@ -108,7 +107,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
           .post(API_CONFIG.path.checkIn, payload)
           .then((res: any) => {
             setIsLoading(false);
-            Notification(res);
+            SuccessNotification(res);
             checkStatus();
           });
       } catch (error) {
@@ -130,13 +129,6 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
     );
   };
 
-  const renderRightSection = (optionValue: any) => {
-    if (optionValue === "option2") {
-      return <VerifiedIcon />;
-    }
-    return null;
-  };
-
   const fields = form.values.employees.map((item, index) => (
     <Paper key={index}>
       <Group mt="xs" sx={{ alignItems: "end" }}>
@@ -151,18 +143,18 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
           sx={{
             width: "40%",
             border: "none",
+            color: "black",
           }}
           classNames={{
             input: classes.input,
           }}
-          rightSectionProps={renderRightSection}
         />
         <Flex align={"center"}>
           <Textarea
             autosize
             placeholder={`- task 1\n- task 2`}
             minRows={2}
-            sx={{ width: "730px" }}
+            sx={{ width: "730px", color: "black" }}
             {...form.getInputProps(`employees.${index}.task`)}
             onKeyDown={(event) => {
               if (

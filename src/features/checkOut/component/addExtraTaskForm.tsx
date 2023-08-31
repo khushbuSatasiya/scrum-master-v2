@@ -27,14 +27,9 @@ const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
   const { form, isShowForm, handleAddTaskBtn, projects, classes } = props;
 
   const isAddButtonDisabled = (employee: any) => {
-    return (
-      employee.task.trim() === "" ||
-      employee.project === "" ||
-      employee.projectHours === "" ||
-      (employee.task.trim() === "" &&
-        employee.project === "" &&
-        employee.projectHours === "")
-    );
+    const enable = employee.task && employee.project && employee.projectHours;
+
+    return !enable;
   };
 
   const fields = form.values.employees.map((item, index) => {
@@ -107,27 +102,29 @@ const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
                           });
                         }}
                         disabled={
-                          isShowForm
-                            ? isAddButtonDisabled(form.values.employees[index])
-                            : false
+                          // isShowForm || form.values.tasks.length === 0
+                          isAddButtonDisabled(form.values.employees[index])
+                          // : false
                         }
                       >
                         <IconPlus size="1.5rem" stroke={"3px"} />
                       </Button>
                     </Group>
                   )}
-
-                <ActionIcon
-                  color="red"
-                  onClick={() => {
-                    form.removeListItem("employees", index);
-                    index === 0 &&
-                      index === form.values.employees.length - 1 &&
-                      handleAddTaskBtn();
-                  }}
-                >
-                  <IconTrash size="1.5rem" color="black" />
-                </ActionIcon>
+                {((form.values.tasks.length === 0 && index !== 0) ||
+                  (form.values.tasks.length > 0 && isShowForm)) && (
+                  <ActionIcon
+                    color="red"
+                    onClick={() => {
+                      form.removeListItem("employees", index);
+                      index === 0 &&
+                        index === form.values.employees.length - 1 &&
+                        handleAddTaskBtn();
+                    }}
+                  >
+                    <IconTrash size="1.5rem" color="black" />
+                  </ActionIcon>
+                )}
               </Group>
               <Divider my="lg" variant="dashed" />
             </Paper>
@@ -138,9 +135,15 @@ const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
   });
 
   return (
-    <div>
-      <Box mx="auto">{fields.reverse()}</Box>
-    </div>
+    <Box
+      mx="auto"
+      sx={{
+        transition: "transform 0.3s ease",
+        transform: "scale(1)",
+      }}
+    >
+      {fields}
+    </Box>
   );
 };
 
