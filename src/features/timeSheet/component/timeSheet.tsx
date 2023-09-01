@@ -157,6 +157,7 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
           icon={<IconCalendar size={16} />}
           maxDate={new Date()}
           minDate={new Date("31-12-2023")}
+          maxLevel="year"
         />
         <Space w="20px" />
         <Tooltip

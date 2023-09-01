@@ -158,6 +158,7 @@ const Dashboard: FC = () => {
       remainingLeaves,
       vacationLeaves,
       compensationLeaves,
+      usedVacationalLeave,
     } = leaveInfo;
     setLeaveDetails({
       grantedLeaves,
@@ -165,6 +166,7 @@ const Dashboard: FC = () => {
       remainingLeaves,
       vacationLeaves,
       compensationLeaves,
+      usedVacationalLeave,
     });
   };
 

@@ -10,6 +10,7 @@ import {
   Space,
   Tabs,
   Text,
+  Tooltip,
 } from "@mantine/core";
 import { IconMail, IconUserStar } from "@tabler/icons-react";
 
@@ -40,13 +41,19 @@ const UserDetail: FC<IProps> = (props: IProps) => {
 
   const LEAVE_DETAILS = [
     {
-      label: "Granted Leave",
-      value: leaveDetails.grantedLeaves,
+      label: "Paid Leave",
+      value: leaveDetails.usedLeaves + " / " + leaveDetails.grantedLeaves,
+      color: "#40c057",
+    },
+    {
+      label: "Rem... Leave",
+      value: leaveDetails.remainingLeaves,
       color: "#40c057",
     },
     {
       label: "Vac... Leave",
-      value: leaveDetails.vacationLeaves,
+      value:
+        leaveDetails.usedVacationalLeave + " / " + leaveDetails.vacationLeaves,
       color: "#228be6",
     },
     {
@@ -54,35 +61,72 @@ const UserDetail: FC<IProps> = (props: IProps) => {
       value: leaveDetails.compensationLeaves,
       color: "#FF9B38",
     },
-    {
-      label: "Used Leave",
-      value: leaveDetails.usedLeaves,
-      color: "#fa5252",
-    },
-    {
-      label: "Rem... Leave",
-      value: leaveDetails.remainingLeaves,
-      color: "#40c057",
-    },
+    // {
+    //   label: "Used Leave",
+    //   value: leaveDetails.usedLeaves,
+    //   color: "#fa5252",
+    // },
   ];
 
-  const renderPaper = (label, value, color) => (
-    <Paper
-      sx={{
-        border: "1px dashed #DBDFE9",
-        borderRadius: "10px",
-        width: "125px",
-        padding: "6px 10px",
-      }}
-    >
-      <Text fw="bold" fz="22px" c={"#071437"}>
-        {value || "0"}
-      </Text>
-      <Text c={color} fw="500" fz="sm">
-        {label}
-      </Text>
-    </Paper>
-  );
+  const renderPaper = (label, value, color) => {
+    return (
+      <Paper
+        sx={{
+          border: "1px dashed #DBDFE9",
+          borderRadius: "10px",
+          width: "125px",
+          padding: "6px 10px",
+        }}
+      >
+        <Text
+          fw="bold"
+          fz="22px"
+          c={"#071437"}
+          // c={`${label === "Rem... Leave" && value < 0 ? "red" : "green"}`}
+        >
+          {value || "0"}
+        </Text>
+        {label === "Comp... Leave" ||
+        label === "Paid Leave" ||
+        label === "Vac... Leave" ? (
+          <Tooltip
+            label={`${
+              label === "Comp... Leave"
+                ? "We have calculated the approximate compensation and not calculated anywhere. For further details, please reach out to the HR department."
+                : "Used  / Granted"
+            }`}
+            sx={{
+              maxWidth: "250px",
+              wordWrap: "break-word",
+              textWrap: "balance",
+              height: "auto",
+              textAlign: "center",
+            }}
+            // width={"auto"}
+            inline
+            position="bottom"
+            color="#1c7ed6"
+            transitionProps={{
+              transition: "slide-down",
+              duration: 300,
+            }}
+          >
+            <Text c={color} fw="500" fz="sm">
+              {label}
+            </Text>
+          </Tooltip>
+        ) : (
+          <Text
+            c={`${label === "Rem... Leave" && value < 0 ? "red" : color}`}
+            fw="500"
+            fz="sm"
+          >
+            {label}
+          </Text>
+        )}
+      </Paper>
+    );
+  };
   const totalExperience = newToken?.experience / 365;
 
   return (
@@ -136,7 +180,7 @@ const UserDetail: FC<IProps> = (props: IProps) => {
               sx={{
                 border: "1px dashed #DBDFE9",
                 borderRadius: "10px",
-                width: "100px",
+                width: "125px",
                 padding: "6px 10px",
               }}
             >
@@ -151,15 +195,25 @@ const UserDetail: FC<IProps> = (props: IProps) => {
               sx={{
                 border: "1px dashed #DBDFE9",
                 borderRadius: "10px",
-                width: "100px",
+                width: "125px",
                 padding: "6px 10px",
               }}
             >
               <Text fw="bold" fz="22px" c={"#071437"}>
                 {totalExperience ? totalExperience.toFixed(1) : 0}
+                <span
+                  style={{
+                    color: "#B5B5C3",
+                    fontWeight: "500",
+                    fontSize: "14px",
+                  }}
+                >
+                  {" "}
+                  Year
+                </span>
               </Text>
               <Text c="#B5B5C3" fz="sm" fw={500}>
-                Experience
+                With us
               </Text>
             </Paper>
 
@@ -189,10 +243,10 @@ const UserDetail: FC<IProps> = (props: IProps) => {
               LEAVE_DETAILS.map(({ label, value, color }, index) => {
                 return (
                   <Fragment key={index}>
-                    {label === "Vacation Leave" &&
+                    {label === "Vac... Leave" &&
                       leaveDetails.vacationLeaves > 0 &&
                       renderPaper(label, value, color)}
-                    {label !== "Vacation Leave" &&
+                    {label !== "Vac... Leave" &&
                       renderPaper(label, value, color)}
                   </Fragment>
                 );

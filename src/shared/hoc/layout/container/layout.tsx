@@ -8,6 +8,7 @@ import {
   Space,
   Flex,
   Box,
+  Text,
 } from "@mantine/core";
 
 import "../styles/layout.scss";
@@ -21,6 +22,7 @@ const Layout: React.FC<PropsWithChildren> = (props) => {
       padding={0}
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
+      pos={"relative"}
     >
       <ScrollArea
         type="never"
@@ -46,6 +48,9 @@ const Layout: React.FC<PropsWithChildren> = (props) => {
         </Box>
         {/* <Breadcrumb /> */}
         {props.children}
+        <Text pos={"absolute"} bottom={0} right={5} fw={600} c={"gray"}>
+          v2.0.1
+        </Text>
       </ScrollArea>
     </AppShell>
   );

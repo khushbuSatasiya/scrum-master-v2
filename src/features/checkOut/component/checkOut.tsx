@@ -204,6 +204,19 @@ const CheckOut: FC<IProps> = ({
     [checkOutDate, checkStatus, enteredTask.length]
   );
 
+  // const handleTimeChange = (e) => {
+  //   console.log("in");
+
+  //   let formattedTime = e.target.value.replace(/\D/g, "");
+  //   if (formattedTime.length > 2) {
+  //     formattedTime = `${formattedTime.slice(0, 2)}:${formattedTime.slice(2)}`;
+  //   }
+  //   if (formattedTime.length > 5) {
+  //     return;
+  //   }
+  //   form.setFieldValue("time", formattedTime);
+  // };
+
   return (
     <>
       <CheckOutForm
@@ -216,6 +229,7 @@ const CheckOut: FC<IProps> = ({
         handleAddTaskBtn={handleAddTaskBtn}
         checkOutDate={checkOutDate}
         isLoading={isLoading}
+        // handleTimeChange={handleTimeChange}
       />
 
       <Modal

@@ -30,11 +30,14 @@ export const getUserTimeSheetColumns = (renderModal) => {
       accessor: "inTime",
       title: "In",
       width: 120,
-      render: ({ inTime, leave }) => {
+      render: ({ inTime, leave, isHalfLeave }) => {
         return (
           <Text
+            truncate
             color={`${
-              inTime ? getCheckInColor(inTime, DeadLine.CHECK_IN) : "red"
+              inTime && isHalfLeave
+                ? "green"
+                : getCheckInColor(inTime, DeadLine.CHECK_IN)
             }`}
             fw={700}
           >
@@ -47,7 +50,7 @@ export const getUserTimeSheetColumns = (renderModal) => {
       accessor: "outTime",
       title: "Out",
       width: 120,
-      render: ({ outTime, remarks }) => {
+      render: ({ outTime, remarks, isHalfLeave }) => {
         return (
           <Text color={`${outTime ? "green" : "red"}`} fw={700}>
             {outTime ? outTime : remarks || <Text color="red">-</Text>}
@@ -59,9 +62,12 @@ export const getUserTimeSheetColumns = (renderModal) => {
       accessor: "totalHour",
       title: "Total Hour",
       width: 120,
-      render: ({ totalHour }) => {
+      render: ({ totalHour, isHalfLeave }) => {
         return (
-          <Text color={getTotalWorkingHourColor(totalHour)} fw={700}>
+          <Text
+            color={isHalfLeave ? "green" : getTotalWorkingHourColor(totalHour)}
+            fw={700}
+          >
             {totalHour || <Text color="red">-</Text>}
           </Text>
         );

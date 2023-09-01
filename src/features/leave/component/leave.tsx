@@ -62,6 +62,7 @@ const Leave: FC<ILeaveProps> = ({ handleLeaveDetails, uId }) => {
             grantedLeaves,
             remainingLeaves,
             usedLeaves,
+            usedVacationalLeave,
             vacationLeaves,
           } = res.data.details;
           const leaveInfo = {
@@ -70,6 +71,7 @@ const Leave: FC<ILeaveProps> = ({ handleLeaveDetails, uId }) => {
             remainingLeaves: remainingLeaves,
             usedLeaves: usedLeaves,
             vacationLeaves: vacationLeaves,
+            usedVacationalLeave: usedVacationalLeave,
           };
 
           handleLeaveDetails(leaveInfo);

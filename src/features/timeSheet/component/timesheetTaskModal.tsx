@@ -108,6 +108,7 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
                   </Flex>
                 </Box>
               </Flex>
+
               <Divider variant="dashed" mt={10} mb={20} />
 
               <Flex align={"flex-start"} justify={"center"} gap={80}>
@@ -193,38 +194,14 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
                             </Flex>
                             <Flex justify={"space-between"} w={"100%"} gap={30}>
                               <Box sx={{ width: "50%" }}>
-                                {item.plannedTask
-                                  .split("\n")
-                                  .filter((task) => task.trim() !== "")
-                                  .map((task, index) => {
-                                    return (
-                                      <List.Item
-                                        key={index}
-                                        sx={{
-                                          fontSize: "14px",
-                                        }}
-                                      >
-                                        <Text
-                                          sx={{
-                                            maxWidth: "500px",
-                                            wordWrap: "break-word",
-                                            textWrap: "balance",
-                                          }}
-                                        >
-                                          {task}
-                                        </Text>
-                                      </List.Item>
-                                    );
-                                  })}
-                              </Box>
-                              <Box sx={{ width: "50%" }}>
-                                {item.completedTask
-                                  .split("\n")
-                                  .filter((task) => task.trim() !== "")
-                                  .map((task, index) => {
-                                    return (
-                                      <Flex key={index}>
+                                {item.plannedTask.includes("\n") &&
+                                  item.plannedTask
+                                    .split("\n")
+                                    .filter((task) => task.trim() !== "")
+                                    .map((task, index) => {
+                                      return (
                                         <List.Item
+                                          key={index}
                                           sx={{
                                             fontSize: "14px",
                                           }}
@@ -239,9 +216,79 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
                                             {task}
                                           </Text>
                                         </List.Item>
-                                      </Flex>
-                                    );
-                                  })}
+                                      );
+                                    })}
+
+                                {!item.plannedTask.includes("/n") && (
+                                  <List.Item
+                                    key={index}
+                                    sx={{
+                                      fontSize: "14px",
+                                    }}
+                                  >
+                                    <Text
+                                      sx={{
+                                        maxWidth: "500px",
+                                        wordWrap: "break-word",
+                                        textWrap: "balance",
+                                      }}
+                                    >
+                                      {item.plannedTask}
+                                    </Text>
+                                  </List.Item>
+                                )}
+                              </Box>
+                              <Box sx={{ width: "50%" }}>
+                                {item.completedTask.includes("\n") &&
+                                  item.completedTask
+                                    .split("\n")
+                                    .filter((task) => task.trim() !== "")
+                                    .map((task, index) => {
+                                      return (
+                                        <Flex key={index}>
+                                          <List.Item
+                                            sx={{
+                                              fontSize: "14px",
+                                            }}
+                                          >
+                                            <Text
+                                              sx={{
+                                                maxWidth: "500px",
+                                                wordWrap: "break-word",
+                                                textWrap: "balance",
+                                              }}
+                                            >
+                                              {task}
+                                            </Text>
+                                          </List.Item>
+                                        </Flex>
+                                      );
+                                    })}
+                                {!item.completedTask.includes("\n") &&
+                                  item.completedTask
+                                    .split("\n")
+                                    .filter((task) => task.trim() !== "")
+                                    .map((task, index) => {
+                                      return (
+                                        <Flex key={index}>
+                                          <List.Item
+                                            sx={{
+                                              fontSize: "14px",
+                                            }}
+                                          >
+                                            <Text
+                                              sx={{
+                                                maxWidth: "500px",
+                                                wordWrap: "break-word",
+                                                textWrap: "balance",
+                                              }}
+                                            >
+                                              {item.completedTask}
+                                            </Text>
+                                          </List.Item>
+                                        </Flex>
+                                      );
+                                    })}
                               </Box>
                             </Flex>
                           </Paper>

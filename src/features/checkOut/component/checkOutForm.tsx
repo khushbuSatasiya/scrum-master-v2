@@ -28,6 +28,7 @@ interface IProps {
   handleAddTaskBtn: () => void;
   checkOutDate: string;
   isLoading: boolean;
+  // handleTimeChange: (e: any) => void;
 }
 
 const CheckOutForm: FC<IProps> = (props) => {
@@ -41,6 +42,7 @@ const CheckOutForm: FC<IProps> = (props) => {
     checkOutDate,
     isLoading,
     userTasks,
+    // handleTimeChange,
   } = props;
 
   const useStyles = createStyles(() => ({
@@ -231,8 +233,8 @@ const CheckOutForm: FC<IProps> = (props) => {
                 ta={"center"}
                 labelProps={{ style: { color: "#5e6278" } }}
                 value={form.values.time}
-                // onChange={(e) => handleTimeChange(e)}
                 {...form.getInputProps("time")}
+                // onChange={(e) => handleTimeChange(e)}
               />
               <Space w="lg" />
               <Group position="center">
