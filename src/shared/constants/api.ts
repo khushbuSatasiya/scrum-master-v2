@@ -18,6 +18,8 @@ export const API_CONFIG = {
     projectList: "project/list",
     project: "project",
     profile: "users/profile",
+	leaveRequest:'request/leave',
+	
   },
 };
 
