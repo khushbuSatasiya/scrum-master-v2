@@ -219,7 +219,7 @@ const TimesheetTaskModal: FC<ITimeTaskModalProps> = ({ task, onClose }) => {
                                       );
                                     })}
 
-                                {!item.plannedTask.includes("/n") && (
+                                {!item.plannedTask.includes("\n") && (
                                   <List.Item
                                     key={index}
                                     sx={{
