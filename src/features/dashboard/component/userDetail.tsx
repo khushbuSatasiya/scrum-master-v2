@@ -216,7 +216,6 @@ const UserDetail: FC<IProps> = (props: IProps) => {
                 With us
               </Text>
             </Paper>
-
             {!isEmpty(totalWorkingHour) && (
               <Paper
                 sx={{
@@ -238,7 +237,6 @@ const UserDetail: FC<IProps> = (props: IProps) => {
                 </Text>
               </Paper>
             )}
-
             {!isEmpty(leaveDetails) &&
               LEAVE_DETAILS.map(({ label, value, color }, index) => {
                 return (

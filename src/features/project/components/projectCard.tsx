@@ -15,6 +15,7 @@ import {
   IconDotsVertical,
   IconFileDownload,
   IconUserCircle,
+  IconCalendarEvent,
 } from "@tabler/icons-react";
 
 import { dateFormate } from "shared/util/utility";
@@ -26,6 +27,8 @@ interface IProjectCardProps {
   setExcelData: (value) => void;
   uId: string;
   isLoading: boolean;
+  getTeamReport: (projectId: string, month: string) => void;
+  setIsShowCalendar: (action: boolean) => void;
 }
 
 const ProjectCard: FC<IProjectCardProps> = ({
@@ -34,6 +37,8 @@ const ProjectCard: FC<IProjectCardProps> = ({
   setExcelData,
   uId,
   isLoading,
+  getTeamReport,
+  setIsShowCalendar,
 }) => {
   const useStyles = createStyles(() => ({
     itemIcon: {
@@ -132,6 +137,16 @@ const ProjectCard: FC<IProjectCardProps> = ({
                             icon={<IconFileDownload color="#40bf4a" />}
                           ></Menu.Item>
                         )}
+                        <Menu.Item
+                          onClick={() => {
+                            setIsShowCalendar(true);
+                            getTeamReport(
+                              projectId,
+                              (new Date().getMonth() + 1).toString()
+                            );
+                          }}
+                          icon={<IconCalendarEvent color="#228be6" />}
+                        ></Menu.Item>
                       </Menu.Dropdown>
                     </Menu>
                   </Flex>

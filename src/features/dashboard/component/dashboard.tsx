@@ -15,6 +15,7 @@ import Project from "features/project/components/project";
 import CheckIn from "features/checkIn/component/checkIn";
 import GuestUser from "features/guestUser/component/guestUser";
 import NoActionRequired from "features/noActionRequired/noActionRequired";
+import TeamCalendar from "features/calendar/component/teamCalendar";
 
 import { IProjectArray, IUserDetail } from "../interface/dashboard";
 
@@ -45,12 +46,10 @@ const Dashboard: FC = () => {
   const [tasks, setTasks] = useState([]);
   const [date, setDate] = useState();
   const [totalHours, setTotalHours] = useState("");
-  const [isTokenLoader, setIsTokenLoader] = useState(true);
   const [isShowUserDetails, setIsShowUserDetails] = useState(false);
 
   const checkStatus = useCallback(async () => {
     setIsActionLoader(true);
-    setIsTokenLoader(false);
     try {
       await httpService.get(API_CONFIG.path.status).then((res) => {
         setIsActionLoader(false);
@@ -83,7 +82,6 @@ const Dashboard: FC = () => {
       });
     } catch (error) {
       setIsActionLoader(false);
-      setIsTokenLoader(true);
 
       // if (error.code && error.code === "ERR_NETWORK") {
       //   setIsTokenLoader(false);
@@ -91,7 +89,6 @@ const Dashboard: FC = () => {
       // }
 
       if (error.response.status && error.response.status === 401) {
-        setIsTokenLoader(false);
         authService.removeAuthData();
         navigate("/token-expired");
       }
@@ -116,7 +113,6 @@ const Dashboard: FC = () => {
           });
       } catch (error) {
         console.error(error);
-        setIsTokenLoader(true);
 
         // if (error.code && error.code === "ERR_NETWORK") {
         //   setIsTokenLoader(false);
@@ -124,7 +120,6 @@ const Dashboard: FC = () => {
         // }
 
         if (error.response.status && error.response.status === 401) {
-          setIsTokenLoader(false);
           authService.removeAuthData();
           navigate("/token-expired");
         }
@@ -232,17 +227,15 @@ const Dashboard: FC = () => {
       value: "projects",
       content: <Project uId={newToken && newToken.userId} />,
     },
+    {
+      label: "Calendar",
+      value: "calendar",
+      content: <TeamCalendar />,
+    },
   ];
 
   return (
     <>
-      {/* <LoadingOverlay
-        loaderProps={{
-          size: "xl",
-        }}
-        visible={isTokenLoader}
-        overlayBlur={2}
-      /> */}
       <Box
         sx={{
           width: "1250px",

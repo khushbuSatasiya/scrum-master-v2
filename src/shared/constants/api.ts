@@ -18,6 +18,7 @@ export const API_CONFIG = {
     projectList: "project/list",
     project: "project",
     profile: "users/profile",
+    teamReport: "web/report",
   },
 };
 

@@ -38,4 +38,18 @@
   }
 }
 
+.rbc-btn-group{
+  width: 43% !important;
+}
+.rbc-toolbar-label{
+  width: 50% !important;
+  text-align: start !important;
+}
+.rbc-toolbar{
+  margin-bottom: 20px !important;
+}
 
+/* for react-big-calendar show more detail popup */
+.rbc-overlay{
+  z-index: 299 !important;
+}
