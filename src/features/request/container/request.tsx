@@ -23,6 +23,7 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
                     endDay: null,
                     duration: '',
                     reason: '',
+                    leaveType: '',
                 });
             },
         },
