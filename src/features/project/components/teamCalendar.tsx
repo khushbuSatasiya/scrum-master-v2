@@ -5,11 +5,11 @@ import { Box, Divider, Flex, Group, Modal, Text } from "@mantine/core";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import { DotIcon } from "shared/icons/icons";
 
+import "react-big-calendar/lib/css/react-big-calendar.css";
+
 interface IProps {
-  setCalendarInfo: (value) => void;
   calendarInfo: any;
   getTeamReport: (projectId: string, month: string) => void;
   projectId: string;
@@ -17,23 +17,24 @@ interface IProps {
 }
 
 const TeamCalendar: FC<IProps> = ({
-  setCalendarInfo,
   calendarInfo,
   getTeamReport,
   projectId,
   setIsShowCalendar,
 }) => {
   const localizer = momentLocalizer(moment);
-  const eventPropGetter = useCallback(
-    (event, start, end, isSelected) => ({
-      style: {
-        backgroundColor: "transparent",
-        color: "black",
-      },
-    }),
-    []
-  );
 
+  const eventPropGetter = useCallback((event, start, end, isSelected) => {
+    const backgroundColor = event.type === "Holiday" ? "green" : "transparent";
+    const color = event.type === "Holiday" ? "white" : "black";
+
+    return {
+      style: {
+        backgroundColor,
+        color,
+      },
+    };
+  }, []);
   const handleNavigate = (newDate) => {
     const month = newDate.getMonth() + 1;
     getTeamReport(projectId, month);
@@ -74,7 +75,7 @@ const TeamCalendar: FC<IProps> = ({
               style={{ height: 650, width: 1000 }}
               titleAccessor="title"
               eventPropGetter={eventPropGetter}
-              tooltipAccessor={(event: any) => console.log(event, "??")}
+              tooltipAccessor={(event: any) => {}}
               //   resourceIdAccessor={(event: any) => event.id}
               onNavigate={(date, view) => handleNavigate(date)}
             />
@@ -84,7 +85,7 @@ const TeamCalendar: FC<IProps> = ({
               flexDirection: "column",
               position: "absolute",
               top: 85,
-              right: 100,
+              left: 100,
             }}
           >
             <Flex align={"center"} mb={3}>
@@ -123,7 +124,3 @@ const TeamCalendar: FC<IProps> = ({
 };
 
 export default TeamCalendar;
-
-// TeamCalendar.propTypes = {
-//   localizer: PropTypes.instanceOf(DateLocalizer) as any,
-// };

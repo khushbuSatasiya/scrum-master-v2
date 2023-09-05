@@ -47,6 +47,7 @@ const Dashboard: FC = () => {
   const [date, setDate] = useState();
   const [totalHours, setTotalHours] = useState("");
   const [isShowUserDetails, setIsShowUserDetails] = useState(false);
+  const [calendarIndicator, setCalendarIndicator] = useState([]);
 
   const checkStatus = useCallback(async () => {
     setIsActionLoader(true);
@@ -83,11 +84,6 @@ const Dashboard: FC = () => {
     } catch (error) {
       setIsActionLoader(false);
 
-      // if (error.code && error.code === "ERR_NETWORK") {
-      //   setIsTokenLoader(false);
-      //   navigate("/token-expired");
-      // }
-
       if (error.response.status && error.response.status === 401) {
         authService.removeAuthData();
         navigate("/token-expired");
@@ -113,11 +109,6 @@ const Dashboard: FC = () => {
           });
       } catch (error) {
         console.error(error);
-
-        // if (error.code && error.code === "ERR_NETWORK") {
-        //   setIsTokenLoader(false);
-        //   navigate("/token-expired");
-        // }
 
         if (error.response.status && error.response.status === 401) {
           authService.removeAuthData();
@@ -248,6 +239,12 @@ const Dashboard: FC = () => {
             data !== "leavereport" && setLeaveDetails({});
             data !== "timesheet" && setTotalWorkingHour("");
             data === "check-in" && checkStatus();
+            setCalendarIndicator(
+              data === "calendar"
+                ? ["First half leave", "Second half leave", "Full leave", "WFH"]
+                : []
+            );
+
             setActiveTab(data);
           }}
         >
@@ -259,6 +256,7 @@ const Dashboard: FC = () => {
             leaveDetails={leaveDetails}
             setIsShowUserDetails={setIsShowUserDetails}
             isShowUserDetails={isShowUserDetails}
+            calendarIndicator={calendarIndicator}
           />
 
           <UserInfoTab

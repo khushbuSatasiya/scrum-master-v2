@@ -17,4 +17,18 @@ const STATUS = {
   REJECTED: "Rejected",
 };
 
-export { firstLevelBreadcrumbs, pageOptions, PER_PAGE, DeadLine, STATUS };
+const colorMap = {
+  "First half leave": "yellow",
+  "Second half leave": "orange",
+  "Full leave": "red",
+  WFH: "blue",
+};
+
+export {
+  firstLevelBreadcrumbs,
+  pageOptions,
+  PER_PAGE,
+  DeadLine,
+  STATUS,
+  colorMap,
+};

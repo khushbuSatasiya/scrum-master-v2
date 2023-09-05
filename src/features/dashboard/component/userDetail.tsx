@@ -17,6 +17,8 @@ import { IconMail, IconUserStar } from "@tabler/icons-react";
 import { getTotalWorkingHourColor } from "shared/util/utility";
 
 import { IUserDetail, IUserInfoArr } from "../interface/dashboard";
+import { DotIcon } from "shared/icons/icons";
+import { colorMap } from "shared/constants/constants";
 
 interface IProps {
   activeTab: string;
@@ -26,6 +28,7 @@ interface IProps {
   leaveDetails: Record<string, any>;
   setIsShowUserDetails: (action: boolean) => void;
   isShowUserDetails: boolean;
+  calendarIndicator: string[];
 }
 
 const UserDetail: FC<IProps> = (props: IProps) => {
@@ -37,6 +40,7 @@ const UserDetail: FC<IProps> = (props: IProps) => {
     leaveDetails,
     setIsShowUserDetails,
     isShowUserDetails,
+    calendarIndicator,
   } = props;
 
   const LEAVE_DETAILS = [
@@ -247,6 +251,27 @@ const UserDetail: FC<IProps> = (props: IProps) => {
                     {label !== "Vac... Leave" &&
                       renderPaper(label, value, color)}
                   </Fragment>
+                );
+              })}
+            {!isEmpty(calendarIndicator) &&
+              calendarIndicator.map((item, index) => {
+                return (
+                  <Paper
+                    sx={{
+                      border: "1px dashed #DBDFE9",
+                      borderRadius: "10px",
+                      width: "145px",
+                      padding: "6px 10px",
+                    }}
+                    key={index}
+                  >
+                    <Text fw="bold" fz="22px" color="#071437">
+                      <DotIcon fill={colorMap[item] || "defaultColor"} />
+                    </Text>
+                    <Text fw="500" fz="sm" c={"#B5B5C3"}>
+                      {item}
+                    </Text>
+                  </Paper>
                 );
               })}
           </Flex>

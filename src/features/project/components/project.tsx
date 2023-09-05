@@ -78,7 +78,9 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
                   alignItems: "center",
                 }}
               >
-                <DotIcon fill={teamReportIconColor(item)} height="8px" />
+                {item.type !== "Holiday" && (
+                  <DotIcon fill={teamReportIconColor(item)} height="8px" />
+                )}
                 <p
                   style={{
                     margin: 0,
@@ -126,7 +128,6 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
 
       {isShowCalendar && (
         <TeamCalendar
-          setCalendarInfo={setCalendarInfo}
           calendarInfo={calendarInfo}
           getTeamReport={getTeamReport}
           projectId={projectId}

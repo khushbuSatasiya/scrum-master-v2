@@ -38,18 +38,44 @@
   }
 }
 
-.rbc-btn-group{
-  width: 43% !important;
-}
-.rbc-toolbar-label{
-  width: 50% !important;
-  text-align: start !important;
-}
-.rbc-toolbar{
-  margin-bottom: 20px !important;
+.rbc-show-more{
+  margin-left: 10px !important;
 }
 
 /* for react-big-calendar show more detail popup */
 .rbc-overlay{
   z-index: 299 !important;
+}
+
+.rbc-toolbar {
+  flex-direction: row-reverse !important;
+}
+
+.rbc-btn-group,
+.rbc-toolbar-label {
+  width: 50% !important;
+  display: flex !important;
+  justify-content: end !important;
+  padding: unset !important;
+}
+
+.rbc-toolbar-label {
+  margin-right: -82px;
+  color: #3f4254;
+  /* font-weight: 600; */
+  font-size: 20px;
+}
+
+.rbc-month-view {
+  border-radius: 6px;
+}
+
+.rbc-button-link{
+  color:#3f4254 !important;
+  /* padding: 4px !important; */
+}
+.rbc-header{
+  color: #3f4254;
+  font-family: 500;
+  /* padding: 8px !important; */
 }
