@@ -73,6 +73,14 @@ export const TableSelection = (props: ITableProps) => {
 
   const { classes } = useStyles();
 
+  const getRowClass = (isUpcomingLeave) => {
+    if (isUpcomingLeave.isUpcomingLeave) {
+      return "gray-background";
+    } else {
+      return "";
+    }
+  };
+
   return (
     <DataTable
       key={Math.random()}
@@ -104,7 +112,9 @@ export const TableSelection = (props: ITableProps) => {
       onRecordsPerPageChange={(recordPerPage) =>
         props.onRecordsPerPageChange(recordPerPage)
       }
-      rowClassName={({ name }) => classes.rowClass}
+      rowClassName={({ isUpcomingLeave }) =>
+        `${classes.rowClass} ${getRowClass({ isUpcomingLeave })}`
+      }
       onRowClick={props.onRowClick || null}
     />
   );

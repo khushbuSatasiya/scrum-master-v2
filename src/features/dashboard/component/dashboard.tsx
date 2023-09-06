@@ -93,7 +93,7 @@ const Dashboard: FC = () => {
     } catch (error) {
       setIsActionLoader(false);
 
-      if (error.response.status && error.response.status === 401) {
+      if (error?.response?.status && error.response.status === 401) {
         authService.removeAuthData();
         navigate("/token-expired");
       }

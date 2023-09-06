@@ -88,3 +88,7 @@
 .hovered-title:hover {
   color: #228be6;
 }
+
+.gray-background{
+  background-color: #f1eeee94 !important;
+}
