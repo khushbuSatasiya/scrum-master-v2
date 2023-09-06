@@ -17,7 +17,11 @@ import GuestUser from "features/guestUser/component/guestUser";
 import NoActionRequired from "features/noActionRequired/noActionRequired";
 import TeamCalendar from "features/calendar/component/teamCalendar";
 
-import { IProjectArray, IUserDetail } from "../interface/dashboard";
+import {
+  IActionTime,
+  IProjectArray,
+  IUserDetail,
+} from "../interface/dashboard";
 
 import UserInfoTab from "./userInfoTab";
 import UserDetail from "./userDetail";
@@ -61,7 +65,7 @@ const Dashboard: FC = () => {
           setActionTime({
             inTime: inTime,
             outTime: outTime,
-          });
+          } as IActionTime);
           setTasks(res.data.tasks);
           setDate(res.data.date);
           setTotalHours(res.data.totalHours);
@@ -80,6 +84,11 @@ const Dashboard: FC = () => {
         res.data.action === "checkOut" &&
           res.data?.tasks &&
           setEnteredTask(res.data.tasks);
+        const { inTime, outTime } = res.data.timeSheet;
+        setActionTime({
+          inTime: inTime,
+          outTime: outTime,
+        } as IActionTime);
       });
     } catch (error) {
       setIsActionLoader(false);
@@ -176,6 +185,7 @@ const Dashboard: FC = () => {
               checkStatus={checkStatus}
               projectArray={projectArray}
               currentTime={currentTime}
+              actionTime={actionTime}
             />
           )}
           {actionType === "LeaveApplyOrMissingDay" && (

@@ -1,4 +1,4 @@
-import React, { useState, PropsWithChildren, useEffect } from "react";
+import React, { useState, PropsWithChildren } from "react";
 import {
   AppShell,
   MediaQuery,
@@ -9,6 +9,7 @@ import {
   Flex,
   Box,
   Text,
+  Anchor,
 } from "@mantine/core";
 
 import "../styles/layout.scss";
@@ -48,8 +49,21 @@ const Layout: React.FC<PropsWithChildren> = (props) => {
         </Box>
         {/* <Breadcrumb /> */}
         {props.children}
-        <Text pos={"absolute"} bottom={0} right={5} fw={600} c={"gray"}>
-          v2.0.1
+        <Text pos={"absolute"} bottom={0} right={5}>
+          <Anchor
+            href="https://docs.google.com/document/d/1_sCW7a6gMUeJuuRZpEJxsqEyRKd_bouqXOWAicjb6yo"
+            target="_blank"
+            c={"gray"}
+            sx={{
+              "&:hover": {
+                textDecoration: "none",
+                color: "#228be6",
+              },
+            }}
+            fw={600}
+          >
+            v2.1.0
+          </Anchor>
         </Text>
       </ScrollArea>
     </AppShell>

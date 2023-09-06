@@ -9,7 +9,6 @@ import {
   Modal,
   Select,
   Text,
-  TextInput,
   createStyles,
 } from "@mantine/core";
 import { MonthPickerInput } from "@mantine/dates";
@@ -159,7 +158,7 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
               }}
               clearable
               autoFocus={false}
-              {...form.getInputProps("teamMate")}
+              {...form.getInputProps("userId")}
             />
           )}
 

@@ -198,6 +198,7 @@ const TeamCalendar: FC = () => {
               tooltipAccessor={(event: any) => console.log()}
               onNavigate={(date, view) => handleNavigate(date)}
               className="team-calendar"
+              popupOffset={{ x: 0, y: 0 }}
             />
           </Flex>
 

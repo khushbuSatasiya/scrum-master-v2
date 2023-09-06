@@ -97,16 +97,13 @@ const UserDetail: FC<IProps> = (props: IProps) => {
             label={`${
               label === "Comp... Leave"
                 ? "We have calculated the approximate compensation and not calculated anywhere. For further details, please reach out to the HR department."
-                : "Used  / Granted"
+                : "Used / Granted"
             }`}
             sx={{
               maxWidth: "250px",
               wordWrap: "break-word",
               textWrap: "balance",
-              height: "auto",
-              textAlign: "center",
             }}
-            // width={"auto"}
             inline
             position="bottom"
             color="#1c7ed6"
@@ -151,19 +148,13 @@ const UserDetail: FC<IProps> = (props: IProps) => {
         <Space w="xl" />
 
         <Flex direction="column">
-          <Text
-            fw="600"
-            fz="xl"
-            color="#071437"
-            sx={{
-              cursor: "pointer",
-              "&:hover": {
-                color: "#228be6",
-              },
-            }}
-            onClick={() => setIsShowUserDetails(!isShowUserDetails)}
-          >
-            {newToken?.realName ? newToken.realName : "-"}
+          <Text fw="600" color="#071437" fz="xl">
+            <span
+              onClick={() => setIsShowUserDetails(!isShowUserDetails)}
+              className={newToken?.realName ? "hovered-title" : ""}
+            >
+              {newToken?.realName ? newToken.realName : "-"}
+            </span>
           </Text>
           <Flex mt={5} direction="row" justify="start" align="center">
             <IconUserStar size="16" color="#B5B5C3" />

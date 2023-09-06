@@ -20,3 +20,8 @@ export interface IUserDetail {
   experience: number;
   projectCount: number;
 }
+
+export interface IActionTime {
+  inTime: string;
+  outTime: string;
+}

@@ -11,23 +11,33 @@ export const getLeaveColumns = (id) => {
       accessor: "date",
       title: "Date",
       width: 100,
-      render: ({ date }) => {
-        return <Anchor sx={{ fontWeight: 500 }}>{dateFormate(date)}</Anchor>;
+      render: ({ date, isUpcomingLeave }) => {
+        return (
+          <Anchor
+            sx={{ fontWeight: 500, color: `${isUpcomingLeave && "red"}` }}
+          >
+            {dateFormate(date)}
+          </Anchor>
+        );
       },
     },
     {
       accessor: "day",
       title: "Day",
       width: 100,
-      render: ({ date }) => {
-        return <Text>{getDay(date)}</Text>;
+      render: ({ date, isUpcomingLeave }) => {
+        return (
+          <Text sx={{ color: `${isUpcomingLeave && "red"}` }}>
+            {getDay(date)}
+          </Text>
+        );
       },
     },
     {
       accessor: "reason",
       title: "Reason",
       width: 150,
-      render: ({ reason }) => {
+      render: ({ reason, isUpcomingLeave }) => {
         return (
           <Tooltip
             sx={{
@@ -47,7 +57,9 @@ export const getLeaveColumns = (id) => {
               duration: 300,
             }}
           >
-            <Text truncate>{reason}</Text>
+            <Text truncate sx={{ color: `${isUpcomingLeave && "red"}` }}>
+              {reason}
+            </Text>
           </Tooltip>
         );
       },
@@ -57,11 +69,13 @@ export const getLeaveColumns = (id) => {
       accessor: "leaveType",
       title: "Leave Type",
       width: 100,
-      render: ({ leaveType }) => {
+      render: ({ leaveType, isUpcomingLeave }) => {
         return (
           <Text
             color={
-              leaveType === "Paid"
+              isUpcomingLeave
+                ? "red"
+                : leaveType === "Paid"
                 ? "#40c057"
                 : leaveType === "Vacational"
                 ? "#228be6"
@@ -78,11 +92,15 @@ export const getLeaveColumns = (id) => {
       accessor: "duration",
       title: "Duration",
       width: 100,
-      render: ({ duration }) => {
+      render: ({ duration, isUpcomingLeave }) => {
         return (
           <Text
             color={
-              capitalizeFirstLetter(duration) === "Full" ? "#228be6" : "#FF9B38"
+              isUpcomingLeave
+                ? "red"
+                : capitalizeFirstLetter(duration) === "Full"
+                ? "#228be6"
+                : "#FF9B38"
             }
             fw={700}
           >
@@ -95,9 +113,9 @@ export const getLeaveColumns = (id) => {
       accessor: "status",
       title: "Status",
       width: 100,
-      render: ({ status }) => {
+      render: ({ status, isUpcomingLeave }) => {
         return (
-          <Text color={STATUS[status]} fw={700}>
+          <Text color={isUpcomingLeave ? "red" : STATUS[status]} fw={700}>
             {status}
           </Text>
         );
@@ -107,6 +125,13 @@ export const getLeaveColumns = (id) => {
       accessor: "actionBy",
       title: "Action By",
       width: 120,
+      render: ({ status, isUpcomingLeave, actionBy }) => {
+        return (
+          <Text color={isUpcomingLeave ? "red" : STATUS[status]} fw={700}>
+            {actionBy}
+          </Text>
+        );
+      },
     },
   ];
 };

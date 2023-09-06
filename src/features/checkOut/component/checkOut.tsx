@@ -18,6 +18,8 @@ import httpService from "shared/services/http.service";
 
 import { API_CONFIG } from "shared/constants/api";
 
+import { IActionTime } from "features/dashboard/interface/dashboard";
+
 import CheckOutForm from "./checkOutForm";
 import { getProjectList } from "shared/util/utility";
 import CheckoutModals from "./checkoutModals";
@@ -28,6 +30,7 @@ interface IProps {
   checkStatus: () => void;
   projectArray: any;
   currentTime: string;
+  actionTime: IActionTime;
 }
 
 const CheckOut: FC<IProps> = ({
@@ -36,6 +39,7 @@ const CheckOut: FC<IProps> = ({
   checkStatus,
   projectArray,
   currentTime,
+  actionTime,
 }) => {
   const [projects, setProjects] = useState([]);
   const [isShowForm, setIsShowForm] = useState(false);
@@ -205,7 +209,6 @@ const CheckOut: FC<IProps> = ({
   );
 
   // const handleTimeChange = (e) => {
-  //   console.log("in");
 
   //   let formattedTime = e.target.value.replace(/\D/g, "");
   //   if (formattedTime.length > 2) {
@@ -229,6 +232,7 @@ const CheckOut: FC<IProps> = ({
         handleAddTaskBtn={handleAddTaskBtn}
         checkOutDate={checkOutDate}
         isLoading={isLoading}
+        actionTime={actionTime}
         // handleTimeChange={handleTimeChange}
       />
 
