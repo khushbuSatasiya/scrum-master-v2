@@ -21,4 +21,10 @@ export interface ILeaveReviewProps {
 	holiday: number
 	message:string
   }
-  
+
+  export interface IUpComingLeave {
+	date: string
+	leaveType: string
+  }
+
+

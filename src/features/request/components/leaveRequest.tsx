@@ -1,41 +1,43 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import {
-    Badge,
     Box,
     Button,
     Divider,
     Flex,
     Group,
     Modal,
-    Select,
     Stepper,
     Text,
-    TextInput,
 } from '@mantine/core';
-import { DatePickerInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
-import { IconCalendar, IconCheck } from '@tabler/icons-react';
-import {
-    LEAVE_DURATION,
-    LEAVE_TYPE,
-    useStyles,
-} from '../constants/requestConstants';
-import httpService from 'shared/services/http.service';
-import { API_CONFIG } from 'shared/constants/api';
+import { Icon12Hours, IconCheck } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import moment from 'moment';
-import { ILeaveRequestProps, ILeaveReviewProps } from '../interface/request';
-import { dateFormate } from 'shared/util/utility';
+import Lottie from 'react-lottie';
+import { isEmpty } from 'lodash';
 
-import '../style/request.scss';
+import checkedJson from 'assets/lotties/checked.json';
+import httpService from 'shared/services/http.service';
+import { API_CONFIG } from 'shared/constants/api';
+
+import {
+    ILeaveRequestProps,
+    ILeaveReviewProps,
+    IUpComingLeave,
+} from '../interface/request';
+import { useStyles } from '../constants/requestConstants';
+
 import LeaveDetails from './leaveDetails';
 import LeaveForm from './leaveForm';
+
+import '../style/request.scss';
 
 interface ILeaveProps {
     leaveRequest: ILeaveRequestProps;
     isOpen: boolean;
-    isUpcomingLeave: any;
+    isUpcomingLeave: IUpComingLeave[];
     isVacational: boolean;
+    getLeaveRequestInfo: () => void;
     onClose: () => void;
 }
 const LeaveRequest: FC<ILeaveProps> = ({
@@ -43,10 +45,17 @@ const LeaveRequest: FC<ILeaveProps> = ({
     isOpen,
     isVacational,
     isUpcomingLeave,
+    getLeaveRequestInfo,
     onClose,
 }) => {
-    const { classes } = useStyles();
+    const defaultOptions = {
+        loop: false,
+        autoplay: false,
+        animationData: checkedJson,
+    };
+
     const { startDay, endDay, reason, duration, leaveType } = leaveRequest;
+    const { classes } = useStyles();
 
     const [leaveData, setLeaveData] = useState({} as ILeaveReviewProps);
     const [isReview, setIsReview] = useState(false);
@@ -59,6 +68,10 @@ const LeaveRequest: FC<ILeaveProps> = ({
             value === '' ? 'Leave Duration is required' : null,
         reason: (value) => (value === '' ? 'Reason is required' : null),
     };
+    if (isVacational) {
+        validationRules.leaveType = (value) =>
+            isEmpty(value) ? 'Leave Type is required' : null;
+    }
 
     const form = useForm({
         initialValues: {
@@ -70,16 +83,6 @@ const LeaveRequest: FC<ILeaveProps> = ({
         },
         validate: validationRules,
     });
-
-    const excludeCustomDates = (date) => {
-        const datesArray = isUpcomingLeave.map((item) => item.date);
-        if (date.getDay() === 0 || date.getDay() === 6) {
-            return true;
-        }
-        const formattedDate = moment(date).format('YYYY-MM-DD');
-
-        return datesArray.includes(formattedDate);
-    };
 
     const nextStep = () => {
         setActive((current) => (current < 3 ? current + 1 : current));
@@ -113,12 +116,12 @@ const LeaveRequest: FC<ILeaveProps> = ({
         if (isReview) {
             httpService
                 .post(`${API_CONFIG.path.leaveRequest}`, params)
-                .then((res) => {
-                    onClose();
-                    notifications.show({
-                        message: res.message,
-                        color: 'green',
-                    });
+                .then(() => {
+                    getLeaveRequestInfo();
+                    nextStep();
+                    setTimeout(() => {
+                        onClose();
+                    }, 4000);
                 })
                 .catch(onError);
         } else {
@@ -133,176 +136,102 @@ const LeaveRequest: FC<ILeaveProps> = ({
         }
     };
 
-    useEffect(() => {
-        if (isVacational) {
-            validationRules.leaveType = (value) =>
-                value === '' ? 'Leave Type is required' : null;
-        }
-    }, []);
     return (
-        <>
-            <Modal
-                shadow='sm'
-                size={'500px'}
-                pos={'relative'}
-                centered
-                padding={20}
-                radius='lg'
-                withCloseButton={true}
-                opened={isOpen}
-                onClose={onClose}
-                classNames={{
-                    header: classes.header,
-                    close: classes.close,
-                }}>
-                <form onSubmit={form.onSubmit(handleSubmit)}>
-                    <Text ta={'center'} fw={600} c={'#071437'} fz={22}>
-                        Request For A Leave
-                    </Text>
-                    <Divider variant='dashed' mt={10} mb={20} />
-                    <Stepper
-                        classNames={{ content: classes.content }}
-                        color={leaveData.action === 'Error' ? 'red' : 'green'}
-                        active={active}
-                        onStepClick={setActive}
-                        breakpoint='sm'
-                        size='xs'
-                        iconSize={25}
-                        completedIcon={<IconCheck size={'20px'} />}>
-                        <Stepper.Step label='' description=''>
-                            {/*<Box
-                                className={
-                                    isReview ? 'slide-left' : 'slide-right'
-                                }>
-                                <Select
-                                    withAsterisk
-                                    label='Leave Duration'
-                                    placeholder='Select Leave Duration'
-                                    variant='filled'
-                                    data={LEAVE_DURATION}
-                                    withinPortal
-                                    classNames={{ label: classes.label }}
-                                    {...form.getInputProps('duration')}
-                                />
+        <Modal
+            shadow='sm'
+            size={'600px'}
+            pos={'relative'}
+            centered
+            padding={'20px 0'}
+            radius='md'
+            withCloseButton={true}
+            opened={isOpen}
+            onClose={onClose}
+            classNames={{
+                header: classes.header,
+                close: classes.close,
+            }}>
+            <form onSubmit={form.onSubmit(handleSubmit)}>
+                <Text ta={'center'} fw={600} c={'#071437'} fz={22} mb={5}>
+                    Request A Leave
+                </Text>
 
-                                <Flex gap={30} w={'100%'}>
-                                    <DatePickerInput
-                                        w={'50%'}
-                                        withAsterisk
-                                        icon={
-                                            <IconCalendar
-                                                size='1.1rem'
-                                                stroke={1.5}
-                                            />
-                                        }
-                                        mt='sm'
-                                        popoverProps={{ withinPortal: true }}
-                                        placeholder='Select a date'
-                                        variant='filled'
-                                        label='Start Day'
-                                        classNames={{ label: classes.label }}
-                                        excludeDate={excludeCustomDates}
-                                        firstDayOfWeek={0}
-                                        maxLevel={'year'}
-                                        {...form.getInputProps('startDay')}
-                                    />
+                <Text ta={'center'} c={'#99A1B7'} fz={16} fw={500} mb={20}>
+                    If you need more info, please check{' '}
+                    <span
+                        style={{
+                            color: '#228be6',
+                        }}>
+                        Leave Policy
+                    </span>
+                    .
+                </Text>
+                <Divider variant='dashed' mt={10} mb={20} />
+                <Stepper
+                    color={leaveData.action === 'Error' ? 'red' : 'green'}
+                    active={active}
+                    breakpoint='sm'
+                    size='xs'
+                    iconSize={25}
+                    p={'0 80px'}
+                    completedIcon={<IconCheck size={'20px'} />}>
+                    <Stepper.Step label='' description=''>
+                        <LeaveForm
+                            leaveRequest={leaveRequest}
+                            isUpcomingLeave={isUpcomingLeave}
+                            isVacational={isVacational}
+                            isReview={isReview}
+                            validationRules={validationRules}
+                            form={form}
+                        />
+                    </Stepper.Step>
+                    <Stepper.Step label='' description=''>
+                        <Box className={isReview ? 'slide-left' : ''}>
+                            {leaveData.action === 'Success' && (
+                                <LeaveDetails leaveData={leaveData} />
+                            )}
 
-                                    <DatePickerInput
-                                        w={'50%'}
-                                        withAsterisk
-                                        icon={
-                                            <IconCalendar
-                                                size='1.1rem'
-                                                stroke={1.5}
-                                            />
-                                        }
-                                        mt='sm'
-                                        popoverProps={{ withinPortal: true }}
-                                        placeholder='Select a date'
-                                        variant='filled'
-                                        label='End Day'
-                                        firstDayOfWeek={0}
-                                        excludeDate={excludeCustomDates}
-                                        classNames={{ label: classes.label }}
-                                        {...form.getInputProps('endDay')}
-                                    />
-                                </Flex>
-
-                                <TextInput
-                                    withAsterisk
-                                    placeholder='For Example, Sick Leave'
-                                    mt={'sm'}
-                                    label='Reason'
-                                    variant='filled'
-                                    classNames={{ label: classes.label }}
-                                    {...form.getInputProps('reason')}
-                                />
-
-                                {isVacational && (
-                                    <Select
-                                        label='Leave Type'
-                                        mt='sm'
-                                        radius='md'
-                                        data={LEAVE_TYPE}
-                                        placeholder='Select Leave Type'
-                                        variant='filled'
-                                        transitionProps={{
-                                            transition: 'pop-top-left',
-                                            duration: 80,
-                                            timingFunction: 'ease',
+                            {leaveData.action === 'Error' && (
+                                <Box mt={30}>
+                                    <Flex
+                                        direction={'column'}
+                                        align={'center'}
+                                        justify={'center'}
+                                        sx={{
+                                            border: '1px dashed #fa5252',
+                                            background: '#F1FAFF',
+                                            borderRadius: '16px',
                                         }}
-                                        withAsterisk
-                                        withinPortal
-                                        classNames={{
-                                            label: classes.label,
-                                        }}
-                                        dropdownPosition={'bottom'}
-                                        {...form.getInputProps('leaveType')}
-                                    />
-                                )}
-                            </Box>*/}
-
-                            <LeaveForm
-                                leaveRequest={leaveRequest}
-                                isUpcomingLeave={isUpcomingLeave}
-                                isVacational={isVacational}
-                                isReview={isReview}
+                                        p={15}>
+                                        <Text
+                                            fz={12}
+                                            fw={600}
+                                            tt='uppercase'
+                                            c={'#fa5252'}
+                                            ta={'center'}>
+                                            {leaveData.message}
+                                        </Text>
+                                    </Flex>
+                                </Box>
+                            )}
+                        </Box>
+                    </Stepper.Step>
+                    <Stepper.Step label='' description=''>
+                        <Box>
+                            <Text tt={'uppercase'} fz={16} fw={600} mb={30}>
+                                Your Leave Request Submitted Successfully.
+                            </Text>
+                            <Lottie
+                                options={defaultOptions}
+                                height={150}
+                                width={150}
                             />
-                        </Stepper.Step>
-                        <Stepper.Step label='' description=''>
-                            <Box className={isReview ? 'slide-left' : ''}>
-                                {leaveData.action === 'Success' && (
-                                    <LeaveDetails leaveData={leaveData} />
-                                )}
+                        </Box>
+                    </Stepper.Step>
+                </Stepper>
 
-                                {leaveData.action === 'Error' && (
-                                    <Box mt={30}>
-                                        <Flex
-                                            direction={'column'}
-                                            align={'center'}
-                                            justify={'center'}
-                                            sx={{
-                                                border: '1px dashed #fa5252',
-                                                background: '#F1FAFF',
-                                                borderRadius: '16px',
-                                            }}
-                                            p={15}>
-                                            <Text
-                                                fz={12}
-                                                fw={600}
-                                                tt='uppercase'
-                                                c={'#fa5252'}
-                                                ta={'center'}>
-                                                {leaveData.message}
-                                            </Text>
-                                        </Flex>
-                                    </Box>
-                                )}
-                            </Box>
-                        </Stepper.Step>
-                    </Stepper>
-
-                    <Group position='center' mt='xl' mb={10}>
+                {active + 1 !== 3 && (
+                    <Group position='center' mt='35px' mb={10}>
                         {isReview && (
                             <Button variant='default' onClick={prevStep}>
                                 Back
@@ -317,9 +246,9 @@ const LeaveRequest: FC<ILeaveProps> = ({
                             {isReview ? 'Submit' : 'Next'}
                         </Button>
                     </Group>
-                </form>
-            </Modal>
-        </>
+                )}
+            </form>
+        </Modal>
     );
 };
 

@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Paper, Text } from '@mantine/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { IProjectsProps } from 'features/project/interface/project';
-import { ILeaveRequestProps } from '../interface/request';
+import { ILeaveRequestProps, IUpComingLeave } from '../interface/request';
 import LeaveRequest from '../components/leaveRequest';
 import { isEmpty } from 'lodash';
 import httpService from 'shared/services/http.service';
@@ -10,13 +10,12 @@ import { API_CONFIG } from 'shared/constants/api';
 const Request: FC<IProjectsProps> = ({ uId }) => {
     const [leaveRequest, setLeaveRequest] = useState({} as ILeaveRequestProps);
     const [isVacational, setIsVacational] = useState(false);
-    const [isUpcomingLeave, setIsUpcomingLeave] = useState([]);
+    const [isUpcomingLeave, setIsUpcomingLeave] = useState<IUpComingLeave[]>();
 
     const REQUEST_ARR = [
         {
             name: 'Request A Leave',
             title1: ' Please submit your leave request for approval.',
-            title2: '  Include dates and reason. Thank you!"',
             onClick: () => {
                 setLeaveRequest({
                     startDay: null,
@@ -30,17 +29,14 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
         {
             name: 'Add Missing Day',
             title1: 'Please add the missing day to your schedule. Thank you!',
-            title2: '',
         },
         {
             name: 'Change Time Request',
             title1: 'Please submit your change time request for us to process. Thank you!',
-            title2: '',
         },
         {
             name: 'Work From Home',
-            title1: 'Enjoy the flexibility of working from home and boost your productivity.',
-            title2: 'Stay connected and thrive',
+            title1: 'Enjoy the flexibility of working from home and boost your productivity.Stay connected and thrive',
         },
     ];
 
@@ -54,20 +50,21 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
             .catch((error) => {
                 console.log('error', error);
             });
-    }, [uId]);
+    }, []);
 
     useEffect(() => {
         getLeaveRequestInfo();
     }, []);
     return (
-        <Box>
-            {REQUEST_ARR.map(({ name, title1, title2, onClick }, index) => {
+        <Flex wrap={'wrap'} w={'100%'} gap={10} justify={'space-between'}>
+            {REQUEST_ARR.map(({ name, title1, onClick }, index) => {
                 return (
                     <Paper
                         key={index}
                         shadow='sm'
                         radius='lg'
                         mt={30}
+                        w={'49%'}
                         p='lg'
                         sx={{
                             width: '100%',
@@ -89,6 +86,7 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
                                 border: '1px dashed #228be6',
                                 background: '#F1FAFF',
                                 borderRadius: '16px',
+                                height: '130px',
                             }}
                             p={15}>
                             <Text
@@ -96,12 +94,10 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
                                 fw={600}
                                 tt='uppercase'
                                 c={'#228be6'}
-                                lh={3}>
+                                ta={'center'}>
                                 {title1}
                             </Text>
-                            <Text fz={12} fw={600} tt='uppercase' c={'#228be6'}>
-                                {title2}
-                            </Text>
+
                             <Button mt={10} onClick={onClick}>
                                 {name}
                             </Button>
@@ -117,9 +113,10 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
                     isOpen={!isEmpty(leaveRequest)}
                     isVacational={isVacational}
                     isUpcomingLeave={isUpcomingLeave}
+                    getLeaveRequestInfo={getLeaveRequestInfo}
                 />
             )}
-        </Box>
+        </Flex>
     );
 };
 

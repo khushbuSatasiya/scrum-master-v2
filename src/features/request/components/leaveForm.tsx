@@ -1,48 +1,37 @@
+import React, { FC, useEffect } from 'react';
 import { Box, Flex, Select, TextInput } from '@mantine/core';
-import React, { FC } from 'react';
+import { IconCalendar } from '@tabler/icons-react';
+import { DatePickerInput } from '@mantine/dates';
+import moment from 'moment';
+import { UseFormReturnType } from '@mantine/form';
+
+import { ILeaveRequestProps, IUpComingLeave } from '../interface/request';
 import {
     LEAVE_DURATION,
     LEAVE_TYPE,
     useStyles,
 } from '../constants/requestConstants';
-import { IconCalendar } from '@tabler/icons-react';
-import { DatePickerInput } from '@mantine/dates';
-import { useForm } from '@mantine/form';
-import { ILeaveRequestProps } from '../interface/request';
-import moment from 'moment';
 interface ILeaveFormProps {
     isReview: boolean;
     leaveRequest: ILeaveRequestProps;
-    isUpcomingLeave: any;
+    isUpcomingLeave: IUpComingLeave[];
     isVacational: boolean;
+    validationRules: Record<string, any>;
+    form: UseFormReturnType<{
+        startDay: null;
+        endDay: null;
+        duration: string;
+        reason: string;
+        leaveType: string;
+    }>;
 }
 const LeaveForm: FC<ILeaveFormProps> = ({
     isReview,
-    leaveRequest,
     isUpcomingLeave,
     isVacational,
+    form,
 }) => {
-    const { startDay, endDay, reason, duration, leaveType } = leaveRequest;
     const { classes } = useStyles();
-
-    const validationRules: Record<string, any> = {
-        startDay: (value) => value === null && ' Start Day is Required',
-        endDay: (value) => value === null && ' End Day is Required',
-        duration: (value) =>
-            value === '' ? 'Leave Duration is required' : null,
-        reason: (value) => (value === '' ? 'Reason is required' : null),
-    };
-
-    const form = useForm({
-        initialValues: {
-            startDay: startDay,
-            endDay: endDay,
-            duration: duration,
-            reason: reason,
-            leaveType: leaveType,
-        },
-        validate: validationRules,
-    });
 
     const excludeCustomDates = (date) => {
         const datesArray = isUpcomingLeave.map((item) => item.date);
@@ -53,30 +42,33 @@ const LeaveForm: FC<ILeaveFormProps> = ({
 
         return datesArray.includes(formattedDate);
     };
+
     return (
-        <Box className={isReview ? 'slide-left' : 'slide-right'}>
+        <Box className={isReview ? 'slide-left' : 'slide-right'} mt={20}>
             <Select
+                radius='md'
                 withAsterisk
                 label='Leave Duration'
                 placeholder='Select Leave Duration'
                 variant='filled'
                 data={LEAVE_DURATION}
                 withinPortal
-                classNames={{ label: classes.label }}
+                classNames={{ label: classes.label, input: classes.input }}
                 {...form.getInputProps('duration')}
             />
 
             <Flex gap={30} w={'100%'}>
                 <DatePickerInput
                     w={'50%'}
+                    radius='md'
                     withAsterisk
                     icon={<IconCalendar size='1.1rem' stroke={1.5} />}
-                    mt='sm'
+                    mt='28px'
                     popoverProps={{ withinPortal: true }}
                     placeholder='Select a date'
                     variant='filled'
-                    label='Start Day'
-                    classNames={{ label: classes.label }}
+                    label='Start Date'
+                    classNames={{ label: classes.label, input: classes.input }}
                     excludeDate={excludeCustomDates}
                     firstDayOfWeek={0}
                     maxLevel={'year'}
@@ -85,16 +77,17 @@ const LeaveForm: FC<ILeaveFormProps> = ({
 
                 <DatePickerInput
                     w={'50%'}
+                    radius='md'
                     withAsterisk
                     icon={<IconCalendar size='1.1rem' stroke={1.5} />}
-                    mt='sm'
+                    mt='28px'
                     popoverProps={{ withinPortal: true }}
                     placeholder='Select a date'
                     variant='filled'
-                    label='End Day'
+                    label='End Date'
                     firstDayOfWeek={0}
                     excludeDate={excludeCustomDates}
-                    classNames={{ label: classes.label }}
+                    classNames={{ label: classes.label, input: classes.input }}
                     {...form.getInputProps('endDay')}
                 />
             </Flex>
@@ -102,17 +95,18 @@ const LeaveForm: FC<ILeaveFormProps> = ({
             <TextInput
                 withAsterisk
                 placeholder='For Example, Sick Leave'
-                mt={'sm'}
+                mt={'28px'}
+                radius='md'
                 label='Reason'
                 variant='filled'
-                classNames={{ label: classes.label }}
+                classNames={{ label: classes.label, input: classes.input }}
                 {...form.getInputProps('reason')}
             />
 
             {isVacational && (
                 <Select
                     label='Leave Type'
-                    mt='sm'
+                    mt='28px'
                     radius='md'
                     data={LEAVE_TYPE}
                     placeholder='Select Leave Type'
@@ -126,6 +120,7 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                     withinPortal
                     classNames={{
                         label: classes.label,
+                        input: classes.input,
                     }}
                     dropdownPosition={'bottom'}
                     {...form.getInputProps('leaveType')}

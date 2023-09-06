@@ -12,10 +12,12 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
             <Box
                 sx={{
                     width: '100%',
+                    margin: '0 auto',
+                    textAlign: 'center',
                 }}>
                 <Flex w={'100%'} justify={'center'} mt={10}>
                     <Box sx={{ width: '50%' }}>
-                        <Text fw={600} fz={'14px'}>
+                        <Text fw={600} fz={'14px'} mb={5}>
                             From
                         </Text>
                         <Badge size='lg' radius='md'>
@@ -23,7 +25,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                         </Badge>
                     </Box>
                     <Box sx={{ width: '50%' }}>
-                        <Text fz={'14px'} fw={600}>
+                        <Text fz={'14px'} fw={600} mb={5}>
                             To
                         </Text>
                         <Badge size='lg' radius='md'>
@@ -34,7 +36,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
 
                 <Flex w={'100%'} mt={20}>
                     <Box sx={{ width: '50%' }}>
-                        <Text fw={600} fz={'14px'}>
+                        <Text fw={600} fz={'14px'} mb={5}>
                             Leave Type
                         </Text>
                         <Text fw='600' fz='14px' color='#40c057'>
@@ -42,7 +44,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                         </Text>
                     </Box>
                     <Box sx={{ width: '50%' }}>
-                        <Text color='' fz={'14px'} fw={600}>
+                        <Text color='' fz={'14px'} fw={600} mb={5}>
                             Total Day
                         </Text>
                         <Text size='lg' fz='14px' fw={600} color='#228be6'>
@@ -57,7 +59,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                         width: '100%',
                     }}>
                     <Box sx={{ width: '50%' }}>
-                        <Text color='' fw={600} fz={'14px'}>
+                        <Text color='' fw={600} fz={'14px'} mb={5}>
                             Duration
                         </Text>
                         <Text fz='14px' color='#B5B5C3' fw={600}>
@@ -66,7 +68,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                         </Text>
                     </Box>
                     <Box sx={{ width: '50%' }}>
-                        <Text color='' fw={600} fz={'14px'}>
+                        <Text color='' fw={600} fz={'14px'} mb={5}>
                             Reason
                         </Text>
                         <Text fz='14px' color='#B5B5C3' fw={600}>
