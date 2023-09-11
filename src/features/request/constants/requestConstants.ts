@@ -15,10 +15,15 @@ const useStyles = createStyles(() => ({
 		fontSize:14
     },
 	input	:{
-		borderColor:'#F9F9F9',
 		color:'#4B5675',
+		border:' 0.0625rem solid F9F9F9',
 		backgroundColor:'#F9F9F9',
 		fontWeight:500,
+		height: '2.25rem',
+
+    
+   
+
 
 		'&::placeholder': {
 			color:'#99A1B7',
@@ -29,13 +34,10 @@ const useStyles = createStyles(() => ({
 			borderColor:'#F1F1F2'
 		  },
 	},
+
 	
-    content: {
-        height: '700px',
-		//display:'flex',
-		//justifyContent:'center',
-		//alignItems:'center'
-    },
+	
+   
 	
 }));
 

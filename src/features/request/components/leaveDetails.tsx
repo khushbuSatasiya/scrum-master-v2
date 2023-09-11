@@ -1,6 +1,9 @@
-import { Badge, Box, Flex, Text } from '@mantine/core';
 import React, { FC } from 'react';
+import Lottie from 'react-lottie';
+import { Badge, Box, Checkbox, Flex, Text } from '@mantine/core';
+
 import { dateFormate } from 'shared/util/utility';
+
 import { ILeaveReviewProps } from '../interface/request';
 
 interface ILeaveDataProps {
@@ -8,7 +11,28 @@ interface ILeaveDataProps {
 }
 const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
     return (
-        <Flex>
+        <Box>
+            <Flex
+                mt={20}
+                mb={40}
+                align={'center'}
+                justify={'center'}
+                sx={{
+                    border: '1px dashed #40c057',
+                    background: '#F1FAFF',
+                    borderRadius: '16px',
+                }}
+                p={15}>
+                <Box>
+                    {' '}
+                    <Text fz={14} fw={400} c={'#40c057'} ta={'center'}>
+                        Thank you for providing your leave details.
+                    </Text>
+                    <Text fz={14} fw={400} c={'#40c057'} ta={'center'}>
+                        Please review and submit.
+                    </Text>
+                </Box>
+            </Flex>
             <Box
                 sx={{
                     width: '100%',
@@ -18,7 +42,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                 <Flex w={'100%'} justify={'center'} mt={10}>
                     <Box sx={{ width: '50%' }}>
                         <Text fw={600} fz={'14px'} mb={5}>
-                            From
+                            From Date
                         </Text>
                         <Badge size='lg' radius='md'>
                             {dateFormate(leaveData.startDate)}
@@ -26,7 +50,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                     </Box>
                     <Box sx={{ width: '50%' }}>
                         <Text fz={'14px'} fw={600} mb={5}>
-                            To
+                            To Date
                         </Text>
                         <Badge size='lg' radius='md'>
                             {dateFormate(leaveData.endDate)}
@@ -77,7 +101,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                     </Box>
                 </Flex>
             </Box>
-        </Flex>
+        </Box>
     );
 };
 

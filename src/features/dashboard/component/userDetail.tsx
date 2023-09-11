@@ -103,7 +103,6 @@ const UserDetail: FC<IProps> = (props: IProps) => {
                             height: 'auto',
                             textAlign: 'center',
                         }}
-                        // width={"auto"}
                         inline
                         position='bottom'
                         color='#1c7ed6'

@@ -12,7 +12,6 @@ import {
     useStyles,
 } from '../constants/requestConstants';
 interface ILeaveFormProps {
-    isReview: boolean;
     leaveRequest: ILeaveRequestProps;
     isUpcomingLeave: IUpComingLeave[];
     isVacational: boolean;
@@ -26,7 +25,6 @@ interface ILeaveFormProps {
     }>;
 }
 const LeaveForm: FC<ILeaveFormProps> = ({
-    isReview,
     isUpcomingLeave,
     isVacational,
     form,
@@ -44,7 +42,7 @@ const LeaveForm: FC<ILeaveFormProps> = ({
     };
 
     return (
-        <Box className={isReview ? 'slide-left' : 'slide-right'} mt={20}>
+        <Box>
             <Select
                 radius='md'
                 withAsterisk
@@ -56,14 +54,13 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                 classNames={{ label: classes.label, input: classes.input }}
                 {...form.getInputProps('duration')}
             />
-
             <Flex gap={30} w={'100%'}>
                 <DatePickerInput
                     w={'50%'}
                     radius='md'
                     withAsterisk
                     icon={<IconCalendar size='1.1rem' stroke={1.5} />}
-                    mt='28px'
+                    mt={'10px'}
                     popoverProps={{ withinPortal: true }}
                     placeholder='Select a date'
                     variant='filled'
@@ -80,7 +77,7 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                     radius='md'
                     withAsterisk
                     icon={<IconCalendar size='1.1rem' stroke={1.5} />}
-                    mt='28px'
+                    mt={'10px'}
                     popoverProps={{ withinPortal: true }}
                     placeholder='Select a date'
                     variant='filled'
@@ -91,22 +88,20 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                     {...form.getInputProps('endDay')}
                 />
             </Flex>
-
             <TextInput
                 withAsterisk
                 placeholder='For Example, Sick Leave'
-                mt={'28px'}
+                mt={'10px'}
                 radius='md'
                 label='Reason'
                 variant='filled'
                 classNames={{ label: classes.label, input: classes.input }}
                 {...form.getInputProps('reason')}
             />
-
             {isVacational && (
                 <Select
                     label='Leave Type'
-                    mt='28px'
+                    mt={'10px'}
                     radius='md'
                     data={LEAVE_TYPE}
                     placeholder='Select Leave Type'
@@ -126,6 +121,33 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                     {...form.getInputProps('leaveType')}
                 />
             )}
+
+            <Select
+                label='Leave Type'
+                mt={'10px'}
+                radius='md'
+                value='Paid'
+                data={[
+                    {
+                        label: 'Paid',
+                        value: 'Paid',
+                    },
+                ]}
+                placeholder='Select Leave Type'
+                variant='filled'
+                transitionProps={{
+                    transition: 'pop-top-left',
+                    duration: 80,
+                    timingFunction: 'ease',
+                }}
+                withAsterisk
+                withinPortal
+                classNames={{
+                    label: classes.label,
+                    input: classes.input,
+                }}
+                dropdownPosition={'bottom'}
+            />
         </Box>
     );
 };

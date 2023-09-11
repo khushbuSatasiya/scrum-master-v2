@@ -1,41 +1,38 @@
-.request-modal {
-    /***** Slide Right *****/
-}
-.slide-right {
-    animation: 1s slide-right;
-    width: 100%;
-}
-@keyframes slide-right {
-    from {
-        margin-left: -100%;
-    }
-    to {
-        margin-left: 0%;
-    }
-}
+//.slide-right {
+//    animation: 1s slide-right;
+//    width: 100%;
+//}
+//@keyframes slide-right {
+//    from {
+//        margin-left: -100%;
+//    }
+//    to {
+//        margin-left: 0%;
+//    }
+//}
 
-/***** Slide Left *****/
-.slide-left {
-    animation: 1s slide-left;
-    width: 100%;
-}
-@keyframes slide-left {
-    from {
-        margin-left: 100%;
-    }
-    to {
-        margin-left: 0%;
-    }
-}
+///***** Slide Left *****/
+//.slide-left {
+//    animation: 1s slide-left;
+//    width: 100%;
+//}
+//@keyframes slide-left {
+//    from {
+//        margin-left: 100%;
+//    }
+//    to {
+//        margin-left: 0%;
+//    }
+//}
 
-.fade-in {
-    animation: fadeIn ease 3s;
-}
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
+//.fade-in {
+//    animation: fadeIn ease 3s;
+//}
+//@keyframes fadeIn {
+//    0% {
+//        opacity: 0;
+//    }
+//    100% {
+//        opacity: 1;
+//    }
+//}
