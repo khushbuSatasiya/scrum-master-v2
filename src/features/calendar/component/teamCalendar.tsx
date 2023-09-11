@@ -1,14 +1,17 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 
-import { Box, Flex, Loader, Paper } from "@mantine/core";
+import { Box, Flex, Paper } from "@mantine/core";
 import { useForm } from "@mantine/form";
+
+import { useDispatch } from "react-redux";
+import * as actionTypes from "store/action-types";
 
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 
 import httpService from "shared/services/http.service";
 import { API_CONFIG } from "shared/constants/api";
-import { teamReportIconColor } from "shared/util/utility";
+import { createAction, teamReportIconColor } from "shared/util/utility";
 import { DotIcon } from "shared/icons/icons";
 
 import CalendarFilter from "./calendarFilter";
@@ -17,6 +20,8 @@ import "../style/calendar.scss";
 
 const TeamCalendar: FC = () => {
   const localizer = momentLocalizer(moment);
+
+  const dispatch = useDispatch();
 
   const [calendarInfo, setCalendarInfo] = useState<any>([]);
   const [proList, setProList] = useState<any>([]);
@@ -39,12 +44,13 @@ const TeamCalendar: FC = () => {
       month = (new Date().getMonth() + 1).toString(),
       userId?: string
     ) => {
+      dispatch(createAction(actionTypes.SET_MONTH, month));
       // month && setIsLoading(true);
 
       const params = {
-        month: month,
-        projectId: projectId,
-        userId: userId,
+        month,
+        projectId,
+        userId,
       };
 
       httpService
@@ -94,7 +100,7 @@ const TeamCalendar: FC = () => {
 
   useEffect(() => {
     getTeamReport();
-  }, [form.values.filteredData, getTeamReport]);
+  }, [getTeamReport]);
 
   const getProjects = useCallback(() => {
     httpService

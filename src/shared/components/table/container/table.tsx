@@ -49,7 +49,9 @@ const useStyles = createStyles((theme) => {
         fontSize: 15,
         fontWeight: 600,
         color: "#78829D",
-        cursor: "pointer",
+      },
+      "&& td:hover": {
+        textDecoration: "none !important",
       },
     },
     pagination: {

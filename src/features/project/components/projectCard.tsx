@@ -27,7 +27,11 @@ interface IProjectCardProps {
   setExcelData: (value) => void;
   uId: string;
   isLoading: boolean;
-  getTeamReport: (projectId: string, month: string) => void;
+  getTeamReport: (
+    projectId: string,
+    month: string,
+    projectName: string
+  ) => void;
   setIsShowCalendar: (action: boolean) => void;
 }
 
@@ -142,7 +146,8 @@ const ProjectCard: FC<IProjectCardProps> = ({
                             setIsShowCalendar(true);
                             getTeamReport(
                               projectId,
-                              (new Date().getMonth() + 1).toString()
+                              (new Date().getMonth() + 1).toString(),
+                              projectName
                             );
                           }}
                           icon={<IconCalendarEvent color="#228be6" />}

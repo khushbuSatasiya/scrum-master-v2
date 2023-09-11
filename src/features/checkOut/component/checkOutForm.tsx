@@ -57,6 +57,9 @@ const CheckOutForm: FC<IProps> = (props) => {
       border: "transparent",
       // border: "transparent",
     },
+    label: {
+      color: "#99A1B7 !important",
+    },
   }));
 
   const { classes } = useStyles();
@@ -247,6 +250,7 @@ const CheckOutForm: FC<IProps> = (props) => {
                 maxLength={5}
                 classNames={{
                   input: classes.input,
+                  label: classes.label,
                 }}
                 label="(24 hour)"
                 ta={"center"}
@@ -265,7 +269,11 @@ const CheckOutForm: FC<IProps> = (props) => {
               <Group position="center" pos={"absolute"} bottom={0} left={58}>
                 <Button
                   type="submit"
-                  sx={{ width: "140px" }}
+                  sx={{
+                    width: "140px",
+                    background: "#fa5252",
+                    "&:hover": { background: "#fa5252 !important" },
+                  }}
                   loading={isLoading}
                   disabled={isLoading}
                   loaderPosition="left"

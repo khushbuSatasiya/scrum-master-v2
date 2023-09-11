@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useState } from "react";
+import React, { FC, Fragment } from "react";
 import isEmpty from "lodash/isEmpty";
 
 import {
@@ -50,18 +50,18 @@ const UserDetail: FC<IProps> = (props: IProps) => {
       color: "#40c057",
     },
     {
-      label: "Rem... Leave",
+      label: "Remaining",
       value: leaveDetails.remainingLeaves,
       color: "#40c057",
     },
     {
-      label: "Vac... Leave",
+      label: "Vacational",
       value:
         leaveDetails.usedVacationalLeave + " / " + leaveDetails.vacationLeaves,
       color: "#228be6",
     },
     {
-      label: "Comp... Leave",
+      label: "Compensation",
       value: leaveDetails.compensationLeaves,
       color: "#FF9B38",
     },
@@ -90,12 +90,12 @@ const UserDetail: FC<IProps> = (props: IProps) => {
         >
           {value || "0"}
         </Text>
-        {label === "Comp... Leave" ||
+        {label === "Compensation" ||
         label === "Paid Leave" ||
-        label === "Vac... Leave" ? (
+        label === "Vacational" ? (
           <Tooltip
             label={`${
-              label === "Comp... Leave"
+              label === "Compensation"
                 ? "We have calculated the approximate compensation and not calculated anywhere. For further details, please reach out to the HR department."
                 : "Used / Granted"
             }`}
@@ -103,6 +103,7 @@ const UserDetail: FC<IProps> = (props: IProps) => {
               maxWidth: "250px",
               wordWrap: "break-word",
               textWrap: "balance",
+              whiteSpace: "normal",
             }}
             inline
             position="bottom"
@@ -118,7 +119,7 @@ const UserDetail: FC<IProps> = (props: IProps) => {
           </Tooltip>
         ) : (
           <Text
-            c={`${label === "Rem... Leave" && value < 0 ? "red" : color}`}
+            c={`${label === "Remaining" && value < 0 ? "red" : color}`}
             fw="500"
             fz="sm"
           >
@@ -236,11 +237,10 @@ const UserDetail: FC<IProps> = (props: IProps) => {
               LEAVE_DETAILS.map(({ label, value, color }, index) => {
                 return (
                   <Fragment key={index}>
-                    {label === "Vac... Leave" &&
+                    {label === "Vacational" &&
                       leaveDetails.vacationLeaves > 0 &&
                       renderPaper(label, value, color)}
-                    {label !== "Vac... Leave" &&
-                      renderPaper(label, value, color)}
+                    {label !== "Vacational" && renderPaper(label, value, color)}
                   </Fragment>
                 );
               })}
@@ -269,12 +269,20 @@ const UserDetail: FC<IProps> = (props: IProps) => {
         </Flex>
       </Flex>
       <Flex sx={{ position: "absolute", top: 15, right: 15 }}>
-        <Button compact>
+        <Button
+          compact
+          bg={"#eaf6ff"}
+          sx={{
+            "&:hover": {
+              backgroundColor: "#F1F1F2",
+            },
+          }}
+        >
           <Anchor
             href="https://docs.google.com/document/d/1TfUVxotVmZ1Ctj2flcuOwzVNUr-UL99H/edit"
             target="_blank"
             sx={{
-              color: "white",
+              color: "#78829D",
               "&:hover": {
                 textDecoration: "none",
               },
@@ -284,12 +292,22 @@ const UserDetail: FC<IProps> = (props: IProps) => {
             Leave Policy
           </Anchor>
         </Button>
-        <Button compact ml={8}>
+
+        <Button
+          compact
+          ml={8}
+          bg={"#eaf6ff"}
+          sx={{
+            "&:hover": {
+              backgroundColor: "#F1F1F2",
+            },
+          }}
+        >
           <Anchor
             href="https://drive.google.com/file/d/1rEK3UmEOAmegnf11vKrHzG1RJD5WKHyi/view?usp=share_link"
             target="_blank"
             sx={{
-              color: "white",
+              color: "#78829D",
               border: "none",
               "&:hover": {
                 textDecoration: "none",
@@ -300,12 +318,21 @@ const UserDetail: FC<IProps> = (props: IProps) => {
             Handbook
           </Anchor>
         </Button>
-        <Button compact ml={8}>
+        <Button
+          compact
+          ml={8}
+          bg={"#eaf6ff"}
+          sx={{
+            "&:hover": {
+              backgroundColor: "#F1F1F2",
+            },
+          }}
+        >
           <Anchor
             href="https://docs.google.com/document/d/1bDzOoZI8itijukUC_VeAnPKv6rf0dOfKgWJlGFjVRXA/edit"
             target="_blank"
             sx={{
-              color: "white",
+              color: "#78829D",
               border: "none",
               "&:hover": {
                 textDecoration: "none",

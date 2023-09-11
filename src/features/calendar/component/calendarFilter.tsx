@@ -2,6 +2,9 @@ import React, { FC } from "react";
 
 import { Select } from "@mantine/core";
 
+import { useSelector } from "react-redux";
+import { State } from "shared/interface";
+
 interface IProps {
   proList: any;
   usersList: any;
@@ -26,6 +29,8 @@ const CalendarFilter: FC<IProps> = ({
       width: "166px",
     },
   };
+
+  const month: any = useSelector((state: State) => state.getMonth.month);
 
   return (
     <>
@@ -62,7 +67,7 @@ const CalendarFilter: FC<IProps> = ({
           }}
           {...form.getInputProps("userId")}
           onChange={(userId) => {
-            getTeamReport(undefined, undefined, userId);
+            getTeamReport(undefined, month, userId);
             setUId(userId);
             form.setFieldValue("userId", userId);
           }}
@@ -86,7 +91,7 @@ const CalendarFilter: FC<IProps> = ({
           }}
           {...form.getInputProps("projectId")}
           onChange={(projectId) => {
-            getTeamReport(projectId, undefined, undefined);
+            getTeamReport(projectId, month, undefined);
             setPId(projectId);
             form.setFieldValue("projectId", projectId);
           }}

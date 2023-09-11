@@ -30,6 +30,7 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
   const [projectId, setProjectId] = useState("");
   const [teamInfo, setTeamInfo] = useState([]);
   const [calendarInfo, setCalendarInfo] = useState<any>([]);
+  const [projectName, setProjectName] = useState("");
   const [excelData, setExcelData] = useState<IExcelProps>();
   const [isShowCalendar, setIsShowCalendar] = useState(false);
   const navigate = useNavigate();
@@ -57,51 +58,55 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
     getProjectList();
   }, []);
 
-  const getTeamReport = useCallback((projectId?: string, month?: string) => {
-    setProjectId(projectId);
-    const params = {
-      month: month,
-      projectId: projectId,
-    };
-    httpService
-      .get(`${API_CONFIG.path.teamReport}`, params)
-      .then((res) => {
-        const info = res.data.map((item) => {
-          return {
-            start: moment(item.date, "YYYY-MM-DD").toDate(),
-            end: moment(item.date, "YYYY-MM-DD").add(1, "hours").toDate(),
-            id: item.id,
-            title: (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                {item.type !== "Holiday" && (
-                  <DotIcon fill={teamReportIconColor(item)} height="8px" />
-                )}
-                <p
+  const getTeamReport = useCallback(
+    (projectId?: string, month?: string, projectName?: string) => {
+      setProjectName(projectName);
+      setProjectId(projectId);
+      const params = {
+        month: month,
+        projectId: projectId,
+      };
+      httpService
+        .get(`${API_CONFIG.path.teamReport}`, params)
+        .then((res) => {
+          const info = res.data.map((item) => {
+            return {
+              start: moment(item.date, "YYYY-MM-DD").toDate(),
+              end: moment(item.date, "YYYY-MM-DD").add(1, "hours").toDate(),
+              id: item.id,
+              title: (
+                <div
                   style={{
-                    margin: 0,
-                    fontSize: "12px",
-                    marginLeft: 2,
-                    pointerEvents: "none",
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
-                  {item.name}
-                </p>
-              </div>
-            ),
-            type: item.type,
-          };
+                  {item.type !== "Holiday" && (
+                    <DotIcon fill={teamReportIconColor(item)} height="8px" />
+                  )}
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: "12px",
+                      marginLeft: 2,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    {item.name}
+                  </p>
+                </div>
+              ),
+              type: item.type,
+            };
+          });
+          setCalendarInfo(info);
+        })
+        .catch((error) => {
+          console.error("Error", error);
         });
-        setCalendarInfo(info);
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
-  }, []);
+    },
+    []
+  );
 
   return (
     <Box mt={30}>
@@ -132,6 +137,7 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
           getTeamReport={getTeamReport}
           projectId={projectId}
           setIsShowCalendar={setIsShowCalendar}
+          projectName={projectName}
         />
       )}
 

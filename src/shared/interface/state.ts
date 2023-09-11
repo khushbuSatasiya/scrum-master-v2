@@ -56,6 +56,7 @@ export interface State {
   //   auth: AuthState;
   loading: LoadingState;
   userDetails: IUserDetails;
+  getMonth: IMonth;
   // breadcrumbs: IBreadcrumbState;
   // user: User;
   // payouts: Payouts;
@@ -76,6 +77,10 @@ export interface IUserDetails {
   email: string;
   joiningDate: string;
   realName: string;
+}
+
+export interface IMonth {
+  month: string;
 }
 
 export interface Action {

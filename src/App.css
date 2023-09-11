@@ -40,6 +40,7 @@
 
 .rbc-show-more{
   margin-left: 10px !important;
+  color: #228be6 !important;
 }
 
 /* for react-big-calendar show more detail popup */
@@ -70,10 +71,9 @@
   border-radius: 6px;
 }
 
-.rbc-button-link{
+/* .rbc-button-link{
   color:#3f4254 !important;
-  /* padding: 4px !important; */
-}
+} */
 .rbc-header{
   color: #3f4254;
   font-family: 500;

@@ -14,6 +14,7 @@ interface IProps {
   getTeamReport: (projectId: string, month: string) => void;
   projectId: string;
   setIsShowCalendar: (action: boolean) => void;
+  projectName: string;
 }
 
 const TeamCalendar: FC<IProps> = ({
@@ -21,6 +22,7 @@ const TeamCalendar: FC<IProps> = ({
   getTeamReport,
   projectId,
   setIsShowCalendar,
+  projectName,
 }) => {
   const localizer = momentLocalizer(moment);
 
@@ -55,6 +57,17 @@ const TeamCalendar: FC<IProps> = ({
       >
         <Text ta="center" c={"#071437"} fz={26} fw={600}>
           Calendar
+        </Text>
+        <Text
+          ta="center"
+          c={"#99A1B7"}
+          fz={16}
+          fw={600}
+          pos={"absolute"}
+          top={32}
+          right={95}
+        >
+          {projectName}
         </Text>
         <Divider variant="dashed" mb={20} mt={10} />
         <Box>

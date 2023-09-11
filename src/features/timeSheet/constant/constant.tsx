@@ -14,7 +14,18 @@ export const getUserTimeSheetColumns = (renderModal) => {
       title: "Date",
       width: 100,
       render: ({ date }) => {
-        return <Anchor sx={{ fontWeight: 500 }}>{dateFormate(date)}</Anchor>;
+        return (
+          <Anchor
+            sx={{
+              fontWeight: 500,
+              cursor: "unset",
+              textDecoration: "none !important",
+              "&:hover": { textDecoration: "none !important" },
+            }}
+          >
+            {dateFormate(date)}
+          </Anchor>
+        );
       },
     },
     {
