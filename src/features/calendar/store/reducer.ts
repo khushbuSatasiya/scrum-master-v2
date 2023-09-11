@@ -6,7 +6,6 @@ const initialState: IMonth = {
 };
 
 const getMonth = (state: IMonth = initialState, action: Action) => {
-  console.log("action:", action);
   switch (action.type) {
     case actionTypes.SET_MONTH:
       return {

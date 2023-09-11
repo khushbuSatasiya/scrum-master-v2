@@ -104,6 +104,7 @@ const UserDetail: FC<IProps> = (props: IProps) => {
               wordWrap: "break-word",
               textWrap: "balance",
               whiteSpace: "normal",
+              textAlign: "center",
             }}
             inline
             position="bottom"

@@ -30,7 +30,7 @@ const CalendarFilter: FC<IProps> = ({
     },
   };
 
-  const month: any = useSelector((state: State) => state.getMonth.month);
+  const month = useSelector((state: State) => state.getMonth.month);
 
   return (
     <>
