@@ -13,7 +13,7 @@ import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import moment from 'moment';
 import Lottie from 'react-lottie';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNull } from 'lodash';
 
 import httpService from 'shared/services/http.service';
 import { API_CONFIG } from 'shared/constants/api';
@@ -55,6 +55,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
     const [isReview, setIsReview] = useState(false);
     const [active, setActive] = useState(0);
     const [isSubmit, setIsSubmit] = useState(false);
+    const [leaveDuration, setLeaveDuration] = useState('Full');
 
     const defaultOptions = {
         loop: false,
@@ -64,13 +65,16 @@ const LeaveRequest: FC<ILeaveProps> = ({
 
     const validationRules: Record<string, any> = {
         startDay: (value) => value === null && ' ',
-        endDay: (value) => value === null && ' ',
         duration: (value) => value === '' && '  ',
         reason: (value) => value === '' && '  ',
     };
     if (isVacational) {
         validationRules.leaveType = (value) => isEmpty(value) && '  ';
     }
+    if (!(leaveDuration === 'First Half' || leaveDuration === 'Second Half')) {
+        validationRules.endDay = (value) => value === null && ' ';
+    }
+    console.log('in');
 
     const form = useForm({
         initialValues: {
@@ -92,9 +96,12 @@ const LeaveRequest: FC<ILeaveProps> = ({
     };
 
     const handleSubmit = (values) => {
+        console.log('handleSubmit ~ values:', values);
         const { startDay, endDay, duration, reason, leaveType } = values;
         const startDate = moment(startDay).format('YYYY-MM-DD');
-        const endDate = moment(endDay).format('YYYY-MM-DD');
+        const endDate = endDay
+            ? moment(endDay).format('YYYY-MM-DD')
+            : startDate;
 
         const params = {
             startDate: startDate,
@@ -195,6 +202,8 @@ const LeaveRequest: FC<ILeaveProps> = ({
                                     isVacational={isVacational}
                                     validationRules={validationRules}
                                     form={form}
+                                    leaveDuration={leaveDuration}
+                                    setLeaveDuration={setLeaveDuration}
                                 />
                             </Box>
                         )}

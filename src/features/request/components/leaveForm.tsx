@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Box, Flex, Select, TextInput } from '@mantine/core';
 import { IconCalendar } from '@tabler/icons-react';
 import { DatePickerInput } from '@mantine/dates';
@@ -16,6 +16,7 @@ interface ILeaveFormProps {
     isUpcomingLeave: IUpComingLeave[];
     isVacational: boolean;
     validationRules: Record<string, any>;
+    leaveDuration: any;
     form: UseFormReturnType<{
         startDay: null;
         endDay: null;
@@ -23,10 +24,13 @@ interface ILeaveFormProps {
         reason: string;
         leaveType: string;
     }>;
+    setLeaveDuration: (value) => void;
 }
 const LeaveForm: FC<ILeaveFormProps> = ({
     isUpcomingLeave,
     isVacational,
+    leaveDuration,
+    setLeaveDuration,
     form,
 }) => {
     const { classes } = useStyles();
@@ -40,7 +44,6 @@ const LeaveForm: FC<ILeaveFormProps> = ({
 
         return datesArray.includes(formattedDate);
     };
-
     return (
         <Box>
             <Select
@@ -53,6 +56,10 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                 withinPortal
                 classNames={{ label: classes.label, input: classes.input }}
                 {...form.getInputProps('duration')}
+                onChange={(value) => {
+                    setLeaveDuration(value);
+                    form.setFieldValue('duration', value);
+                }}
             />
             <Flex gap={30} w={'100%'}>
                 <DatePickerInput
@@ -72,21 +79,26 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                     {...form.getInputProps('startDay')}
                 />
 
-                <DatePickerInput
-                    w={'50%'}
-                    radius='md'
-                    withAsterisk
-                    icon={<IconCalendar size='1.1rem' stroke={1.5} />}
-                    mt={'10px'}
-                    popoverProps={{ withinPortal: true }}
-                    placeholder='Select a date'
-                    variant='filled'
-                    label='End Date'
-                    firstDayOfWeek={0}
-                    excludeDate={excludeCustomDates}
-                    classNames={{ label: classes.label, input: classes.input }}
-                    {...form.getInputProps('endDay')}
-                />
+                {leaveDuration === 'Full' && (
+                    <DatePickerInput
+                        w={'50%'}
+                        radius='md'
+                        withAsterisk
+                        icon={<IconCalendar size='1.1rem' stroke={1.5} />}
+                        mt={'10px'}
+                        popoverProps={{ withinPortal: true }}
+                        placeholder='Select a date'
+                        variant='filled'
+                        label='End Date'
+                        firstDayOfWeek={0}
+                        excludeDate={excludeCustomDates}
+                        classNames={{
+                            label: classes.label,
+                            input: classes.input,
+                        }}
+                        {...form.getInputProps('endDay')}
+                    />
+                )}
             </Flex>
             <TextInput
                 withAsterisk
