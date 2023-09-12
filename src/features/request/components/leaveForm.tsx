@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Box, Flex, Select, TextInput } from '@mantine/core';
+import React, { FC } from 'react';
+import moment from 'moment';
+import { Box, Flex, MantineTransition, Select, TextInput } from '@mantine/core';
 import { IconCalendar } from '@tabler/icons-react';
 import { DatePickerInput } from '@mantine/dates';
-import moment from 'moment';
 import { UseFormReturnType } from '@mantine/form';
 
 import { ILeaveRequestProps, IUpComingLeave } from '../interface/request';
@@ -11,6 +11,7 @@ import {
     LEAVE_TYPE,
     useStyles,
 } from '../constants/requestConstants';
+
 interface ILeaveFormProps {
     leaveRequest: ILeaveRequestProps;
     isUpcomingLeave: IUpComingLeave[];
@@ -44,12 +45,31 @@ const LeaveForm: FC<ILeaveFormProps> = ({
 
         return datesArray.includes(formattedDate);
     };
+    const commonSelectProps = {
+        label: 'Type',
+        mt: '30px',
+        radius: 'sm',
+        placeholder: 'Select Leave Type',
+        variant: 'filled',
+        transitionProps: {
+            transition: 'pop-top-left' as MantineTransition,
+            duration: 80,
+            timingFunction: 'ease',
+        },
+        withAsterisk: true,
+        withinPortal: true,
+        classNames: {
+            label: classes.label,
+            input: classes.input,
+        },
+        dropdownPosition: 'bottom' as const,
+    };
     return (
         <Box>
             <Select
-                radius='md'
+                radius='sm'
                 withAsterisk
-                label='Leave Duration'
+                label='Duration'
                 placeholder='Select Leave Duration'
                 variant='filled'
                 data={LEAVE_DURATION}
@@ -59,19 +79,20 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                 onChange={(value) => {
                     setLeaveDuration(value);
                     form.setFieldValue('duration', value);
+                    form.setFieldValue('endDay', null);
                 }}
             />
             <Flex gap={30} w={'100%'}>
                 <DatePickerInput
                     w={'50%'}
-                    radius='md'
+                    radius='sm'
                     withAsterisk
                     icon={<IconCalendar size='1.1rem' stroke={1.5} />}
-                    mt={'10px'}
+                    mt={'30px'}
                     popoverProps={{ withinPortal: true }}
                     placeholder='Select a date'
                     variant='filled'
-                    label='Start Date'
+                    label={leaveDuration === 'Full' ? 'From Date' : ' Date'}
                     classNames={{ label: classes.label, input: classes.input }}
                     excludeDate={excludeCustomDates}
                     firstDayOfWeek={0}
@@ -82,14 +103,14 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                 {leaveDuration === 'Full' && (
                     <DatePickerInput
                         w={'50%'}
-                        radius='md'
+                        radius='sm'
                         withAsterisk
                         icon={<IconCalendar size='1.1rem' stroke={1.5} />}
-                        mt={'10px'}
+                        mt={'30px'}
                         popoverProps={{ withinPortal: true }}
                         placeholder='Select a date'
                         variant='filled'
-                        label='End Date'
+                        label='To Date'
                         firstDayOfWeek={0}
                         excludeDate={excludeCustomDates}
                         classNames={{
@@ -103,62 +124,30 @@ const LeaveForm: FC<ILeaveFormProps> = ({
             <TextInput
                 withAsterisk
                 placeholder='For Example, Sick Leave'
-                mt={'10px'}
-                radius='md'
+                mt={'30px'}
+                radius='sm'
                 label='Reason'
                 variant='filled'
                 classNames={{ label: classes.label, input: classes.input }}
                 {...form.getInputProps('reason')}
             />
-            {isVacational && (
-                <Select
-                    label='Leave Type'
-                    mt={'10px'}
-                    radius='md'
-                    data={LEAVE_TYPE}
-                    placeholder='Select Leave Type'
-                    variant='filled'
-                    transitionProps={{
-                        transition: 'pop-top-left',
-                        duration: 80,
-                        timingFunction: 'ease',
-                    }}
-                    withAsterisk
-                    withinPortal
-                    classNames={{
-                        label: classes.label,
-                        input: classes.input,
-                    }}
-                    dropdownPosition={'bottom'}
-                    {...form.getInputProps('leaveType')}
-                />
-            )}
-
             <Select
-                label='Leave Type'
-                mt={'10px'}
-                radius='md'
-                value='Paid'
-                data={[
-                    {
-                        label: 'Paid',
-                        value: 'Paid',
-                    },
-                ]}
-                placeholder='Select Leave Type'
-                variant='filled'
-                transitionProps={{
-                    transition: 'pop-top-left',
-                    duration: 80,
-                    timingFunction: 'ease',
-                }}
-                withAsterisk
-                withinPortal
-                classNames={{
-                    label: classes.label,
-                    input: classes.input,
-                }}
-                dropdownPosition={'bottom'}
+                {...commonSelectProps}
+                data={
+                    isVacational
+                        ? LEAVE_TYPE
+                        : [{ label: 'Paid', value: 'Paid' }]
+                }
+                value={
+                    isVacational
+                        ? form.getInputProps('leaveType').value
+                        : 'Paid'
+                }
+                onChange={
+                    isVacational
+                        ? form.getInputProps('leaveType').onChange
+                        : undefined
+                }
             />
         </Box>
     );

@@ -1,4 +1,7 @@
 import React, { FC, useState } from 'react';
+import { isEmpty } from 'lodash';
+import moment from 'moment';
+import Lottie from 'react-lottie';
 import {
     Anchor,
     Box,
@@ -11,9 +14,6 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
-import moment from 'moment';
-import Lottie from 'react-lottie';
-import { isEmpty, isNull } from 'lodash';
 
 import httpService from 'shared/services/http.service';
 import { API_CONFIG } from 'shared/constants/api';
@@ -25,12 +25,10 @@ import {
     ILeaveReviewProps,
     IUpComingLeave,
 } from '../interface/request';
-import { useStyles } from '../constants/requestConstants';
+import { DURATION, useStyles } from '../constants/requestConstants';
 
 import LeaveDetails from './leaveDetails';
 import LeaveForm from './leaveForm';
-
-import '../style/request.scss';
 
 interface ILeaveProps {
     leaveRequest: ILeaveRequestProps;
@@ -71,10 +69,10 @@ const LeaveRequest: FC<ILeaveProps> = ({
     if (isVacational) {
         validationRules.leaveType = (value) => isEmpty(value) && '  ';
     }
-    if (!(leaveDuration === 'First Half' || leaveDuration === 'Second Half')) {
+
+    if (!DURATION.includes(leaveDuration)) {
         validationRules.endDay = (value) => value === null && ' ';
     }
-    console.log('in');
 
     const form = useForm({
         initialValues: {
@@ -96,7 +94,6 @@ const LeaveRequest: FC<ILeaveProps> = ({
     };
 
     const handleSubmit = (values) => {
-        console.log('handleSubmit ~ values:', values);
         const { startDay, endDay, duration, reason, leaveType } = values;
         const startDate = moment(startDay).format('YYYY-MM-DD');
         const endDate = endDay
@@ -151,7 +148,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
             centered
             padding={'20px 0'}
             radius='md'
-            withCloseButton={true}
+            withCloseButton={false}
             opened={isOpen}
             onClose={onClose}
             classNames={{
@@ -161,21 +158,16 @@ const LeaveRequest: FC<ILeaveProps> = ({
             <form onSubmit={form.onSubmit(handleSubmit)}>
                 <Flex direction={'column'} justify={'center'}>
                     <Box>
-                        <Text
-                            ta={'center'}
-                            fw={600}
-                            c={'#071437'}
-                            fz={22}
-                            mb={5}>
+                        <Text ta={'center'} fw={700} c={'#071437'} fz={22}>
                             Request A Leave
                         </Text>
 
                         <Text
                             ta={'center'}
                             c={'#99A1B7'}
-                            fz={16}
+                            fz={14}
                             fw={500}
-                            mb={20}>
+                            mb={10}>
                             If you need more info, please check{' '}
                             <Anchor
                                 href='https://docs.google.com/document/d/1TfUVxotVmZ1Ctj2flcuOwzVNUr-UL99H/edit'
@@ -190,7 +182,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
                             </Anchor>
                             .
                         </Text>
-                        <Divider variant='dashed' mt={10} mb={20} />
+                        <Divider variant='dashed' mt={15} mb={5} />
                     </Box>
 
                     <Box>
@@ -268,14 +260,23 @@ const LeaveRequest: FC<ILeaveProps> = ({
                     </Box>
 
                     {active + 1 !== 3 && (
-                        <Group position='center' mt='18px' mb={10}>
-                            {isReview && (
-                                <Button variant='default' onClick={prevStep}>
-                                    Back
-                                </Button>
-                            )}
+                        <Group position='center' mt='60px' mb={20}>
+                            <Button
+                                variant='default'
+                                sx={{
+                                    background: '#F9F9F9',
+                                    color: '#99A1B7',
+                                    border: 'none',
+                                }}
+                                w={100}
+                                fz={14}
+                                onClick={isReview ? prevStep : onClose}>
+                                {isReview ? 'Back' : 'Cancel'}
+                            </Button>
 
                             <Button
+                                w={100}
+                                fz={14}
                                 type='submit'
                                 disabled={
                                     isReview

@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
-import Lottie from 'react-lottie';
-import { Badge, Box, Checkbox, Flex, Text } from '@mantine/core';
+import { Badge, Box, Flex, Text, Tooltip } from '@mantine/core';
 
 import { dateFormate } from 'shared/util/utility';
 
@@ -10,6 +9,8 @@ interface ILeaveDataProps {
     leaveData: ILeaveReviewProps;
 }
 const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
+    const { startDate, endDate, leavetype, totalDay, duration, reason } =
+        leaveData;
     return (
         <Box>
             <Flex
@@ -45,7 +46,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                             From Date
                         </Text>
                         <Badge size='lg' radius='md'>
-                            {dateFormate(leaveData.startDate)}
+                            {dateFormate(startDate)}
                         </Badge>
                     </Box>
                     <Box sx={{ width: '50%' }}>
@@ -53,7 +54,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                             To Date
                         </Text>
                         <Badge size='lg' radius='md'>
-                            {dateFormate(leaveData.endDate)}
+                            {dateFormate(endDate)}
                         </Badge>
                     </Box>
                 </Flex>
@@ -64,7 +65,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                             Leave Type
                         </Text>
                         <Text fw='600' fz='14px' color='#40c057'>
-                            {leaveData.leavetype}
+                            {leavetype}
                         </Text>
                     </Box>
                     <Box sx={{ width: '50%' }}>
@@ -72,7 +73,7 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                             Total Day
                         </Text>
                         <Text size='lg' fz='14px' fw={600} color='#228be6'>
-                            {leaveData.totalDay}
+                            {totalDay}
                         </Text>
                     </Box>
                 </Flex>
@@ -88,16 +89,34 @@ const LeaveDetails: FC<ILeaveDataProps> = ({ leaveData }) => {
                         </Text>
                         <Text fz='14px' color='#B5B5C3' fw={600}>
                             {' '}
-                            {leaveData.duration}
+                            {duration}
                         </Text>
                     </Box>
                     <Box sx={{ width: '50%' }}>
                         <Text color='' fw={600} fz={'14px'} mb={5}>
                             Reason
                         </Text>
-                        <Text fz='14px' color='#B5B5C3' fw={600}>
-                            {leaveData.reason}
-                        </Text>
+
+                        <Tooltip
+                            sx={{
+                                maxWidth: '150px',
+                                wordWrap: 'break-word',
+                                textWrap: 'balance',
+                                height: 'auto',
+                                textAlign: 'center',
+                            }}
+                            inline
+                            position='top'
+                            label={reason}
+                            color='#1c7ed6'
+                            transitionProps={{
+                                transition: 'slide-down',
+                                duration: 300,
+                            }}>
+                            <Text fz='14px' color='#B5B5C3' fw={600} truncate>
+                                {reason}
+                            </Text>
+                        </Tooltip>
                     </Box>
                 </Flex>
             </Box>
