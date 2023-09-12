@@ -54,6 +54,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
     const [active, setActive] = useState(0);
     const [isSubmit, setIsSubmit] = useState(false);
     const [leaveDuration, setLeaveDuration] = useState('Full');
+    const [isLoading, setIsLoading] = useState(false);
 
     const defaultOptions = {
         loop: false,
@@ -101,7 +102,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
         const { startDay, endDay, duration, reason, leaveType } = values;
 
         const startDate = moment(startDay).format('YYYY-MM-DD');
-        const endDate = endDay
+        const endDate = !DURATION.includes(leaveDuration)
             ? moment(endDay).format('YYYY-MM-DD')
             : startDate;
 
@@ -115,17 +116,20 @@ const LeaveRequest: FC<ILeaveProps> = ({
 
         const onError = (err) => {
             console.error('Error', err);
+            setIsLoading(false);
             notifications.show({
                 message: err.response.data.message,
                 color: 'red',
             });
         };
 
+        setIsLoading(true);
         if (isReview) {
             //API calling for final Leave Request
             httpService
                 .post(`${API_CONFIG.path.leaveRequest}`, params)
                 .then(() => {
+                    setIsLoading(false);
                     getLeaveRequestInfo();
                     nextStep();
                     setIsSubmit(true);
@@ -139,6 +143,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
             httpService
                 .post(`${API_CONFIG.path.leaveRequest}/review`, params)
                 .then((res) => {
+                    setIsLoading(false);
                     setLeaveData(res.data);
                     setIsReview(true);
                     nextStep();
@@ -257,7 +262,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
                                     width={120}
                                     speed={1.5}
                                 />
-                                <Text tt={'uppercase'} fz={16} fw={600} mt={30}>
+                                <Text fz={16} fw={600} mt={30}>
                                     Your Leave Request Submitted Successfully.
                                 </Text>
                             </Flex>
@@ -282,13 +287,21 @@ const LeaveRequest: FC<ILeaveProps> = ({
                             <Button
                                 w={100}
                                 fz={14}
+                                loading={isLoading}
+                                loaderPosition='center'
+                                loaderProps={{
+                                    size: 'sm',
+                                    color: '#fff',
+
+                                    variant: 'oval',
+                                }}
                                 type='submit'
                                 disabled={
-                                    isReview
+                                    isLoading && isReview
                                         ? leaveData.action === 'Error'
                                         : false
                                 }>
-                                {isReview ? 'Submit' : 'Next'}
+                                {isLoading ? '' : isReview ? 'Submit' : 'Next'}
                             </Button>
                         </Group>
                     )}

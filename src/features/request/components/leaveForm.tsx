@@ -86,7 +86,6 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                 onChange={(value) => {
                     setLeaveDuration(value);
                     form.setFieldValue('duration', value);
-                    form.setFieldValue('endDay', null);
                 }}
             />
             <Flex gap={30} w={'100%'}>

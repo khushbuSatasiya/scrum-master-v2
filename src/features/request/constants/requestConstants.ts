@@ -31,7 +31,7 @@ const useStyles = createStyles(() => ({
         },
     },
 	error:{
-		display:'none'
+		display:'none',
 	},
 	wrapper:{
 		margin:'0px'
