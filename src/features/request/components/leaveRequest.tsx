@@ -253,15 +253,15 @@ const LeaveRequest: FC<ILeaveProps> = ({
                                 direction={'column'}
                                 justify={'center'}
                                 align={'center'}>
-                                <Text tt={'uppercase'} fz={16} fw={600} mb={30}>
-                                    Your Leave Request Submitted Successfully.
-                                </Text>
                                 <Lottie
                                     options={defaultOptions}
                                     height={120}
                                     width={120}
                                     speed={1.5}
                                 />
+                                <Text tt={'uppercase'} fz={16} fw={600} mt={30}>
+                                    Your Leave Request Submitted Successfully.
+                                </Text>
                             </Flex>
                         )}
                     </Box>
