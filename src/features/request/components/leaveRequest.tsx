@@ -217,15 +217,14 @@ const LeaveRequest: FC<ILeaveProps> = ({
 
                                 {leaveData.action === 'Error' && (
                                     <Flex
-                                        mt={30}
                                         p={'0 80px'}
                                         h={'320px'}
+                                        mt={20}
                                         justify={'center'}
                                         align={'center'}>
                                         <Flex
-                                            direction={'column'}
-                                            align={'center'}
                                             justify={'center'}
+                                            align={'center'}
                                             sx={{
                                                 border: '1px dashed #fa5252',
                                                 background: '#F1FAFF',
@@ -233,9 +232,8 @@ const LeaveRequest: FC<ILeaveProps> = ({
                                             }}
                                             p={15}>
                                             <Text
-                                                fz={12}
+                                                fz={14}
                                                 fw={600}
-                                                tt='uppercase'
                                                 c={'#fa5252'}
                                                 ta={'center'}>
                                                 {leaveData.message}
