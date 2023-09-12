@@ -61,6 +61,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
         animationData: checkedJson,
     };
 
+    //Validation Rules
     const validationRules: Record<string, any> = {
         startDay: (value) => value === null && ' ',
         duration: (value) => value === '' && '  ',

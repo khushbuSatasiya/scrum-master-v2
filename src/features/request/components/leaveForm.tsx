@@ -150,25 +150,20 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                 }}
                 {...form.getInputProps('reason')}
             />
-            <Select
-                {...commonSelectProps}
-                data={
-                    isVacational
-                        ? LEAVE_TYPE
-                        : [{ label: 'Paid', value: 'Paid' }]
-                }
-                value={
-                    isVacational
-                        ? form.getInputProps('leaveType').value
-                        : 'Paid'
-                }
-                onChange={
-                    isVacational
-                        ? form.getInputProps('leaveType').onChange
-                        : undefined
-                }
-                {...form.getInputProps('leaveType')}
-            />
+            {isVacational ? (
+                <Select
+                    {...commonSelectProps}
+                    data={LEAVE_TYPE}
+                    value={form.getInputProps('leaveType').value}
+                    {...form.getInputProps('leaveType')}
+                />
+            ) : (
+                <Select
+                    {...commonSelectProps}
+                    data={[{ label: 'Paid', value: 'Paid' }]}
+                    value='Paid'
+                />
+            )}
         </Box>
     );
 };
