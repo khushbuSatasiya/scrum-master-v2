@@ -1,11 +1,13 @@
-import { Box, Button, Flex, Paper, Text } from '@mantine/core';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { IProjectsProps } from 'features/project/interface/project';
-import { ILeaveRequestProps, IUpComingLeave } from '../interface/request';
-import LeaveRequest from '../components/leaveRequest';
+import { Button, Flex, Paper, Text } from '@mantine/core';
 import { isEmpty } from 'lodash';
+
 import httpService from 'shared/services/http.service';
 import { API_CONFIG } from 'shared/constants/api';
+import { IProjectsProps } from 'features/project/interface/project';
+
+import { ILeaveRequestProps, IUpComingLeave } from '../interface/request';
+import LeaveRequest from '../components/leaveRequest';
 
 const Request: FC<IProjectsProps> = ({ uId }) => {
     const [leaveRequest, setLeaveRequest] = useState({} as ILeaveRequestProps);
@@ -39,7 +41,7 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
             title1: 'Enjoy the flexibility of working from home and boost your productivity.Stay connected and thrive',
         },
     ];
-
+    //API call for get Leave info
     const getLeaveRequestInfo = useCallback(() => {
         httpService
             .get(`${API_CONFIG.path.leaveRequest}/${uId}`)
@@ -50,11 +52,12 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
             .catch((error) => {
                 console.log('error', error);
             });
-    }, []);
+    }, [uId]);
 
     useEffect(() => {
         getLeaveRequestInfo();
     }, []);
+
     return (
         <Flex wrap={'wrap'} w={'100%'} gap={10} justify={'space-between'}>
             {REQUEST_ARR.map(({ name, title1, onClick }, index) => {

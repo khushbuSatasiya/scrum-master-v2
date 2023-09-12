@@ -85,9 +85,12 @@ const LeaveRequest: FC<ILeaveProps> = ({
         validate: validationRules,
     });
 
+    //for next Step of leave review
     const nextStep = () => {
         setActive((current) => (current < 3 ? current + 1 : current));
     };
+    //for Prev Step of leave review
+
     const prevStep = () => {
         setIsReview(false);
         setActive((current) => (current > 0 ? current - 1 : current));
@@ -95,6 +98,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
 
     const handleSubmit = (values) => {
         const { startDay, endDay, duration, reason, leaveType } = values;
+
         const startDate = moment(startDay).format('YYYY-MM-DD');
         const endDate = endDay
             ? moment(endDay).format('YYYY-MM-DD')
@@ -117,6 +121,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
         };
 
         if (isReview) {
+            //API calling for final Leave Request
             httpService
                 .post(`${API_CONFIG.path.leaveRequest}`, params)
                 .then(() => {
@@ -129,6 +134,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
                 })
                 .catch(onError);
         } else {
+            //API calling for Leave Review
             httpService
                 .post(`${API_CONFIG.path.leaveRequest}/review`, params)
                 .then((res) => {
