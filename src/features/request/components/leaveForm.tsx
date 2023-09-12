@@ -135,6 +135,22 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                     />
                 )}
             </Flex>
+
+            {isVacational ? (
+                <Select
+                    {...commonSelectProps}
+                    data={LEAVE_TYPE}
+                    value={form.getInputProps('leaveType').value}
+                    {...form.getInputProps('leaveType')}
+                />
+            ) : (
+                <Select
+                    {...commonSelectProps}
+                    data={[{ label: 'Paid', value: 'Paid' }]}
+                    value='Paid'
+                />
+            )}
+
             <TextInput
                 withAsterisk
                 placeholder='For Example, Sick Leave'
@@ -150,20 +166,6 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                 }}
                 {...form.getInputProps('reason')}
             />
-            {isVacational ? (
-                <Select
-                    {...commonSelectProps}
-                    data={LEAVE_TYPE}
-                    value={form.getInputProps('leaveType').value}
-                    {...form.getInputProps('leaveType')}
-                />
-            ) : (
-                <Select
-                    {...commonSelectProps}
-                    data={[{ label: 'Paid', value: 'Paid' }]}
-                    value='Paid'
-                />
-            )}
         </Box>
     );
 };
