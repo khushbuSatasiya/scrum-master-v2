@@ -65,8 +65,17 @@ const LEAVE_TYPE = [
 
 const  DURATION= [
 	'First Half' ,
-	'Second Half' 
-	
+	'Second Half' 	
 ]
 
-export { useStyles, LEAVE_DURATION, LEAVE_TYPE ,DURATION};
+const CHANGE_TIMESHEET_TYPE=[
+	{label:'In Time',
+	value:'In'},
+{
+	label:'Out time',
+	value:'Out'
+
+}
+]
+
+export { useStyles, LEAVE_DURATION, LEAVE_TYPE ,DURATION ,CHANGE_TIMESHEET_TYPE} ;

@@ -19,6 +19,9 @@ export const API_CONFIG = {
     project: "project",
     profile: "users/profile",
 	leaveRequest:'request/leave',
+	changeTimeSheet:'request/changetime',
+	timeSheet:'request/timesheet'
+
 	
   },
 };

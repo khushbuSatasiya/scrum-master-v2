@@ -6,12 +6,21 @@ import httpService from 'shared/services/http.service';
 import { API_CONFIG } from 'shared/constants/api';
 import { IProjectsProps } from 'features/project/interface/project';
 
-import { ILeaveRequestProps, IUpComingLeave } from '../interface/request';
+import {
+    IChangeTimeSheet,
+    ILeaveRequestProps,
+    IUpComingLeave,
+} from '../interface/request';
 import LeaveRequest from '../components/leaveRequest';
+import ChangeTimeSheet from '../components/changeTimeSheet';
 
 const Request: FC<IProjectsProps> = ({ uId }) => {
     const [leaveRequest, setLeaveRequest] = useState({} as ILeaveRequestProps);
+    const [changeTimeSheet, setChangeTimeSheet] = useState(
+        {} as IChangeTimeSheet
+    );
     const [isVacational, setIsVacational] = useState(false);
+    const [isDisableDate, setIsDisableDate] = useState([]);
     const [isUpcomingLeave, setIsUpcomingLeave] = useState<IUpComingLeave[]>();
 
     const REQUEST_ARR = [
@@ -35,13 +44,20 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
         {
             name: 'Change Time Request',
             title1: 'Please submit your change time request for us to process. Thank you!',
+            onClick: () => {
+                setChangeTimeSheet({
+                    date: null,
+                    changeTimeType: '',
+                    time: '',
+                });
+            },
         },
         {
             name: 'Work From Home',
             title1: 'Enjoy the flexibility of working from home and boost your productivity.Stay connected and thrive',
         },
     ];
-    //API call for get Leave info
+    //API call for getting Leave info
     const getLeaveRequestInfo = useCallback(() => {
         httpService
             .get(`${API_CONFIG.path.leaveRequest}/${uId}`)
@@ -54,8 +70,21 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
             });
     }, [uId]);
 
+    //APi call for getting Disable Date
+    const getDateForChangeTimeSheet = useCallback(() => {
+        httpService
+            .get(`${API_CONFIG.path.changeTimeSheet}`)
+            .then((res) => {
+                setIsDisableDate(res.data.date);
+            })
+            .catch((error) => {
+                console.log('error', error);
+            });
+    }, [uId]);
+
     useEffect(() => {
         getLeaveRequestInfo();
+        getDateForChangeTimeSheet();
     }, []);
 
     return (
@@ -117,6 +146,15 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
                     isVacational={isVacational}
                     isUpcomingLeave={isUpcomingLeave}
                     getLeaveRequestInfo={getLeaveRequestInfo}
+                />
+            )}
+
+            {!isEmpty(changeTimeSheet) && (
+                <ChangeTimeSheet
+                    onClose={() => setChangeTimeSheet({} as IChangeTimeSheet)}
+                    changeTimeSheet={changeTimeSheet}
+                    isOpen={!isEmpty(changeTimeSheet)}
+                    isDisableDate={isDisableDate}
                 />
             )}
         </Flex>

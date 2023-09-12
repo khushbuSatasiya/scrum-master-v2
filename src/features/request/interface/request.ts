@@ -4,7 +4,12 @@ export interface ILeaveRequestProps{
 	duration:string,
 	reason:string
 	leaveType:string
+}
 
+export interface IChangeTimeSheet{
+	date: Date,
+	changeTimeType: string,
+	time: string
 }
 
 export interface ILeaveReviewProps {
