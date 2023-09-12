@@ -29,6 +29,7 @@ const UserInfoPopup: FC<IProps> = ({
   const [userDetail, setUserDetail] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
 
+  /* API call for get profile data*/
   const getProfile = async () => {
     setIsLoading(true);
     try {
@@ -75,7 +76,6 @@ const UserInfoPopup: FC<IProps> = ({
         </Flex>
       )}
 
-      {/* {!isLoading && isEmpty(userDetail) && <Text>No data found</Text>} */}
       {!isLoading && !isEmpty(userDetail) && (
         <Paper radius="lg">
           <Text align="center" fw={600} size={22}>

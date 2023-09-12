@@ -26,12 +26,13 @@ interface IProps {
 const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
   const { form, isShowForm, handleAddTaskBtn, projects, classes } = props;
 
+  /* add task button disable */
   const isAddButtonDisabled = (employee: any) => {
     const enable = employee.task && employee.project && employee.projectHours;
-
     return !enable;
   };
 
+  /* For input fields */
   const fields = form.values.employees.map((item, index) => {
     return (
       <Box key={index}>

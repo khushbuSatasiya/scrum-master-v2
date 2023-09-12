@@ -84,14 +84,7 @@ const CheckOut: FC<IProps> = ({
             },
           ],
         ],
-        tasks: [
-          // {
-          //   taskId: "",
-          //   projectId: "",
-          //   taskName: "",
-          //   projectHours: "",
-          // },
-        ],
+        tasks: [],
       };
     }
   };
@@ -129,6 +122,7 @@ const CheckOut: FC<IProps> = ({
     setIsShowForm(!isShowForm);
   };
 
+  /* API call for check out */
   const handleCheckOut = useCallback(
     async (values: any) => {
       const project = values.employees.filter(
@@ -156,28 +150,13 @@ const CheckOut: FC<IProps> = ({
           };
         });
 
-        // const isAnyValueEmpty = () => {
-        //   return values.employees.some((item: any) => {
-        //     return (
-        //       item.project === undefined ||
-        //       item.task === undefined ||
-        //       item.projectHours === undefined
-        //     );
-        //   });
-        // };
-
         let tasks;
 
-        // if (isAnyValueEmpty()) {
-        //   tasks = updatedTasks;
-        // }
-        // else {
         if (enteredTask.length > 0) {
           tasks = [...updatedTasks, ...updatedEmployees];
         } else {
           tasks = [...updatedEmployees];
         }
-        // }
 
         const payload = {
           outTime: values.time,
@@ -208,18 +187,6 @@ const CheckOut: FC<IProps> = ({
     [checkOutDate, checkStatus, enteredTask.length]
   );
 
-  // const handleTimeChange = (e) => {
-
-  //   let formattedTime = e.target.value.replace(/\D/g, "");
-  //   if (formattedTime.length > 2) {
-  //     formattedTime = `${formattedTime.slice(0, 2)}:${formattedTime.slice(2)}`;
-  //   }
-  //   if (formattedTime.length > 5) {
-  //     return;
-  //   }
-  //   form.setFieldValue("time", formattedTime);
-  // };
-
   return (
     <>
       <CheckOutForm
@@ -233,7 +200,6 @@ const CheckOut: FC<IProps> = ({
         checkOutDate={checkOutDate}
         isLoading={isLoading}
         actionTime={actionTime}
-        // handleTimeChange={handleTimeChange}
       />
 
       <Modal

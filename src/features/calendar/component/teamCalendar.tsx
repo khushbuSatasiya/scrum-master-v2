@@ -14,6 +14,8 @@ import { API_CONFIG } from "shared/constants/api";
 import { createAction, teamReportIconColor } from "shared/util/utility";
 import { DotIcon } from "shared/icons/icons";
 
+import { ICalendarInfo, IProUserList } from "../interface/calendar.interface";
+
 import CalendarFilter from "./calendarFilter";
 
 import "../style/calendar.scss";
@@ -23,9 +25,9 @@ const TeamCalendar: FC = () => {
 
   const dispatch = useDispatch();
 
-  const [calendarInfo, setCalendarInfo] = useState<any>([]);
-  const [proList, setProList] = useState<any>([]);
-  const [usersList, setUsersList] = useState<any>([]);
+  const [calendarInfo, setCalendarInfo] = useState<ICalendarInfo[]>([]);
+  const [proList, setProList] = useState<IProUserList[]>([]);
+  const [usersList, setUsersList] = useState<IProUserList[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [uId, setUId] = useState("");
   const [pId, setPId] = useState("");
@@ -38,6 +40,7 @@ const TeamCalendar: FC = () => {
     },
   });
 
+  /* API call to get team report */
   const getTeamReport = useCallback(
     (
       projectId?: string,
@@ -45,7 +48,6 @@ const TeamCalendar: FC = () => {
       userId?: string
     ) => {
       dispatch(createAction(actionTypes.SET_MONTH, month));
-      // month && setIsLoading(true);
 
       const params = {
         month,
@@ -56,8 +58,6 @@ const TeamCalendar: FC = () => {
       httpService
         .get(`${API_CONFIG.path.teamReport}`, params)
         .then((res) => {
-          // month && setIsLoading(false);
-
           const info = res.data.map((item) => {
             return {
               start: moment(item.date, "YYYY-MM-DD").toDate(),
@@ -102,6 +102,7 @@ const TeamCalendar: FC = () => {
     getTeamReport();
   }, [getTeamReport]);
 
+  /* API call to get project list report */
   const getProjects = useCallback(() => {
     httpService
       .get(`${API_CONFIG.path.projects}`)
@@ -123,6 +124,7 @@ const TeamCalendar: FC = () => {
     getProjects();
   }, [getProjects]);
 
+  /* API call to get user list report */
   const getUsers = useCallback(() => {
     httpService
       .get(`${API_CONFIG.path.userList}`)
@@ -156,6 +158,7 @@ const TeamCalendar: FC = () => {
     };
   }, []);
 
+  /* For next back of calendar month */
   const handleNavigate = (newDate) => {
     const month = newDate.getMonth() + 1;
     getTeamReport(pId, month, uId);
@@ -171,17 +174,6 @@ const TeamCalendar: FC = () => {
       display={`${isLoading && "flex"}`}
       sx={{ justifyContent: `${isLoading && "center"}` }}
     >
-      {/* {isLoading && (
-        <Loader
-          variant="dots"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: 690,
-          }}
-        />
-      )} */}
       {!isLoading && (
         <Box>
           <Flex

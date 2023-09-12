@@ -29,7 +29,6 @@ const TeamCalendar: FC<IProps> = ({
   const eventPropGetter = useCallback((event, start, end, isSelected) => {
     const backgroundColor = event.type === "Holiday" ? "green" : "transparent";
     const color = event.type === "Holiday" ? "white" : "black";
-
     return {
       style: {
         backgroundColor,
@@ -37,6 +36,7 @@ const TeamCalendar: FC<IProps> = ({
       },
     };
   }, []);
+
   const handleNavigate = (newDate) => {
     const month = newDate.getMonth() + 1;
     getTeamReport(projectId, month);

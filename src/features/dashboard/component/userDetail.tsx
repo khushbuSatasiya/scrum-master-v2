@@ -65,11 +65,6 @@ const UserDetail: FC<IProps> = (props: IProps) => {
       value: leaveDetails.compensationLeaves,
       color: "#FF9B38",
     },
-    // {
-    //   label: "Used Leave",
-    //   value: leaveDetails.usedLeaves,
-    //   color: "#fa5252",
-    // },
   ];
 
   const renderPaper = (label, value, color) => {
@@ -82,12 +77,7 @@ const UserDetail: FC<IProps> = (props: IProps) => {
           padding: "6px 10px",
         }}
       >
-        <Text
-          fw="bold"
-          fz="22px"
-          c={"#071437"}
-          // c={`${label === "Rem... Leave" && value < 0 ? "red" : "green"}`}
-        >
+        <Text fw="bold" fz="22px" c={"#071437"}>
           {value || "0"}
         </Text>
         {label === "Compensation" ||

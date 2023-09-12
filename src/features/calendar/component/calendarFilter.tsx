@@ -3,11 +3,13 @@ import React, { FC } from "react";
 import { Select } from "@mantine/core";
 
 import { useSelector } from "react-redux";
+import { IProUserList } from "../interface/calendar.interface";
+
 import { State } from "shared/interface";
 
 interface IProps {
-  proList: any;
-  usersList: any;
+  proList: IProUserList[];
+  usersList: IProUserList[];
   getTeamReport: (projectId: string, month: string, userId: string) => void;
   form: any;
   setPId: (id: string) => void;

@@ -9,45 +9,12 @@ import { IUserInfo } from "../interface/user";
 import { USERINFO } from "../constants/userConstants";
 
 const ViewUser: FC = () => {
-  const [userData, setUserData] = useState<IUserInfo>(USERINFO);
+  const [userData] = useState<IUserInfo>(USERINFO);
   const [activeTab, setActiveTab] = useState<string | null>("overview");
   const [LeaveDetails, setLeaveDetails] = useState<Record<string, any>>({});
   const [totalWorkingHour, setTotalWorkingHour] = useState<string>("");
 
-  /* API call for get user info*/
-  // const getUserInfo = () => {
-  //   httpService
-  //     .get(`${API_CONFIG.path.getUser}/${params.id}`)
-  //     .then((res) => {
-  //       setUserData(res.data);
-  //     })
-  //     .catch((err: Error) => {
-  //       console.error("Error", err);
-  //     });
-  // };
-
   const totalExperience = userData.experience / 365;
-
-  // const handleLeaveDetails = (leaveInfo) => {
-  //   const {
-  //     grantedLeaves,
-  //     usedLeaves,
-  //     remainingLeaves,
-  //     vacationLeaves,
-  //     compensationLeaves,
-  //   } = leaveInfo;
-  //   setLeaveDetails({
-  //     grantedLeaves,
-  //     usedLeaves,
-  //     remainingLeaves,
-  //     vacationLeaves,
-  //     compensationLeaves,
-  //   });
-  // };
-
-  // const handleTimeSheetDetails = (workingHours) => {
-  //   setTotalWorkingHour(workingHours);
-  // };
 
   const renderPaper = (label, value, color) => (
     <Paper
@@ -81,12 +48,10 @@ const ViewUser: FC = () => {
     {
       label: "Time Sheet",
       value: "timesheet",
-      // content: <UserTimeSheet handleTimeSheetDetails={handleTimeSheetDetails} />
     },
     {
       label: "Leave Report",
       value: "leavereport",
-      // content: <LeaveList handleLeaveDetails={handleLeaveDetails} />
     },
   ];
 
@@ -117,10 +82,6 @@ const ViewUser: FC = () => {
       color: "#40c057",
     },
   ];
-
-  // useEffect(() => {
-  //   getUserInfo();
-  // }, []);
 
   return (
     <Box>

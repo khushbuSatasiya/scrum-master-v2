@@ -31,7 +31,6 @@ interface IProps {
   checkOutDate: string;
   isLoading: boolean;
   actionTime: IActionTime;
-  // handleTimeChange: (e: any) => void;
 }
 
 const CheckOutForm: FC<IProps> = (props) => {
@@ -46,7 +45,6 @@ const CheckOutForm: FC<IProps> = (props) => {
     isLoading,
     userTasks,
     actionTime,
-    // handleTimeChange,
   } = props;
 
   const useStyles = createStyles(() => ({
@@ -55,7 +53,6 @@ const CheckOutForm: FC<IProps> = (props) => {
       color: "5e6278",
       fontWight: "500",
       border: "transparent",
-      // border: "transparent",
     },
     label: {
       color: "#99A1B7 !important",
@@ -143,7 +140,6 @@ const CheckOutForm: FC<IProps> = (props) => {
                             input: classes.input,
                           }}
                           sx={{ marginLeft: "20px" }}
-                          // value={form.values.time}
                           {...form.getInputProps(`tasks.${index}.projectHours`)}
                         />
                       </Flex>
@@ -259,7 +255,6 @@ const CheckOutForm: FC<IProps> = (props) => {
                 value={form.values.time}
                 {...form.getInputProps("time")}
                 m={"0 auto"}
-                // onChange={(e) => handleTimeChange(e)}
               />
               <Divider
                 my="sm"

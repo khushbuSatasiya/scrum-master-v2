@@ -53,6 +53,7 @@ const Dashboard: FC = () => {
   const [isShowUserDetails, setIsShowUserDetails] = useState(false);
   const [calendarIndicator, setCalendarIndicator] = useState([]);
 
+  /* API call for check status*/
   const checkStatus = useCallback(async () => {
     setIsActionLoader(true);
     try {
@@ -102,6 +103,7 @@ const Dashboard: FC = () => {
     }
   }, []);
 
+  /* API call for login*/
   const login = useCallback(
     async (token: string) => {
       try {
@@ -138,6 +140,7 @@ const Dashboard: FC = () => {
     }
   }, [login, token]);
 
+  /* calling checkStatus when action type changed */
   useEffect(() => {
     !actionType && authService.getAuthData() && checkStatus();
   }, [actionType, checkStatus]);

@@ -11,7 +11,6 @@ interface IProps {
 const CheckoutModals: FC<IProps> = ({ isConfirm, setIsConfirm }) => {
   return (
     <Modal
-      // size="auto"
       opened={isConfirm}
       onClose={() => setIsConfirm(false)}
       centered

@@ -40,8 +40,7 @@ const Leave: FC<ILeaveProps> = ({ handleLeaveDetails, uId }) => {
       currentPage = pagination.currentPage,
       recordPerPage = pagination.recordPerPage,
       status?,
-      date?,
-      userId?
+      date?
     ) => {
       const params = {
         currentPage,

@@ -58,6 +58,7 @@ const Project: FC<IProjectsProps> = ({ uId }) => {
     getProjectList();
   }, []);
 
+  /* API call to get team report */
   const getTeamReport = useCallback(
     (projectId?: string, month?: string, projectName?: string) => {
       setProjectName(projectName);

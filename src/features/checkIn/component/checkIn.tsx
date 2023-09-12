@@ -67,6 +67,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
     validateInputOnBlur: true,
   });
 
+  /* To get label value pair for project */
   const getProject = useCallback(() => {
     setProjectName(getProjectList(projectArray));
   }, [projectArray]);
@@ -86,6 +87,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
     }
   }, []);
 
+  /* API call for check in */
   const confirmCheckIn = useCallback(
     async (values: ICheckInValues) => {
       const updatedValue = values.employees.map((data) => {
@@ -121,6 +123,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
     [checkStatus]
   );
 
+  /* add task button disable */
   const isAddButtonDisabled = (employee: any) => {
     return (
       employee.task.trim() === "" ||
@@ -129,6 +132,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
     );
   };
 
+  /* For input fields */
   const fields = form.values.employees.map((item, index) => (
     <Paper key={index}>
       <Group mt="xs" sx={{ alignItems: "end" }}>
@@ -209,17 +213,6 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
     </Paper>
   ));
 
-  const handleTimeChange = (e) => {
-    let formattedTime = e.target.value.replace(/\D/g, "");
-    if (formattedTime.length > 2) {
-      formattedTime = `${formattedTime.slice(0, 2)}:${formattedTime.slice(2)}`;
-    }
-    if (formattedTime.length > 5) {
-      return;
-    }
-    form.setFieldValue("time", formattedTime);
-  };
-
   return (
     <>
       <Flex direction="column" justify="center" mt={30}>
@@ -227,7 +220,6 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
           form={form}
           handleCheckIn={handleCheckIn}
           fields={fields}
-          handleTimeChange={handleTimeChange}
           isLoading={isLoading}
           classes={classes}
           isConfirm={isConfirm}

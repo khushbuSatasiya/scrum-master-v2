@@ -20,7 +20,6 @@ interface IProps {
   form: any;
   handleCheckIn: (values: ICheckInValues) => void;
   fields: any;
-  handleTimeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isLoading: boolean;
   classes: {
     input: string;
@@ -32,7 +31,6 @@ const CheckInForm: FC<IProps> = ({
   form,
   handleCheckIn,
   fields,
-  handleTimeChange,
   isLoading,
   classes,
   isConfirm,
@@ -121,7 +119,6 @@ const CheckInForm: FC<IProps> = ({
               }}
               ta={"center"}
               labelProps={{ style: { color: "#5e6278" } }}
-              onChange={(e) => handleTimeChange(e)}
               {...form.getInputProps("time")}
             />
 
