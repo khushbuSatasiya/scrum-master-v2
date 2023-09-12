@@ -30,6 +30,12 @@ const useStyles = createStyles(() => ({
             borderColor: '#F1F1F2',
         },
     },
+	error:{
+		display:'none'
+	},
+	wrapper:{
+		margin:'0px'
+	}
 }));
 
 const LEAVE_DURATION = [

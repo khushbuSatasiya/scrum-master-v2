@@ -17,7 +17,7 @@ interface ILeaveFormProps {
     isUpcomingLeave: IUpComingLeave[];
     isVacational: boolean;
     validationRules: Record<string, any>;
-    leaveDuration: any;
+    leaveDuration: string;
     form: UseFormReturnType<{
         startDay: null;
         endDay: null;
@@ -61,6 +61,8 @@ const LeaveForm: FC<ILeaveFormProps> = ({
         classNames: {
             label: classes.label,
             input: classes.input,
+            error: classes.error,
+            wrapper: classes.wrapper,
         },
         dropdownPosition: 'bottom' as const,
     };
@@ -74,7 +76,12 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                 variant='filled'
                 data={LEAVE_DURATION}
                 withinPortal
-                classNames={{ label: classes.label, input: classes.input }}
+                classNames={{
+                    label: classes.label,
+                    input: classes.input,
+                    error: classes.error,
+                    wrapper: classes.wrapper,
+                }}
                 {...form.getInputProps('duration')}
                 onChange={(value) => {
                     setLeaveDuration(value);
@@ -93,7 +100,12 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                     placeholder='Select a date'
                     variant='filled'
                     label={leaveDuration === 'Full' ? 'From Date' : ' Date'}
-                    classNames={{ label: classes.label, input: classes.input }}
+                    classNames={{
+                        label: classes.label,
+                        input: classes.input,
+                        error: classes.error,
+                        wrapper: classes.wrapper,
+                    }}
                     excludeDate={excludeCustomDates}
                     firstDayOfWeek={0}
                     maxLevel={'year'}
@@ -116,6 +128,8 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                         classNames={{
                             label: classes.label,
                             input: classes.input,
+                            error: classes.error,
+                            wrapper: classes.wrapper,
                         }}
                         {...form.getInputProps('endDay')}
                     />
@@ -128,7 +142,12 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                 radius='sm'
                 label='Reason'
                 variant='filled'
-                classNames={{ label: classes.label, input: classes.input }}
+                classNames={{
+                    label: classes.label,
+                    input: classes.input,
+                    error: classes.error,
+                    wrapper: classes.wrapper,
+                }}
                 {...form.getInputProps('reason')}
             />
             <Select
@@ -148,6 +167,7 @@ const LeaveForm: FC<ILeaveFormProps> = ({
                         ? form.getInputProps('leaveType').onChange
                         : undefined
                 }
+                {...form.getInputProps('leaveType')}
             />
         </Box>
     );

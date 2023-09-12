@@ -66,12 +66,12 @@ const LeaveRequest: FC<ILeaveProps> = ({
         duration: (value) => value === '' && '  ',
         reason: (value) => value === '' && '  ',
     };
-    if (isVacational) {
-        validationRules.leaveType = (value) => isEmpty(value) && '  ';
-    }
 
     if (!DURATION.includes(leaveDuration)) {
         validationRules.endDay = (value) => value === null && ' ';
+    }
+    if (isVacational) {
+        validationRules.leaveType = (value) => isEmpty(value) && ' ';
     }
 
     const form = useForm({
@@ -260,7 +260,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
                     </Box>
 
                     {active + 1 !== 3 && (
-                        <Group position='center' mt='60px' mb={20}>
+                        <Group position='center' mt='80px' mb={20}>
                             <Button
                                 variant='default'
                                 sx={{
