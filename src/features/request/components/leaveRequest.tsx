@@ -135,7 +135,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
                     setIsSubmit(true);
                     setTimeout(() => {
                         onClose();
-                    }, 2000);
+                    }, 3000);
                 })
                 .catch(onError);
         } else {
@@ -170,7 +170,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
             <form onSubmit={form.onSubmit(handleSubmit)}>
                 <Flex direction={'column'} justify={'center'}>
                     <Box>
-                        <Text ta={'center'} fw={700} c={'#071437'} fz={22}>
+                        <Text ta={'center'} fw={700} c={'#252F4A'} fz={22}>
                             Request A Leave
                         </Text>
 
@@ -262,7 +262,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
                                     width={120}
                                     speed={1.5}
                                 />
-                                <Text fz={16} fw={400} mt={30}>
+                                <Text fz={16} fw={600} mt={30} c={'#99A1B7'}>
                                     Your leave request submitted successfully.
                                 </Text>
                             </Flex>

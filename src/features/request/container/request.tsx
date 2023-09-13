@@ -37,10 +37,10 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
                 });
             },
         },
-        {
-            name: 'Add Missing Day',
-            title1: 'Please add the missing day to your schedule. Thank you!',
-        },
+        //{
+        //    name: 'Add Missing Day',
+        //    title1: 'Please add the missing day to your schedule. Thank you!',
+        //},
         {
             name: 'Change Time Request',
             title1: 'Please submit your change time request for us to process. Thank you!',
@@ -52,10 +52,10 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
                 });
             },
         },
-        {
-            name: 'Work From Home',
-            title1: 'Enjoy the flexibility of working from home and boost your productivity.Stay connected and thrive',
-        },
+        //{
+        //    name: 'Work From Home',
+        //    title1: 'Enjoy the flexibility of working from home and boost your productivity.Stay connected and thrive',
+        //},
     ];
     //API call for getting Leave info
     const getLeaveRequestInfo = useCallback(() => {

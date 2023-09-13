@@ -52,14 +52,17 @@ const ChangeTimeSheetForm: FC<IChangeTimeSheetProps> = ({
     };
 
     const handleTimeChange = (e) => {
-        let formattedTime = e.target.value.replace(/\D/g, '');
-        if (formattedTime.length > 2) {
-            formattedTime = `${formattedTime.slice(0, 2)}:${formattedTime.slice(
-                2
-            )}`;
-        }
-        if (formattedTime.length > 5) {
-            return;
+        const input = e.target.value;
+        let formattedTime = input
+            .replace(/\D/g, '') // Remove non-numeric characters
+            .slice(0, 4) // Limit to a maximum of 4 characters (hhmm)
+            .replace(/(\d{2})(\d{0,2})/, '$1:$2'); // Add a colon between the first 2 digits
+
+        if (e.nativeEvent.inputType === 'deleteContentBackward') {
+            const lastChar = formattedTime.charAt(formattedTime.length - 1);
+            if (lastChar === ':') {
+                formattedTime = formattedTime.slice(0, -1);
+            }
         }
         form.setFieldValue('time', formattedTime);
     };

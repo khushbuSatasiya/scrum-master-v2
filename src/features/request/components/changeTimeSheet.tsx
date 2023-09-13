@@ -106,7 +106,7 @@ const ChangeTimeSheet: FC<IChangeTimeProps> = ({
                 setIsSubmit(true);
                 setTimeout(() => {
                     onClose();
-                }, 2000);
+                }, 3000);
             })
             .catch((error) => {
                 notifications.show({
@@ -132,7 +132,7 @@ const ChangeTimeSheet: FC<IChangeTimeProps> = ({
             <form onSubmit={form.onSubmit(handleSubmit)}>
                 <Flex direction={'column'} justify={'center'}>
                     <Box>
-                        <Text ta={'center'} fw={700} c={'#071437'} fz={22}>
+                        <Text ta={'center'} fw={700} c={'#252F4A'} fz={22}>
                             Change Time Sheet
                         </Text>
 
@@ -193,7 +193,12 @@ const ChangeTimeSheet: FC<IChangeTimeProps> = ({
                                 width={120}
                                 speed={1.5}
                             />
-                            <Text fz={16} fw={400} mt={30} ta={'center'}>
+                            <Text
+                                fz={16}
+                                fw={600}
+                                mt={30}
+                                ta={'center'}
+                                c={'#99A1B7'}>
                                 Your change timeSheet request submitted
                                 successfully.
                             </Text>
