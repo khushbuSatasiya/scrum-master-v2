@@ -66,7 +66,7 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
                 setIsUpcomingLeave(res.data.upcomingLeave);
             })
             .catch((error) => {
-                console.log('error', error);
+                console.error('error', error);
             });
     }, [uId]);
 
@@ -78,7 +78,7 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
                 setIsDisableDate(res.data.date);
             })
             .catch((error) => {
-                console.log('error', error);
+                console.error('error', error);
             });
     }, [uId]);
 

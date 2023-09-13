@@ -1,44 +1,49 @@
 import React, { FC, useState } from 'react';
-import { IChangeTimeSheet } from '../interface/request';
-import {
-    Box,
-    Button,
-    Divider,
-    Flex,
-    Group,
-    Modal,
-    SegmentedControl,
-    Text,
-    TextInput,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { DatePickerInput } from '@mantine/dates';
-import { IconCalendar } from '@tabler/icons-react';
-import { CHANGE_TIMESHEET_TYPE } from '../constants/requestConstants';
+import Lottie from 'react-lottie';
 import moment from 'moment';
+import { Box, Button, Divider, Flex, Group, Modal, Text } from '@mantine/core';
+import { useForm } from '@mantine/form';
+
+import { notifications } from '@mantine/notifications';
+
 import httpService from 'shared/services/http.service';
 import { API_CONFIG } from 'shared/constants/api';
 
+import checkedJson from 'assets/lotties/checked.json';
+
+import { IChangeTimeSheet, ITimeSheetData } from '../interface/request';
+import ChangeTimeSheetForm from './changeTimesheetForm';
+
 interface IChangeTimeProps {
-    changeTimeSheet: IChangeTimeSheet;
     isOpen: boolean;
-    isDisableDate: any;
+    changeTimeSheet: IChangeTimeSheet;
+    isDisableDate: string[];
     onClose: () => void;
 }
+
 const ChangeTimeSheet: FC<IChangeTimeProps> = ({
     changeTimeSheet,
     isDisableDate,
     isOpen,
     onClose,
 }) => {
-    const { date, changeTimeType, time } = changeTimeSheet;
+    const { changeTimeType, time } = changeTimeSheet;
+
     const [isLoading, setIsLoading] = useState(false);
     const [ChangeTime, setChangeTime] = useState('In');
-    const [timeSheetData, setTimeSheetData] = useState({
+    const [timeSheetData, setTimeSheetData] = useState<ITimeSheetData>({
         date: null,
         inTime: '',
         outTime: '',
     });
+    const [isSubmit, setIsSubmit] = useState(false);
+
+    const defaultOptions = {
+        loop: false,
+        autoplay: true,
+        animationData: checkedJson,
+    };
+
     const form = useForm({
         initialValues: {
             date: timeSheetData.date,
@@ -47,21 +52,31 @@ const ChangeTimeSheet: FC<IChangeTimeProps> = ({
         },
         validate: {
             date: (value) => value === null && ' ',
-            time: (value) => value === '' && '  ',
+            time: (value) => {
+                const regex = /^[0-9]{2}:[0-9]{2}$/;
+                if (!regex.test(value)) {
+                    return 'Please enter a valid time format (hh:mm)';
+                }
+                // Custom validation
+                if (value) {
+                    const [hours, minutes] = value.split(':').map(Number);
+
+                    if (
+                        hours < 0 ||
+                        hours > 23 ||
+                        minutes < 0 ||
+                        minutes > 59
+                    ) {
+                        return 'Invalid time value';
+                    }
+                }
+
+                return null; // Return null if the input is valid
+            },
         },
     });
 
-    const excludeCustomDates = (date) => {
-        const datesArray = isDisableDate.map((item) => item);
-        if (date.getDay() === 0 || date.getDay() === 6) {
-            return true;
-        }
-        const formattedDate = moment(date).format('YYYY-MM-DD');
-
-        const updateDate = !datesArray.includes(formattedDate);
-        return updateDate;
-    };
-
+    //Api call for getting timesheet data in date onChange
     const getTimeSheetData = (date) => {
         const payload = {
             date: moment(date).format('YYYY-MM-DD'),
@@ -72,12 +87,35 @@ const ChangeTimeSheet: FC<IChangeTimeProps> = ({
                 setTimeSheetData(res.data);
             })
             .catch((error) => {
-                console.log('error', error);
+                console.error('error', error);
             });
     };
 
     const handleSubmit = (values) => {
-        console.log('handleSubmit ~ values:', values);
+        const payload = {
+            date: moment(values.date).format('YYYY-MM-DD'),
+            changeTimeType: ChangeTime,
+            time: values.time,
+        };
+        setIsLoading(true);
+
+        httpService
+            .post(API_CONFIG.path.changeTimeSheet, payload)
+            .then(() => {
+                setIsLoading(false);
+                setIsSubmit(true);
+                setTimeout(() => {
+                    onClose();
+                }, 2000);
+            })
+            .catch((error) => {
+                notifications.show({
+                    message: error.response.data.message,
+                    color: 'red',
+                });
+                setIsLoading(false);
+                console.error('error', error);
+            });
     };
 
     return (
@@ -101,96 +139,66 @@ const ChangeTimeSheet: FC<IChangeTimeProps> = ({
                         <Divider variant='dashed' mt={15} mb={5} />
                     </Box>
 
-                    <Box p={'0 80px'} h={'320px'}>
-                        <DatePickerInput
-                            w={'100%'}
-                            radius='sm'
-                            icon={<IconCalendar size='1.1rem' stroke={1.5} />}
-                            mt={'30px'}
-                            popoverProps={{ withinPortal: true }}
-                            placeholder='Select a date'
-                            variant='filled'
-                            label={'Date'}
-                            firstDayOfWeek={0}
-                            maxLevel={'year'}
-                            excludeDate={excludeCustomDates}
-                            {...form.getInputProps('date')}
-                            onChange={(date) => {
-                                getTimeSheetData(date);
-                                form.setFieldValue('date', date);
-                            }}
-                        />
-
-                        <SegmentedControl
-                            color='blue'
-                            mt={'30px'}
-                            transitionDuration={500}
-                            transitionTimingFunction='linear'
-                            defaultValue={CHANGE_TIMESHEET_TYPE[0].value}
-                            data={CHANGE_TIMESHEET_TYPE}
-                            onChange={(val) => setChangeTime(val)}
-                        />
-
-                        <Flex justify={'center'} gap={15}>
-                            <TextInput
-                                placeholder='00:00'
-                                disabled
-                                maxLength={5}
-                                mt={24}
-                                label={
-                                    ChangeTime === 'In' ? 'In Time' : 'Out time'
-                                }
-                                defaultValue={
-                                    ChangeTime === 'In'
-                                        ? timeSheetData.inTime
-                                        : timeSheetData.outTime
-                                }
-                                labelProps={{ style: { color: '#5e6278' } }}
+                    {!isSubmit && (
+                        <Box>
+                            <ChangeTimeSheetForm
+                                isDisableDate={isDisableDate}
+                                form={form}
+                                getTimeSheetData={getTimeSheetData}
+                                setChangeTime={setChangeTime}
+                                ChangeTime={ChangeTime}
+                                timeSheetData={timeSheetData}
                             />
-                            <TextInput
-                                placeholder='00:00'
-                                maxLength={5}
-                                mt={24}
-                                label={
-                                    ChangeTime === 'In' ? 'In Time' : 'Out time'
-                                }
-                                value={form.values.time}
-                                labelProps={{ style: { color: '#5e6278' } }}
-                                {...form.getInputProps('time')}
+
+                            <Group position='center' mt='80px' mb={20}>
+                                <Button
+                                    variant='default'
+                                    sx={{
+                                        background: '#F9F9F9',
+                                        color: '#99A1B7',
+                                        border: 'none',
+                                    }}
+                                    w={100}
+                                    fz={14}
+                                    onClick={onClose}>
+                                    Cancel
+                                </Button>
+
+                                <Button
+                                    w={100}
+                                    fz={14}
+                                    loading={isLoading}
+                                    loaderPosition='center'
+                                    loaderProps={{
+                                        size: 'sm',
+                                        color: '#fff',
+                                        variant: 'oval',
+                                    }}
+                                    type='submit'>
+                                    {isLoading ? '' : 'Submit'}
+                                </Button>
+                            </Group>
+                        </Box>
+                    )}
+                    {isSubmit && (
+                        <Flex
+                            h={'250px'}
+                            p={'0 80px'}
+                            direction={'column'}
+                            justify={'center'}
+                            align={'center'}>
+                            <Lottie
+                                options={defaultOptions}
+                                height={120}
+                                width={120}
+                                speed={1.5}
                             />
+                            <Text fz={16} fw={400} mt={30} ta={'center'}>
+                                Your change timeSheet request submitted
+                                successfully.
+                            </Text>
                         </Flex>
-                    </Box>
-
-                    <Group position='center' mt='80px' mb={20}>
-                        <Button
-                            variant='default'
-                            sx={{
-                                background: '#F9F9F9',
-                                color: '#99A1B7',
-                                border: 'none',
-                            }}
-                            w={100}
-                            fz={14}
-                            onClick={onClose}>
-                            Cancel
-                        </Button>
-
-                        <Button
-                            w={100}
-                            fz={14}
-                            loading={isLoading}
-                            loaderPosition='center'
-                            loaderProps={{
-                                size: 'sm',
-                                color: '#fff',
-
-                                variant: 'oval',
-                            }}
-                            type='submit'
-                            disabled={isLoading}>
-                            {isLoading ? '' : 'Submit'}
-                        </Button>
-                    </Group>
+                    )}
                 </Flex>
             </form>
         </Modal>

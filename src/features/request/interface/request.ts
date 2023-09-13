@@ -33,3 +33,9 @@ export interface ILeaveReviewProps {
   }
 
 
+  export interface ITimeSheetData{
+	date: Date,
+	inTime:string,
+	outTime: string,
+  }
+

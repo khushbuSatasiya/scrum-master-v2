@@ -262,8 +262,8 @@ const LeaveRequest: FC<ILeaveProps> = ({
                                     width={120}
                                     speed={1.5}
                                 />
-                                <Text fz={16} fw={600} mt={30}>
-                                    Your Leave Request Submitted Successfully.
+                                <Text fz={16} fw={400} mt={30}>
+                                    Your leave request submitted successfully.
                                 </Text>
                             </Flex>
                         )}
