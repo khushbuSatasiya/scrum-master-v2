@@ -1,8 +1,5 @@
 import CryptoJS from "crypto-js";
-import {
-  UserData,
-  UserProfileResponse,
-} from "features/login/interface/login.interface";
+
 const KEY: string = process.env.REACT_APP_ENCRYPTION_KEY as string;
 
 /**
@@ -16,19 +13,18 @@ const checkLogin = (): boolean => {
   }
 };
 
-/**
- * function to get user access token
- */
-const getAccessToken = (): boolean | string => {
+const setAuthData = (data: any): void => {
+  const cipherText = CryptoJS.AES.encrypt(JSON.stringify(data), KEY);
+  localStorage.setItem("authData", cipherText.toString());
+};
+
+const getAuthData = () => {
   try {
     const data = localStorage.authData;
-
     if (data) {
       const bytes = CryptoJS.AES.decrypt(data.toString(), KEY);
-      const decryptedData: UserData = JSON.parse(
-        bytes.toString(CryptoJS.enc.Utf8)
-      );
-      return decryptedData && decryptedData.token ? decryptedData.token : false;
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      return decryptedData;
     } else {
       return false;
     }
@@ -38,35 +34,17 @@ const getAccessToken = (): boolean | string => {
 };
 
 /**
- * function to get user data
+ * function to get user access token
  */
-const getUserData = (): UserProfileResponse => {
-  const data = localStorage.userData;
-  if (data) {
-    const bytes = CryptoJS.AES.decrypt(data.toString(), KEY);
-    const decryptedData: UserProfileResponse = JSON.parse(
-      bytes.toString(CryptoJS.enc.Utf8)
-    );
-    if (!decryptedData) {
-      return {} as UserProfileResponse;
-    }
-    return decryptedData;
+const getAccessToken = (): boolean | string => {
+  const data = getAuthData();
+  if (data && data.token) {
+    return data.token;
   } else {
-    return {} as UserProfileResponse;
+    return "";
   }
 };
 
-/**
- * function to set user authentication data
- */
-const setAuthData = (data: UserData): void => {
-  const cipherText = CryptoJS.AES.encrypt(JSON.stringify(data), KEY);
-  localStorage.setItem("authData", cipherText.toString());
-};
-
-/**
- * function to set user organizationData data
- */
 const setSelectedOrg = (
   data: { label: string; value: string } | null
 ): void => {
@@ -84,63 +62,18 @@ const getSelectedOrg = (): { label: string; value: string } | null => {
   return selectedOrg ? JSON.parse(selectedOrg) : null;
 };
 
-/**
- * function to set user authentication data
- */
-const setUserData = (data: UserProfileResponse): void => {
-  const cipherText = CryptoJS.AES.encrypt(JSON.stringify(data), KEY);
-  localStorage.setItem("userData", cipherText.toString());
-};
-
-/**
- * function to get user authentication data
- */
-const getAuthData = (): UserData | undefined => {
-  const data = localStorage.authData;
-
-  if (data) {
-    const bytes = CryptoJS.AES.decrypt(data.toString(), KEY);
-    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    return decryptedData;
-  } else {
-    return;
-  }
-};
-
-/**
- * function to remove user authentication data
- */
 const removeAuthData = (): void => {
   localStorage.removeItem("authData");
 };
 
-/**
- * function to get Organization token
- */
-// const getOrg = () => {
-// 	try {
-// 		const data = localStorage.authData;
-
-// 		if (data) {
-// 			const bytes = CryptoJS.AES.decrypt(data.toString(), KEY);
-// 			const decryptedData: UserData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-// 			return decryptedData && decryptedData.user.organizations ? decryptedData.user.organizations : [];
-// 		} else {
-// 			return [];
-// 		}
-// 	} catch (e) {
-// 		return [];
-// 	}
-// };
-
 const authService = {
   checkLogin: checkLogin,
   getAccessToken: getAccessToken,
-  getUserData: getUserData,
+  // getUserData: getUserData,
   setAuthData: setAuthData,
   getAuthData: getAuthData,
   removeAuthData: removeAuthData,
-  setUserData: setUserData,
+  // setUserData: setUserData,
   setSelectedOrg: setSelectedOrg,
   getSelectedOrg: getSelectedOrg,
   //   getOrg: getOrg,

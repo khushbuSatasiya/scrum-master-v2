@@ -1,9 +1,10 @@
 import { FC, Suspense } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { Group, Loader } from "@mantine/core";
+import { Group } from "@mantine/core";
 
 import Layout from "shared/hoc/layout/container/layout";
-import { User } from "shared/hoc/asyncComponents";
+import { Dashboard, User } from "shared/hoc/asyncComponents";
+import TokenExpired from "shared/components/tokenExpried/tokenExpired";
 
 import "./App.css";
 
@@ -13,14 +14,17 @@ const App: FC = () => {
       <Suspense
         fallback={
           <Group w="100%" h="500px" position="center" align="center">
-            <Loader size="xl" />
+            Loading...
           </Group>
         }
       >
         <Routes>
           <Route path="/user/list" element={<User />} />
+          <Route path="verify-token/:token" element={<Dashboard />} />
+          <Route path="/token-expired" element={<TokenExpired />} />
+          <Route path="/" element={<Dashboard />} />
 
-          <Route path="*" element={<Navigate replace to="/dashboard" />} />
+          <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
       </Suspense>
     </Layout>

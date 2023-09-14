@@ -1,0 +1,25 @@
+.team-calendar {
+  .rbc-toolbar {
+    flex-direction: row-reverse !important;
+  }
+
+  .rbc-btn-group,
+  .rbc-toolbar-label {
+    width: 50% !important;
+    display: flex !important;
+    justify-content: end !important;
+    padding: unset !important;
+  }
+
+  .rbc-toolbar-label {
+    margin-right: -80px;
+  }
+
+  .rbc-month-view {
+    border-radius: 6px;
+  }
+}
+.rbc-overlay {
+  max-height: 250px !important;
+  overflow-x: scroll !important;
+}
