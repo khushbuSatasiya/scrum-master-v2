@@ -10,26 +10,22 @@ import "./App.css";
 
 const App: FC = () => {
   return (
-    <>
-      <Layout>
-        <Suspense
-          fallback={
-            <Group w="100%" h="500px" position="center" align="center">
-              {/* <Loader size="xl" /> */}
-            </Group>
-          }
-        >
-          <Routes>
-            <Route path="/user/list" element={<User />} />
-            <Route path="verify-token/:token" element={<Dashboard />} />
-            <Route path="/token-expired" element={<TokenExpired />} />
-            <Route path="/" element={<Dashboard />} />
+    <Layout>
+      <Suspense
+        fallback={
+          <Group w="100%" h="500px" position="center" align="center"></Group>
+        }
+      >
+        <Routes>
+          <Route path="/user/list" element={<User />} />
+          <Route path="verify-token/:token" element={<Dashboard />} />
+          <Route path="/token-expired" element={<TokenExpired />} />
+          <Route path="/" element={<Dashboard />} />
 
-            <Route path="*" element={<Navigate replace to="/" />} />
-          </Routes>
-        </Suspense>
-      </Layout>
-    </>
+          <Route path="*" element={<Navigate replace to="/" />} />
+        </Routes>
+      </Suspense>
+    </Layout>
   );
 };
 

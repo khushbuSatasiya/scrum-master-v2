@@ -21,15 +21,6 @@ const validationSchema = Yup.object().shape({
         })
       )
     ),
-    // otherwise: Yup.array().of(
-    //   Yup.array().of(
-    //     Yup.object().shape({
-    //       task: Yup.string(),
-    //       project: Yup.string(),
-    //       projectHours: Yup.string(),
-    //     })
-    //   )
-    // ),
   }),
 });
 
@@ -49,32 +40,6 @@ const checkInValidationSchema = Yup.object().shape({
       return true;
     })
     .required("Time is required"),
-
-  // employees: Yup.array().of(
-  //   Yup.object().shape({
-  //     task: Yup.string().test(
-  //       "task-required",
-  //       "Task is required",
-  //       function (value) {
-  //         const projectValue = this.parent.project;
-  //         if (projectValue === "") {
-  //           return true; // Task validation is skipped when project is empty
-  //         }
-  //         return !!value;
-  //       }
-  //     ),
-  //     project: Yup.string()
-  //       .nullable()
-  //       .test("project-required", "Project is required", function (value) {
-  //         const taskValue = this.parent.task;
-  //         if (taskValue === "") {
-  //           return true; // Project validation is skipped when task is empty
-  //         }
-
-  //         return !!value;
-  //       }),
-  //   })
-  // ),
 });
 
 const checkOutValidationWithOptSchema = Yup.object().shape({
@@ -115,13 +80,6 @@ const checkOutValidationWithOptSchema = Yup.object().shape({
         }),
     })
   ),
-  // employees: Yup.array().of(
-  //   Yup.object().shape({
-  //     project: Yup.string().nullable().required("Project is required"),
-  //     task: Yup.string().required("Task is required"),
-  //     projectHours: Yup.string().required("Project hours are required"),
-  //   })
-  // ),
 });
 
 const checkOutValidationSchema = Yup.object().shape({
@@ -180,13 +138,6 @@ const checkOutwithNoTaskValidationSchema = Yup.object().shape({
       return true;
     })
     .required("Time is required"),
-  // employees: Yup.array().of(
-  //   Yup.object().shape({
-  //     project: Yup.string().nullable().required("Project is required"),
-  //     task: Yup.string().required("Task is required"),
-  //     projectHours: Yup.string().required("Project hours are required"),
-  //   })
-  // ),
 });
 
 export {

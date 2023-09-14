@@ -2,30 +2,29 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 
 import { useForm, yupResolver } from "@mantine/form";
 
-import { Button, Flex, Modal, Paper, Text } from "@mantine/core";
-import { IconAlertTriangle } from "@tabler/icons-react";
+import { useMantineTheme } from "@mantine/core";
 
 import {
   checkOutValidationSchema,
   checkOutValidationWithOptSchema,
   checkOutwithNoTaskValidationSchema,
 } from "shared/constants/validation-schema";
-import {
-  ErrNotification,
-  SuccessNotification,
-} from "shared/components/notification/notification";
+import { showNotification } from "shared/components/notification/notification";
 import httpService from "shared/services/http.service";
 
 import { API_CONFIG } from "shared/constants/api";
 
-import { IActionTime } from "features/dashboard/interface/dashboard";
+import {
+  IActionTime,
+  IEnteredTask,
+} from "features/dashboard/interface/dashboard";
 
 import CheckOutForm from "./checkOutForm";
 import { getProjectList } from "shared/util/utility";
 import CheckoutModals from "./checkoutModals";
 
 interface IProps {
-  enteredTask: any;
+  enteredTask: IEnteredTask[];
   checkOutDate: string;
   checkStatus: () => void;
   projectArray: any;
@@ -41,6 +40,8 @@ const CheckOut: FC<IProps> = ({
   currentTime,
   actionTime,
 }) => {
+  const theme = useMantineTheme();
+
   const [projects, setProjects] = useState([]);
   const [isShowForm, setIsShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,45 +49,29 @@ const CheckOut: FC<IProps> = ({
   const [isConfirm, setIsConfirm] = useState(false);
 
   const formatValues = (userTask: any) => {
-    if (userTask.length > 0) {
-      const tasksArray = userTask.map((task: any) => {
-        return {
-          taskId: task.projectId,
-          taskName: task.taskCreate,
-          projectHours: "",
-          projectName: task.projectDetails.projectName,
-          id: task.id,
-        };
-      });
+    const tasksArray = userTask.map((task: any) => {
+      return {
+        taskId: task.projectId,
+        taskName: task.taskCreate,
+        projectHours: "",
+        projectName: task.projectDetails.projectName,
+        id: task.id,
+      };
+    });
 
-      return {
-        time: currentTime,
-        employees: [
-          [
-            {
-              task: "",
-              project: "",
-              projectHours: "",
-            },
-          ],
+    return {
+      time: currentTime,
+      employees: [
+        [
+          {
+            task: "",
+            project: "",
+            projectHours: "",
+          },
         ],
-        tasks: tasksArray,
-      };
-    } else {
-      return {
-        time: currentTime,
-        employees: [
-          [
-            {
-              task: "",
-              project: "",
-              projectHours: "",
-            },
-          ],
-        ],
-        tasks: [],
-      };
-    }
+      ],
+      tasks: userTask.length > 0 ? tasksArray : [],
+    };
   };
 
   const selectedValidationSchema = () => {
@@ -171,12 +156,12 @@ const CheckOut: FC<IProps> = ({
             .post(API_CONFIG.path.checkOut, payload)
             .then((res: any) => {
               setIsLoading(false);
-              SuccessNotification(res);
+              showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);
               checkStatus();
             });
         } catch (error) {
           setIsLoading(false);
-          ErrNotification(error);
+          showNotification(error, theme.colors.red[6], theme.colors.red[6]);
           if (error?.response?.status === 409) {
             setIsAlreadyCheckOut(true);
           }
@@ -184,7 +169,13 @@ const CheckOut: FC<IProps> = ({
         }
       }
     },
-    [checkOutDate, checkStatus, enteredTask.length]
+    [
+      checkOutDate,
+      checkStatus,
+      enteredTask.length,
+      theme.colors.blue,
+      theme.colors.red,
+    ]
   );
 
   return (
@@ -202,39 +193,13 @@ const CheckOut: FC<IProps> = ({
         actionTime={actionTime}
       />
 
-      <Modal
-        size="auto"
-        opened={isAlreadyCheckOut}
-        onClose={() => setIsAlreadyCheckOut(false)}
-        centered
-        padding={40}
-        radius="lg"
-        withCloseButton={false}
-      >
-        <Paper radius="lg">
-          <Flex align={"center"} direction={"column"}>
-            <Flex justify="center" align="center" direction="column" mb={20}>
-              <IconAlertTriangle size="120" color="Orange" />
-            </Flex>
-            <Text ta="center" mb={30} weight={600} color="#99A1B7">
-              You already check out
-            </Text>
-
-            <Button
-              variant="outline"
-              color="red"
-              onClick={() => {
-                checkStatus();
-                setIsAlreadyCheckOut(false);
-              }}
-            >
-              OK
-            </Button>
-          </Flex>
-        </Paper>
-      </Modal>
-
-      <CheckoutModals isConfirm={isConfirm} setIsConfirm={setIsConfirm} />
+      <CheckoutModals
+        isConfirm={isConfirm}
+        setIsConfirm={setIsConfirm}
+        checkStatus={checkStatus}
+        isAlreadyCheckOut={isAlreadyCheckOut}
+        setIsAlreadyCheckOut={setIsAlreadyCheckOut}
+      />
     </>
   );
 };

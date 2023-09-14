@@ -2,7 +2,6 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 import { getUrl } from "shared/constants/api";
 import { ResponseObj } from "../interface";
-import AuthService from "./auth.service";
 import authService from "./auth.service";
 
 const axiosInstance = axios.create();
@@ -129,11 +128,6 @@ const commonAxios = ({
   } else {
     headers["x-request-language"] = localStorage.getItem("lang");
   }
-
-  // const selectedOrg = AuthService.getSelectedOrg();
-  // if (selectedOrg) {
-  //   headers.organizationId = selectedOrg.value;
-  // }
 
   let body: any = null;
   if (contentType === "application/json") {

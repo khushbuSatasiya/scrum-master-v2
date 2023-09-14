@@ -10,7 +10,6 @@ const User: React.FC = () => {
   const [searchValue, setSearchVal] = useDebouncedState("", 400, {
     leading: true,
   });
-  //   const selectedOrg = useSelector((state: State) => state?.auth?.selectedOrg);
   const [editPopup, setEditPopup] = useState(false);
   const [editInfo] = useState();
 

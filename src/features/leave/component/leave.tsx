@@ -45,7 +45,7 @@ const Leave: FC<ILeaveProps> = ({ handleLeaveDetails, uId }) => {
       const params = {
         currentPage,
         recordPerPage,
-        status: status === undefined ? selectedStatus : status,
+        status: status ?? selectedStatus,
         startDate: date
           ? moment(date).startOf("month").format("YYYY-DD-MM")
           : "",
@@ -167,7 +167,6 @@ const Leave: FC<ILeaveProps> = ({ handleLeaveDetails, uId }) => {
               w={40}
               h={40}
               onClick={getLeaveExcel}
-              // variant="light"
               mb={15}
               radius="md"
             >

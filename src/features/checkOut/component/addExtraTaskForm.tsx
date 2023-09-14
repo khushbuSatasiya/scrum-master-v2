@@ -12,14 +12,17 @@ import {
   TextInput,
   Textarea,
 } from "@mantine/core";
+
 import { IconPlus, IconTrash } from "@tabler/icons-react";
+
+import { IEmployee, IProject } from "features/checkIn/interface/checkIn";
 
 interface IProps {
   form: any;
   isShowForm: boolean;
   setIsShowForm: (action: boolean) => void;
   handleAddTaskBtn: () => void;
-  projects: any;
+  projects: IProject[];
   classes: any;
 }
 
@@ -27,7 +30,7 @@ const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
   const { form, isShowForm, handleAddTaskBtn, projects, classes } = props;
 
   /* add task button disable */
-  const isAddButtonDisabled = (employee: any) => {
+  const isAddButtonDisabled = (employee: IEmployee) => {
     const enable = employee.task && employee.project && employee.projectHours;
     return !enable;
   };
@@ -102,11 +105,9 @@ const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
                             project: form.values.employees[index].project,
                           });
                         }}
-                        disabled={
-                          // isShowForm || form.values.tasks.length === 0
-                          isAddButtonDisabled(form.values.employees[index])
-                          // : false
-                        }
+                        disabled={isAddButtonDisabled(
+                          form.values.employees[index]
+                        )}
                       >
                         <IconPlus size="1.5rem" stroke={"3px"} />
                       </Button>

@@ -22,9 +22,7 @@ const useStyles = createStyles((theme) => {
     header: {
       backgroundColor: theme.colors.blue[5],
       color: theme.white,
-      // '&& tr': { height: '50px', backgroundColor: theme.colors.blue[5] },
-      // '&& th': { fontSize: '16px', fontWeight: 'bold', color: theme.white },
-      // '&&& th:hover': { backgroundColor: theme.colors.blue[5], color: theme.white }
+
       "&& tr": {
         height: "50px",
         backgroundColor: theme.white,
@@ -94,13 +92,9 @@ export const TableSelection = (props: ITableProps) => {
       loaderBackgroundBlur={3}
       withBorder
       borderRadius="md"
-      //shadow='md'
-      // striped
       highlightOnHover
       records={userList}
       paginationSize="md"
-      // sortStatus={sortStatus}
-      // onSortStatusChange={handleSortStatusChange}
       noRecordsIcon={<NoRecordPage />}
       noRecordsText="No records found"
       totalRecords={props?.pagination?.total}

@@ -17,6 +17,8 @@ import httpService from "shared/services/http.service";
 import { API_CONFIG } from "shared/constants/api";
 import { dateFormate } from "shared/util/utility";
 
+import { IPersonalDetails } from "../interface/dashboard";
+
 interface IProps {
   isShowUserDetails: boolean;
   setIsShowUserDetails: (action: boolean) => void;
@@ -26,7 +28,9 @@ const UserInfoPopup: FC<IProps> = ({
   isShowUserDetails,
   setIsShowUserDetails,
 }) => {
-  const [userDetail, setUserDetail] = useState<any>({});
+  const [userDetail, setUserDetail] = useState<IPersonalDetails>(
+    {} as IPersonalDetails
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   /* API call for get profile data*/

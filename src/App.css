@@ -63,7 +63,6 @@
 .rbc-toolbar-label {
   margin-right: -82px;
   color: #3f4254;
-  /* font-weight: 600; */
   font-size: 20px;
 }
 
@@ -71,13 +70,10 @@
   border-radius: 6px;
 }
 
-/* .rbc-button-link{
-  color:#3f4254 !important;
-} */
+
 .rbc-header{
   color: #3f4254;
   font-family: 500;
-  /* padding: 8px !important; */
 }
 
 

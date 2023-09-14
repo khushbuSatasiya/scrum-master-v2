@@ -20,6 +20,10 @@ import { IUserDetail, IUserInfoArr } from "../interface/dashboard";
 import { DotIcon } from "shared/icons/icons";
 import { colorMap } from "shared/constants/constants";
 
+import { LEAVE_DETAILS } from "../constant/constant";
+
+import AnchorButton from "./anchorButton";
+
 interface IProps {
   activeTab: string;
   USER_INFO_ARR: IUserInfoArr[];
@@ -42,30 +46,6 @@ const UserDetail: FC<IProps> = (props: IProps) => {
     isShowUserDetails,
     calendarIndicator,
   } = props;
-
-  const LEAVE_DETAILS = [
-    {
-      label: "Paid Leave",
-      value: leaveDetails.usedLeaves + " / " + leaveDetails.grantedLeaves,
-      color: "#40c057",
-    },
-    {
-      label: "Remaining",
-      value: leaveDetails.remainingLeaves,
-      color: "#40c057",
-    },
-    {
-      label: "Vacational",
-      value:
-        leaveDetails.usedVacationalLeave + " / " + leaveDetails.vacationLeaves,
-      color: "#228be6",
-    },
-    {
-      label: "Compensation",
-      value: leaveDetails.compensationLeaves,
-      color: "#FF9B38",
-    },
-  ];
 
   const renderPaper = (label, value, color) => {
     return (
@@ -225,16 +205,19 @@ const UserDetail: FC<IProps> = (props: IProps) => {
               </Paper>
             )}
             {!isEmpty(leaveDetails) &&
-              LEAVE_DETAILS.map(({ label, value, color }, index) => {
-                return (
-                  <Fragment key={index}>
-                    {label === "Vacational" &&
-                      leaveDetails.vacationLeaves > 0 &&
-                      renderPaper(label, value, color)}
-                    {label !== "Vacational" && renderPaper(label, value, color)}
-                  </Fragment>
-                );
-              })}
+              LEAVE_DETAILS(leaveDetails).map(
+                ({ label, value, color }, index) => {
+                  return (
+                    <Fragment key={index}>
+                      {label === "Vacational" &&
+                        leaveDetails.vacationLeaves > 0 &&
+                        renderPaper(label, value, color)}
+                      {label !== "Vacational" &&
+                        renderPaper(label, value, color)}
+                    </Fragment>
+                  );
+                }
+              )}
             {!isEmpty(calendarIndicator) &&
               calendarIndicator.map((item, index) => {
                 return (
@@ -263,76 +246,36 @@ const UserDetail: FC<IProps> = (props: IProps) => {
         <Button
           compact
           bg={"#eaf6ff"}
-          sx={{
-            "&:hover": {
-              backgroundColor: "#F1F1F2",
-            },
-          }}
+          sx={{ "&:hover": { backgroundColor: "#F1F1F2" } }}
         >
-          <Anchor
+          <AnchorButton
             href="https://docs.google.com/document/d/1TfUVxotVmZ1Ctj2flcuOwzVNUr-UL99H/edit"
-            target="_blank"
-            sx={{
-              color: "#78829D",
-              "&:hover": {
-                textDecoration: "none",
-              },
-            }}
-            fw={"lighter"}
-          >
-            Leave Policy
-          </Anchor>
+            text="Leave Policy"
+          />
         </Button>
 
         <Button
           compact
           ml={8}
           bg={"#eaf6ff"}
-          sx={{
-            "&:hover": {
-              backgroundColor: "#F1F1F2",
-            },
-          }}
+          sx={{ "&:hover": { backgroundColor: "#F1F1F2" } }}
         >
-          <Anchor
+          <AnchorButton
             href="https://drive.google.com/file/d/1rEK3UmEOAmegnf11vKrHzG1RJD5WKHyi/view?usp=share_link"
-            target="_blank"
-            sx={{
-              color: "#78829D",
-              border: "none",
-              "&:hover": {
-                textDecoration: "none",
-              },
-            }}
-            fw={"lighter"}
-          >
-            Handbook
-          </Anchor>
+            text="Handbook"
+          />
         </Button>
+
         <Button
           compact
           ml={8}
           bg={"#eaf6ff"}
-          sx={{
-            "&:hover": {
-              backgroundColor: "#F1F1F2",
-            },
-          }}
+          sx={{ "&:hover": { backgroundColor: "#F1F1F2" } }}
         >
-          <Anchor
+          <AnchorButton
             href="https://docs.google.com/document/d/1bDzOoZI8itijukUC_VeAnPKv6rf0dOfKgWJlGFjVRXA/edit"
-            target="_blank"
-            sx={{
-              color: "#78829D",
-              border: "none",
-              "&:hover": {
-                textDecoration: "none",
-              },
-            }}
-            fw={"lighter"}
-          >
-            Healthy Workplace
-          </Anchor>
+            text="Healthy Workplace"
+          />
         </Button>
       </Flex>
       <Tabs.List sx={{ borderBottom: "1px solid transparent" }} mt="20px">

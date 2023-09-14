@@ -24,12 +24,14 @@ import TeamCalendar from "./teamCalendar";
 import { DotIcon } from "shared/icons/icons";
 import { teamReportIconColor } from "shared/util/utility";
 
+import { ICalendarInfo } from "features/calendar/interface/calendar.interface";
+
 const Project: FC<IProjectsProps> = ({ uId }) => {
   const [isLoading, setLoading] = useState(true);
   const [projectInfo, setProjectInfo] = useState<IProjectProps[]>();
   const [projectId, setProjectId] = useState("");
   const [teamInfo, setTeamInfo] = useState([]);
-  const [calendarInfo, setCalendarInfo] = useState<any>([]);
+  const [calendarInfo, setCalendarInfo] = useState<ICalendarInfo[]>([]);
   const [projectName, setProjectName] = useState("");
   const [excelData, setExcelData] = useState<IExcelProps>();
   const [isShowCalendar, setIsShowCalendar] = useState(false);

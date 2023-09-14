@@ -11,4 +11,5 @@ export interface ICheckInValues {
 export interface IEmployee {
   task: string;
   project: string;
+  projectHours?: string;
 }

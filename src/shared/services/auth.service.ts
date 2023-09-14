@@ -23,9 +23,7 @@ const getAuthData = () => {
     const data = localStorage.authData;
     if (data) {
       const bytes = CryptoJS.AES.decrypt(data.toString(), KEY);
-      const decryptedData = JSON.parse(
-        bytes.toString(CryptoJS.enc.Utf8)
-      ) as any;
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
       return decryptedData;
     } else {
       return false;

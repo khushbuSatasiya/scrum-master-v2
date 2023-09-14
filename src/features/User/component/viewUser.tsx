@@ -6,7 +6,11 @@ import { isEmpty } from "lodash";
 import { getTotalWorkingHourColor } from "shared/util/utility";
 
 import { IUserInfo } from "../interface/user";
-import { USERINFO } from "../constants/userConstants";
+import {
+  LEAVE_DETAILS,
+  USERINFO,
+  USER_INFO_ARR,
+} from "../constants/userConstants";
 
 const ViewUser: FC = () => {
   const [userData] = useState<IUserInfo>(USERINFO);
@@ -33,55 +37,6 @@ const ViewUser: FC = () => {
       </Text>
     </Paper>
   );
-
-  const USER_INFO_ARR = [
-    {
-      label: "Overview",
-      value: "overview",
-      content: "Gallery tab content",
-    },
-    {
-      label: "Projects",
-      value: "projects",
-      content: "Project tab content",
-    },
-    {
-      label: "Time Sheet",
-      value: "timesheet",
-    },
-    {
-      label: "Leave Report",
-      value: "leavereport",
-    },
-  ];
-
-  const LEAVE_DETAILS = [
-    {
-      label: "Remaining Leave",
-      value: LeaveDetails.remainingLeaves,
-      color: "#40c057",
-    },
-    {
-      label: "Compensation Leave",
-      value: LeaveDetails.compensationLeaves,
-      color: "#228be6",
-    },
-    {
-      label: "Used Leave",
-      value: LeaveDetails.usedLeaves,
-      color: "#fa5252",
-    },
-    {
-      label: "Vacation Leave",
-      value: LeaveDetails.vacationLeaves,
-      color: "#228be6",
-    },
-    {
-      label: "Granted Leave",
-      value: LeaveDetails.grantedLeaves,
-      color: "#40c057",
-    },
-  ];
 
   return (
     <Box>
@@ -174,17 +129,19 @@ const ViewUser: FC = () => {
                 )}
 
                 {!isEmpty(LeaveDetails) &&
-                  LEAVE_DETAILS.map(({ label, value, color }, index) => {
-                    return (
-                      <Fragment key={index}>
-                        {label === "Vacation Leave" &&
-                          LeaveDetails.vacationLeaves > 0 &&
-                          renderPaper(label, value, color)}
-                        {label !== "Vacation Leave" &&
-                          renderPaper(label, value, color)}
-                      </Fragment>
-                    );
-                  })}
+                  LEAVE_DETAILS(LeaveDetails).map(
+                    ({ label, value, color }, index) => {
+                      return (
+                        <Fragment key={index}>
+                          {label === "Vacation Leave" &&
+                            LeaveDetails.vacationLeaves > 0 &&
+                            renderPaper(label, value, color)}
+                          {label !== "Vacation Leave" &&
+                            renderPaper(label, value, color)}
+                        </Fragment>
+                      );
+                    }
+                  )}
               </Flex>
             </Flex>
           </Flex>

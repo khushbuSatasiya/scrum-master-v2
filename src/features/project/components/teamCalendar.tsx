@@ -8,9 +8,10 @@ import moment from "moment";
 import { DotIcon } from "shared/icons/icons";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { ICalendarInfo } from "features/calendar/interface/calendar.interface";
 
 interface IProps {
-  calendarInfo: any;
+  calendarInfo: ICalendarInfo[];
   getTeamReport: (projectId: string, month: string) => void;
   projectId: string;
   setIsShowCalendar: (action: boolean) => void;

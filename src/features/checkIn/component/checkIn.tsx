@@ -10,6 +10,7 @@ import {
   Textarea,
   Divider,
   createStyles,
+  useMantineTheme,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
@@ -18,14 +19,14 @@ import { getProjectList } from "shared/util/utility";
 import { checkInValidationSchema } from "shared/constants/validation-schema";
 import { API_CONFIG } from "shared/constants/api";
 import httpService from "shared/services/http.service";
-import { SuccessNotification } from "shared/components/notification/notification";
+import { showNotification } from "shared/components/notification/notification";
 
 import { IProjectArray } from "features/dashboard/interface/dashboard";
 
 import CheckInForm from "./checkInForm";
 import CheckInModal from "./checkInModal";
 
-import { ICheckInValues, IProject } from "../interface/checkIn";
+import { ICheckInValues, IEmployee, IProject } from "../interface/checkIn";
 
 interface IProps {
   projectArray: IProjectArray[];
@@ -34,6 +35,8 @@ interface IProps {
 }
 
 const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
+  const theme = useMantineTheme();
+
   const [projectName, setProjectName] = useState<IProject[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
@@ -109,7 +112,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
           .post(API_CONFIG.path.checkIn, payload)
           .then((res: any) => {
             setIsLoading(false);
-            SuccessNotification(res);
+            showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);
             checkStatus();
           });
       } catch (error) {
@@ -124,7 +127,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
   );
 
   /* add task button disable */
-  const isAddButtonDisabled = (employee: any) => {
+  const isAddButtonDisabled = (employee: IEmployee) => {
     return (
       employee.task.trim() === "" ||
       employee.project === "" ||

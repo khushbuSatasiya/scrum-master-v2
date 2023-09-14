@@ -19,6 +19,7 @@ import TeamCalendar from "features/calendar/component/teamCalendar";
 
 import {
   IActionTime,
+  IEnteredTask,
   IProjectArray,
   IUserDetail,
 } from "../interface/dashboard";
@@ -39,7 +40,7 @@ const Dashboard: FC = () => {
   const [newToken, setNewToken] = useState<IUserDetail>({} as IUserDetail);
   const [totalWorkingHour, setTotalWorkingHour] = useState("");
   const [leaveDetails, setLeaveDetails] = useState<Record<string, any>>({});
-  const [enteredTask, setEnteredTask] = useState<any>({});
+  const [enteredTask, setEnteredTask] = useState<IEnteredTask[]>([]);
   const [checkOutDate, setCheckOutDate] = useState<any>("" || []);
   const [isActionLoader, setIsActionLoader] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
@@ -59,9 +60,10 @@ const Dashboard: FC = () => {
     try {
       await httpService.get(API_CONFIG.path.status).then((res) => {
         setIsActionLoader(false);
-        setActionType(res.data.action);
+        const action = res.data.action;
+        setActionType(action);
 
-        if (res.data.action === "noActionRequired") {
+        if (action === "noActionRequired") {
           const { inTime, outTime } = res.data.timeSheet;
           setActionTime({
             inTime: inTime,
@@ -73,18 +75,19 @@ const Dashboard: FC = () => {
         }
 
         if (
-          res.data.action === "checkOut" ||
-          res.data.action === "checkIn" ||
-          res.data.action === "LeaveApplyOrMissingDay"
+          action === "checkOut" ||
+          action === "checkIn" ||
+          action === "LeaveApplyOrMissingDay"
         ) {
           setCurrentTime(res.data.currentTime);
           res.data.date && setCheckOutDate(res.data.date);
           setProjectArray(res.data.projects);
         }
 
-        res.data.action === "checkOut" &&
+        action === "checkOut" &&
           res.data?.tasks &&
           setEnteredTask(res.data.tasks);
+
         const { inTime, outTime } = res.data.timeSheet;
         setActionTime({
           inTime: inTime,
@@ -239,53 +242,51 @@ const Dashboard: FC = () => {
   ];
 
   return (
-    <>
-      <Box
-        sx={{
-          width: "1250px",
-          margin: "0 auto",
+    <Box
+      sx={{
+        width: "1250px",
+        margin: "0 auto",
+      }}
+    >
+      <Tabs
+        defaultValue="check-in"
+        onTabChange={(data) => {
+          data !== "leavereport" && setLeaveDetails({});
+          data !== "timesheet" && setTotalWorkingHour("");
+          data === "check-in" && checkStatus();
+          setCalendarIndicator(
+            data === "calendar"
+              ? ["First half leave", "Second half leave", "Full leave", "WFH"]
+              : []
+          );
+
+          setActiveTab(data);
         }}
       >
-        <Tabs
-          defaultValue="check-in"
-          onTabChange={(data) => {
-            data !== "leavereport" && setLeaveDetails({});
-            data !== "timesheet" && setTotalWorkingHour("");
-            data === "check-in" && checkStatus();
-            setCalendarIndicator(
-              data === "calendar"
-                ? ["First half leave", "Second half leave", "Full leave", "WFH"]
-                : []
-            );
-
-            setActiveTab(data);
-          }}
-        >
-          <UserDetail
-            activeTab={activeTab}
-            USER_INFO_ARR={USER_INFO_ARR}
-            newToken={newToken}
-            totalWorkingHour={totalWorkingHour}
-            leaveDetails={leaveDetails}
-            setIsShowUserDetails={setIsShowUserDetails}
-            isShowUserDetails={isShowUserDetails}
-            calendarIndicator={calendarIndicator}
-          />
-
-          <UserInfoTab
-            activeTab={activeTab}
-            USER_INFO_ARR={USER_INFO_ARR}
-            isActionLoader={isActionLoader}
-            actionType={actionType}
-          />
-        </Tabs>
-
-        <UserInfoPopup
-          isShowUserDetails={isShowUserDetails}
+        <UserDetail
+          activeTab={activeTab}
+          USER_INFO_ARR={USER_INFO_ARR}
+          newToken={newToken}
+          totalWorkingHour={totalWorkingHour}
+          leaveDetails={leaveDetails}
           setIsShowUserDetails={setIsShowUserDetails}
+          isShowUserDetails={isShowUserDetails}
+          calendarIndicator={calendarIndicator}
         />
-      </Box>
-    </>
+
+        <UserInfoTab
+          activeTab={activeTab}
+          USER_INFO_ARR={USER_INFO_ARR}
+          isActionLoader={isActionLoader}
+          actionType={actionType}
+        />
+      </Tabs>
+
+      <UserInfoPopup
+        isShowUserDetails={isShowUserDetails}
+        setIsShowUserDetails={setIsShowUserDetails}
+      />
+    </Box>
   );
 };
 
