@@ -13,7 +13,9 @@ const App: FC = () => {
     <Layout>
       <Suspense
         fallback={
-          <Group w="100%" h="500px" position="center" align="center"></Group>
+          <Group w="100%" h="500px" position="center" align="center">
+            Loading...
+          </Group>
         }
       >
         <Routes>

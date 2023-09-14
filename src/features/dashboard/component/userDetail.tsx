@@ -2,7 +2,6 @@ import React, { FC, Fragment } from "react";
 import isEmpty from "lodash/isEmpty";
 
 import {
-  Anchor,
   Button,
   Flex,
   Image,
