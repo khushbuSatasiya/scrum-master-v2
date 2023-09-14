@@ -15,13 +15,19 @@ import Project from 'features/project/components/project';
 import CheckIn from 'features/checkIn/component/checkIn';
 import GuestUser from 'features/guestUser/component/guestUser';
 import NoActionRequired from 'features/noActionRequired/noActionRequired';
+import TeamCalendar from 'features/calendar/component/teamCalendar';
+import Request from 'features/request/container/request';
 
-import { IProjectArray, IUserDetail } from '../interface/dashboard';
+import {
+    IActionTime,
+    IEnteredTask,
+    IProjectArray,
+    IUserDetail,
+} from '../interface/dashboard';
 
 import UserInfoTab from './userInfoTab';
 import UserDetail from './userDetail';
 import UserInfoPopup from './userInfoPopup';
-import Request from 'features/request/container/request';
 
 const Dashboard: FC = () => {
     const { token } = useParams<{ token: string }>();
@@ -35,7 +41,7 @@ const Dashboard: FC = () => {
     const [newToken, setNewToken] = useState<IUserDetail>({} as IUserDetail);
     const [totalWorkingHour, setTotalWorkingHour] = useState('');
     const [leaveDetails, setLeaveDetails] = useState<Record<string, any>>({});
-    const [enteredTask, setEnteredTask] = useState<any>({});
+    const [enteredTask, setEnteredTask] = useState<IEnteredTask[]>([]);
     const [checkOutDate, setCheckOutDate] = useState<any>('' || []);
     const [isActionLoader, setIsActionLoader] = useState(false);
     const [currentTime, setCurrentTime] = useState('');
@@ -46,53 +52,53 @@ const Dashboard: FC = () => {
     const [tasks, setTasks] = useState([]);
     const [date, setDate] = useState();
     const [totalHours, setTotalHours] = useState('');
-    const [isTokenLoader, setIsTokenLoader] = useState(true);
     const [isShowUserDetails, setIsShowUserDetails] = useState(false);
+    const [calendarIndicator, setCalendarIndicator] = useState([]);
 
+    /* API call for check status*/
     const checkStatus = useCallback(async () => {
         setIsActionLoader(true);
-        setIsTokenLoader(false);
         try {
             await httpService.get(API_CONFIG.path.status).then((res) => {
                 setIsActionLoader(false);
-                setActionType(res.data.action);
+                const action = res.data.action;
+                setActionType(action);
 
-                if (res.data.action === 'noActionRequired') {
+                if (action === 'noActionRequired') {
                     const { inTime, outTime } = res.data.timeSheet;
                     setActionTime({
                         inTime: inTime,
                         outTime: outTime,
-                    });
+                    } as IActionTime);
                     setTasks(res.data.tasks);
                     setDate(res.data.date);
                     setTotalHours(res.data.totalHours);
                 }
 
                 if (
-                    res.data.action === 'checkOut' ||
-                    res.data.action === 'checkIn' ||
-                    res.data.action === 'LeaveApplyOrMissingDay'
+                    action === 'checkOut' ||
+                    action === 'checkIn' ||
+                    action === 'LeaveApplyOrMissingDay'
                 ) {
                     setCurrentTime(res.data.currentTime);
                     res.data.date && setCheckOutDate(res.data.date);
                     setProjectArray(res.data.projects);
                 }
 
-                res.data.action === 'checkOut' &&
+                action === 'checkOut' &&
                     res.data?.tasks &&
                     setEnteredTask(res.data.tasks);
+
+                const { inTime, outTime } = res.data.timeSheet;
+                setActionTime({
+                    inTime: inTime,
+                    outTime: outTime,
+                } as IActionTime);
             });
         } catch (error) {
             setIsActionLoader(false);
-            setIsTokenLoader(true);
 
-            // if (error.code && error.code === "ERR_NETWORK") {
-            //   setIsTokenLoader(false);
-            //   navigate("/token-expired");
-            // }
-
-            if (error.response.status && error.response.status === 401) {
-                setIsTokenLoader(false);
+            if (error?.response?.status && error.response.status === 401) {
                 authService.removeAuthData();
                 navigate('/token-expired');
             }
@@ -101,6 +107,7 @@ const Dashboard: FC = () => {
         }
     }, []);
 
+    /* API call for login*/
     const login = useCallback(
         async (token: string) => {
             try {
@@ -117,15 +124,8 @@ const Dashboard: FC = () => {
                     });
             } catch (error) {
                 console.error(error);
-                setIsTokenLoader(true);
-
-                // if (error.code && error.code === "ERR_NETWORK") {
-                //   setIsTokenLoader(false);
-                //   navigate("/token-expired");
-                // }
 
                 if (error.response.status && error.response.status === 401) {
-                    setIsTokenLoader(false);
                     authService.removeAuthData();
                     navigate('/token-expired');
                 }
@@ -144,6 +144,7 @@ const Dashboard: FC = () => {
         }
     }, [login, token]);
 
+    /* calling checkStatus when action type changed */
     useEffect(() => {
         !actionType && authService.getAuthData() && checkStatus();
     }, [actionType, checkStatus]);
@@ -191,6 +192,7 @@ const Dashboard: FC = () => {
                             checkStatus={checkStatus}
                             projectArray={projectArray}
                             currentTime={currentTime}
+                            actionTime={actionTime}
                         />
                     )}
                     {actionType === 'LeaveApplyOrMissingDay' && (
@@ -234,6 +236,11 @@ const Dashboard: FC = () => {
             content: <Project uId={newToken && newToken.userId} />,
         },
         {
+            label: 'Calendar',
+            value: 'calendar',
+            content: <TeamCalendar />,
+        },
+        {
             label: 'Request',
             value: 'request',
             content: <Request uId={newToken && newToken.userId} />,
@@ -241,51 +248,54 @@ const Dashboard: FC = () => {
     ];
 
     return (
-        <>
-            {/* <LoadingOverlay
-        loaderProps={{
-          size: "xl",
-        }}
-        visible={isTokenLoader}
-        overlayBlur={2}
-      /> */}
-            <Box
-                sx={{
-                    width: '1250px',
-                    margin: '0 auto',
+        <Box
+            sx={{
+                width: '1250px',
+                margin: '0 auto',
+            }}>
+            <Tabs
+                defaultValue='check-in'
+                onTabChange={(data) => {
+                    data !== 'leavereport' && setLeaveDetails({});
+                    data !== 'timesheet' && setTotalWorkingHour('');
+                    data === 'check-in' && checkStatus();
+                    setCalendarIndicator(
+                        data === 'calendar'
+                            ? [
+                                  'First half leave',
+                                  'Second half leave',
+                                  'Full leave',
+                                  'WFH',
+                              ]
+                            : []
+                    );
+
+                    setActiveTab(data);
                 }}>
-                <Tabs
-                    defaultValue='check-in'
-                    onTabChange={(data) => {
-                        data !== 'leavereport' && setLeaveDetails({});
-                        data !== 'timesheet' && setTotalWorkingHour('');
-                        data === 'check-in' && checkStatus();
-                        setActiveTab(data);
-                    }}>
-                    <UserDetail
-                        activeTab={activeTab}
-                        USER_INFO_ARR={USER_INFO_ARR}
-                        newToken={newToken}
-                        totalWorkingHour={totalWorkingHour}
-                        leaveDetails={leaveDetails}
-                        setIsShowUserDetails={setIsShowUserDetails}
-                        isShowUserDetails={isShowUserDetails}
-                    />
-
-                    <UserInfoTab
-                        activeTab={activeTab}
-                        USER_INFO_ARR={USER_INFO_ARR}
-                        isActionLoader={isActionLoader}
-                        actionType={actionType}
-                    />
-                </Tabs>
-
-                <UserInfoPopup
-                    isShowUserDetails={isShowUserDetails}
+                <UserDetail
+                    activeTab={activeTab}
+                    USER_INFO_ARR={USER_INFO_ARR}
+                    newToken={newToken}
+                    totalWorkingHour={totalWorkingHour}
+                    leaveDetails={leaveDetails}
                     setIsShowUserDetails={setIsShowUserDetails}
+                    isShowUserDetails={isShowUserDetails}
+                    calendarIndicator={calendarIndicator}
                 />
-            </Box>
-        </>
+
+                <UserInfoTab
+                    activeTab={activeTab}
+                    USER_INFO_ARR={USER_INFO_ARR}
+                    isActionLoader={isActionLoader}
+                    actionType={actionType}
+                />
+            </Tabs>
+
+            <UserInfoPopup
+                isShowUserDetails={isShowUserDetails}
+                setIsShowUserDetails={setIsShowUserDetails}
+            />
+        </Box>
     );
 };
 

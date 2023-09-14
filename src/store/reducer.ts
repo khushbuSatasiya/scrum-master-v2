@@ -4,10 +4,12 @@ import * as actionTypes from "store/action-types";
 import loadingReducer from "./loadingReducer";
 
 import userDetails from "features/dashboard/store/reducer";
+import getMonth from "features/calendar/store/reducer";
 
 const appReducer = combineReducers({
   loading: loadingReducer,
   userDetails: userDetails,
+  getMonth: getMonth,
 });
 
 const rootReducer = (state: State | undefined, action: Action): State => {

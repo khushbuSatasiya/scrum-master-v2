@@ -8,7 +8,7 @@ import {
     Text,
     createStyles,
 } from '@mantine/core';
-import { IProjectProps, TeamDetail } from '../interface/project';
+import { TeamDetail } from '../interface/project';
 
 interface ITeamProfileProps {
     teamInfo: TeamDetail[];

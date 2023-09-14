@@ -246,3 +246,18 @@ export const getCurrentTime = () => {
   const cleanedTime = currentTime.replace(/(am|pm)/i, "");
   return cleanedTime;
 };
+
+export const teamReportIconColor = (data: any) => {
+  let iconColor = "black";
+
+  if (data.type === "Full leave") {
+    iconColor = "Red";
+  } else if (data.type === "Wfh") {
+    iconColor = "Blue";
+  } else if (data.type === "Second Half leave") {
+    iconColor = "Orange";
+  } else if (data.type === "First Half leave") {
+    iconColor = "Yellow";
+  }
+  return iconColor;
+};

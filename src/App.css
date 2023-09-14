@@ -38,4 +38,53 @@
   }
 }
 
+.rbc-show-more{
+  margin-left: 10px !important;
+  color: #228be6 !important;
+}
 
+/* for react-big-calendar show more detail popup */
+.rbc-overlay{
+  z-index: 299 !important;
+}
+
+.rbc-toolbar {
+  flex-direction: row-reverse !important;
+}
+
+.rbc-btn-group,
+.rbc-toolbar-label {
+  width: 50% !important;
+  display: flex !important;
+  justify-content: end !important;
+  padding: unset !important;
+}
+
+.rbc-toolbar-label {
+  margin-right: -82px;
+  color: #3f4254;
+  font-size: 20px;
+}
+
+.rbc-month-view {
+  border-radius: 6px;
+}
+
+
+.rbc-header{
+  color: #3f4254;
+  font-family: 500;
+}
+
+
+.hovered-title {
+  cursor: pointer !important;
+}
+
+.hovered-title:hover {
+  color: #228be6;
+}
+
+.gray-background{
+  background-color: #f1eeee94 !important;
+}

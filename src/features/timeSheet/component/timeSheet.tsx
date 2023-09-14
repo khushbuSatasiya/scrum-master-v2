@@ -171,7 +171,6 @@ const TimeSheet: FC<IUserTimeSheetProps> = ({
                         w={40}
                         h={40}
                         onClick={getTimeSheetExcel}
-                        // variant="light"
                         mb={15}
                         radius='md'>
                         <IconDownload cursor='pointer' />

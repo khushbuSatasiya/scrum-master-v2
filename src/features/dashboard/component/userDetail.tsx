@@ -1,8 +1,7 @@
-import React, { FC, Fragment, useState } from 'react';
+import React, { FC, Fragment } from 'react';
 import isEmpty from 'lodash/isEmpty';
 
 import {
-    Anchor,
     Button,
     Flex,
     Image,
@@ -17,6 +16,12 @@ import { IconMail, IconUserStar } from '@tabler/icons-react';
 import { getTotalWorkingHourColor } from 'shared/util/utility';
 
 import { IUserDetail, IUserInfoArr } from '../interface/dashboard';
+import { DotIcon } from 'shared/icons/icons';
+import { colorMap } from 'shared/constants/constants';
+
+import { LEAVE_DETAILS } from '../constant/constant';
+
+import AnchorButton from './anchorButton';
 
 interface IProps {
     activeTab: string;
@@ -24,8 +29,9 @@ interface IProps {
     newToken: IUserDetail;
     totalWorkingHour: string;
     leaveDetails: Record<string, any>;
-    isShowUserDetails: boolean;
     setIsShowUserDetails: (action: boolean) => void;
+    isShowUserDetails: boolean;
+    calendarIndicator: string[];
 }
 
 const UserDetail: FC<IProps> = (props: IProps) => {
@@ -37,38 +43,8 @@ const UserDetail: FC<IProps> = (props: IProps) => {
         leaveDetails,
         setIsShowUserDetails,
         isShowUserDetails,
+        calendarIndicator,
     } = props;
-
-    const LEAVE_DETAILS = [
-        {
-            label: 'Paid Leave',
-            value: leaveDetails.usedLeaves + ' / ' + leaveDetails.grantedLeaves,
-            color: '#40c057',
-        },
-        {
-            label: 'Rem... Leave',
-            value: leaveDetails.remainingLeaves,
-            color: '#40c057',
-        },
-        {
-            label: 'Vac... Leave',
-            value:
-                leaveDetails.usedVacationalLeave +
-                ' / ' +
-                leaveDetails.vacationLeaves,
-            color: '#228be6',
-        },
-        {
-            label: 'Comp... Leave',
-            value: leaveDetails.compensationLeaves,
-            color: '#FF9B38',
-        },
-        // {
-        //   label: "Used Leave",
-        //   value: leaveDetails.usedLeaves,
-        //   color: "#fa5252",
-        // },
-    ];
 
     const renderPaper = (label, value, color) => {
         return (
@@ -79,28 +55,23 @@ const UserDetail: FC<IProps> = (props: IProps) => {
                     width: '125px',
                     padding: '6px 10px',
                 }}>
-                <Text
-                    fw='bold'
-                    fz='22px'
-                    c={'#071437'}
-                    // c={`${label === "Rem... Leave" && value < 0 ? "red" : "green"}`}
-                >
+                <Text fw='bold' fz='22px' c={'#071437'}>
                     {value || '0'}
                 </Text>
-                {label === 'Comp... Leave' ||
+                {label === 'Compensation' ||
                 label === 'Paid Leave' ||
-                label === 'Vac... Leave' ? (
+                label === 'Vacational' ? (
                     <Tooltip
                         label={`${
-                            label === 'Comp... Leave'
+                            label === 'Compensation'
                                 ? 'We have calculated the approximate compensation and not calculated anywhere. For further details, please reach out to the HR department.'
-                                : 'Used  / Granted'
+                                : 'Used / Granted'
                         }`}
                         sx={{
                             maxWidth: '250px',
                             wordWrap: 'break-word',
                             textWrap: 'balance',
-                            height: 'auto',
+                            whiteSpace: 'normal',
                             textAlign: 'center',
                         }}
                         inline
@@ -117,9 +88,7 @@ const UserDetail: FC<IProps> = (props: IProps) => {
                 ) : (
                     <Text
                         c={`${
-                            label === 'Rem... Leave' && value < 0
-                                ? 'red'
-                                : color
+                            label === 'Remaining' && value < 0 ? 'red' : color
                         }`}
                         fw='500'
                         fz='sm'>
@@ -148,20 +117,16 @@ const UserDetail: FC<IProps> = (props: IProps) => {
                 <Space w='xl' />
 
                 <Flex direction='column'>
-                    <Text
-                        fw='600'
-                        fz='xl'
-                        color='#071437'
-                        sx={{
-                            cursor: 'pointer',
-                            '&:hover': {
-                                color: '#228be6',
-                            },
-                        }}
-                        onClick={() =>
-                            setIsShowUserDetails(!isShowUserDetails)
-                        }>
-                        {newToken?.realName ? newToken.realName : '-'}
+                    <Text fw='600' color='#071437' fz='xl'>
+                        <span
+                            onClick={() =>
+                                setIsShowUserDetails(!isShowUserDetails)
+                            }
+                            className={
+                                newToken?.realName ? 'hovered-title' : ''
+                            }>
+                            {newToken?.realName ? newToken.realName : '-'}
+                        </span>
                     </Text>
                     <Flex mt={5} direction='row' justify='start' align='center'>
                         <IconUserStar size='16' color='#B5B5C3' />
@@ -217,7 +182,6 @@ const UserDetail: FC<IProps> = (props: IProps) => {
                                 With us
                             </Text>
                         </Paper>
-
                         {!isEmpty(totalWorkingHour) && (
                             <Paper
                                 sx={{
@@ -239,13 +203,12 @@ const UserDetail: FC<IProps> = (props: IProps) => {
                                 </Text>
                             </Paper>
                         )}
-
                         {!isEmpty(leaveDetails) &&
-                            LEAVE_DETAILS.map(
+                            LEAVE_DETAILS(leaveDetails).map(
                                 ({ label, value, color }, index) => {
                                     return (
                                         <Fragment key={index}>
-                                            {label === 'Vac... Leave' &&
+                                            {label === 'Vacational' &&
                                                 leaveDetails.vacationLeaves >
                                                     0 &&
                                                 renderPaper(
@@ -253,7 +216,7 @@ const UserDetail: FC<IProps> = (props: IProps) => {
                                                     value,
                                                     color
                                                 )}
-                                            {label !== 'Vac... Leave' &&
+                                            {label !== 'Vacational' &&
                                                 renderPaper(
                                                     label,
                                                     value,
@@ -263,53 +226,68 @@ const UserDetail: FC<IProps> = (props: IProps) => {
                                     );
                                 }
                             )}
+                        {!isEmpty(calendarIndicator) &&
+                            calendarIndicator.map((item, index) => {
+                                return (
+                                    <Paper
+                                        sx={{
+                                            border: '1px dashed #DBDFE9',
+                                            borderRadius: '10px',
+                                            width: '145px',
+                                            padding: '6px 10px',
+                                        }}
+                                        key={index}>
+                                        <Text
+                                            fw='bold'
+                                            fz='22px'
+                                            color='#071437'>
+                                            <DotIcon
+                                                fill={
+                                                    colorMap[item] ||
+                                                    'defaultColor'
+                                                }
+                                            />
+                                        </Text>
+                                        <Text fw='500' fz='sm' c={'#B5B5C3'}>
+                                            {item}
+                                        </Text>
+                                    </Paper>
+                                );
+                            })}
                     </Flex>
                 </Flex>
             </Flex>
             <Flex sx={{ position: 'absolute', top: 15, right: 15 }}>
-                <Button compact>
-                    <Anchor
+                <Button
+                    compact
+                    bg={'#eaf6ff'}
+                    sx={{ '&:hover': { backgroundColor: '#F1F1F2' } }}>
+                    <AnchorButton
                         href='https://docs.google.com/document/d/1TfUVxotVmZ1Ctj2flcuOwzVNUr-UL99H/edit'
-                        target='_blank'
-                        sx={{
-                            color: 'white',
-                            '&:hover': {
-                                textDecoration: 'none',
-                            },
-                        }}
-                        fw={'lighter'}>
-                        Leave Policy
-                    </Anchor>
+                        text='Leave Policy'
+                    />
                 </Button>
-                <Button compact ml={8}>
-                    <Anchor
+
+                <Button
+                    compact
+                    ml={8}
+                    bg={'#eaf6ff'}
+                    sx={{ '&:hover': { backgroundColor: '#F1F1F2' } }}>
+                    <AnchorButton
                         href='https://drive.google.com/file/d/1rEK3UmEOAmegnf11vKrHzG1RJD5WKHyi/view?usp=share_link'
-                        target='_blank'
-                        sx={{
-                            color: 'white',
-                            border: 'none',
-                            '&:hover': {
-                                textDecoration: 'none',
-                            },
-                        }}
-                        fw={'lighter'}>
-                        Handbook
-                    </Anchor>
+                        text='Handbook'
+                    />
                 </Button>
-                <Button compact ml={8}>
-                    <Anchor
+
+                <Button
+                    compact
+                    ml={8}
+                    bg={'#eaf6ff'}
+                    sx={{ '&:hover': { backgroundColor: '#F1F1F2' } }}>
+                    <AnchorButton
                         href='https://docs.google.com/document/d/1bDzOoZI8itijukUC_VeAnPKv6rf0dOfKgWJlGFjVRXA/edit'
-                        target='_blank'
-                        sx={{
-                            color: 'white',
-                            border: 'none',
-                            '&:hover': {
-                                textDecoration: 'none',
-                            },
-                        }}
-                        fw={'lighter'}>
-                        Healthy Workplace
-                    </Anchor>
+                        text='Healthy Workplace'
+                    />
                 </Button>
             </Flex>
             <Tabs.List sx={{ borderBottom: '1px solid transparent' }} mt='20px'>

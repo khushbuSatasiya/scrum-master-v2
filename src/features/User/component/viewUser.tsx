@@ -6,48 +6,19 @@ import { isEmpty } from "lodash";
 import { getTotalWorkingHourColor } from "shared/util/utility";
 
 import { IUserInfo } from "../interface/user";
-import { USERINFO } from "../constants/userConstants";
+import {
+  LEAVE_DETAILS,
+  USERINFO,
+  USER_INFO_ARR,
+} from "../constants/userConstants";
 
 const ViewUser: FC = () => {
-  const [userData, setUserData] = useState<IUserInfo>(USERINFO);
+  const [userData] = useState<IUserInfo>(USERINFO);
   const [activeTab, setActiveTab] = useState<string | null>("overview");
   const [LeaveDetails, setLeaveDetails] = useState<Record<string, any>>({});
   const [totalWorkingHour, setTotalWorkingHour] = useState<string>("");
 
-  /* API call for get user info*/
-  // const getUserInfo = () => {
-  //   httpService
-  //     .get(`${API_CONFIG.path.getUser}/${params.id}`)
-  //     .then((res) => {
-  //       setUserData(res.data);
-  //     })
-  //     .catch((err: Error) => {
-  //       console.error("Error", err);
-  //     });
-  // };
-
   const totalExperience = userData.experience / 365;
-
-  // const handleLeaveDetails = (leaveInfo) => {
-  //   const {
-  //     grantedLeaves,
-  //     usedLeaves,
-  //     remainingLeaves,
-  //     vacationLeaves,
-  //     compensationLeaves,
-  //   } = leaveInfo;
-  //   setLeaveDetails({
-  //     grantedLeaves,
-  //     usedLeaves,
-  //     remainingLeaves,
-  //     vacationLeaves,
-  //     compensationLeaves,
-  //   });
-  // };
-
-  // const handleTimeSheetDetails = (workingHours) => {
-  //   setTotalWorkingHour(workingHours);
-  // };
 
   const renderPaper = (label, value, color) => (
     <Paper
@@ -66,61 +37,6 @@ const ViewUser: FC = () => {
       </Text>
     </Paper>
   );
-
-  const USER_INFO_ARR = [
-    {
-      label: "Overview",
-      value: "overview",
-      content: "Gallery tab content",
-    },
-    {
-      label: "Projects",
-      value: "projects",
-      content: "Project tab content",
-    },
-    {
-      label: "Time Sheet",
-      value: "timesheet",
-      // content: <UserTimeSheet handleTimeSheetDetails={handleTimeSheetDetails} />
-    },
-    {
-      label: "Leave Report",
-      value: "leavereport",
-      // content: <LeaveList handleLeaveDetails={handleLeaveDetails} />
-    },
-  ];
-
-  const LEAVE_DETAILS = [
-    {
-      label: "Remaining Leave",
-      value: LeaveDetails.remainingLeaves,
-      color: "#40c057",
-    },
-    {
-      label: "Compensation Leave",
-      value: LeaveDetails.compensationLeaves,
-      color: "#228be6",
-    },
-    {
-      label: "Used Leave",
-      value: LeaveDetails.usedLeaves,
-      color: "#fa5252",
-    },
-    {
-      label: "Vacation Leave",
-      value: LeaveDetails.vacationLeaves,
-      color: "#228be6",
-    },
-    {
-      label: "Granted Leave",
-      value: LeaveDetails.grantedLeaves,
-      color: "#40c057",
-    },
-  ];
-
-  // useEffect(() => {
-  //   getUserInfo();
-  // }, []);
 
   return (
     <Box>
@@ -213,17 +129,19 @@ const ViewUser: FC = () => {
                 )}
 
                 {!isEmpty(LeaveDetails) &&
-                  LEAVE_DETAILS.map(({ label, value, color }, index) => {
-                    return (
-                      <Fragment key={index}>
-                        {label === "Vacation Leave" &&
-                          LeaveDetails.vacationLeaves > 0 &&
-                          renderPaper(label, value, color)}
-                        {label !== "Vacation Leave" &&
-                          renderPaper(label, value, color)}
-                      </Fragment>
-                    );
-                  })}
+                  LEAVE_DETAILS(LeaveDetails).map(
+                    ({ label, value, color }, index) => {
+                      return (
+                        <Fragment key={index}>
+                          {label === "Vacation Leave" &&
+                            LeaveDetails.vacationLeaves > 0 &&
+                            renderPaper(label, value, color)}
+                          {label !== "Vacation Leave" &&
+                            renderPaper(label, value, color)}
+                        </Fragment>
+                      );
+                    }
+                  )}
               </Flex>
             </Flex>
           </Flex>

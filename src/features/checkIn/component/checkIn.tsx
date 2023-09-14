@@ -10,6 +10,7 @@ import {
     Textarea,
     Divider,
     createStyles,
+    useMantineTheme,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
@@ -18,14 +19,14 @@ import { getProjectList } from 'shared/util/utility';
 import { checkInValidationSchema } from 'shared/constants/validation-schema';
 import { API_CONFIG } from 'shared/constants/api';
 import httpService from 'shared/services/http.service';
-import { SuccessNotification } from 'shared/components/notification/notification';
+import { showNotification } from 'shared/components/notification/notification';
 
 import { IProjectArray } from 'features/dashboard/interface/dashboard';
 
 import CheckInForm from './checkInForm';
 import CheckInModal from './checkInModal';
 
-import { ICheckInValues, IProject } from '../interface/checkIn';
+import { ICheckInValues, IEmployee, IProject } from '../interface/checkIn';
 
 interface IProps {
     projectArray: IProjectArray[];
@@ -34,6 +35,8 @@ interface IProps {
 }
 
 const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
+    const theme = useMantineTheme();
+
     const [projectName, setProjectName] = useState<IProject[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isConfirm, setIsConfirm] = useState(false);
@@ -67,6 +70,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
         validateInputOnBlur: true,
     });
 
+    /* To get label value pair for project */
     const getProject = useCallback(() => {
         setProjectName(getProjectList(projectArray));
     }, [projectArray]);
@@ -86,6 +90,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
         }
     }, []);
 
+    /* API call for check in */
     const confirmCheckIn = useCallback(
         async (values: ICheckInValues) => {
             const updatedValue = values.employees.map((data) => {
@@ -107,7 +112,11 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
                     .post(API_CONFIG.path.checkIn, payload)
                     .then((res: any) => {
                         setIsLoading(false);
-                        SuccessNotification(res);
+                        showNotification(
+                            res,
+                            theme.colors.blue[6],
+                            theme.colors.blue[6]
+                        );
                         checkStatus();
                     });
             } catch (error) {
@@ -121,7 +130,8 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
         [checkStatus]
     );
 
-    const isAddButtonDisabled = (employee: any) => {
+    /* add task button disable */
+    const isAddButtonDisabled = (employee: IEmployee) => {
         return (
             employee.task.trim() === '' ||
             employee.project === '' ||
@@ -129,6 +139,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
         );
     };
 
+    /* For input fields */
     const fields = form.values.employees.map((item, index) => (
         <Paper key={index}>
             <Group mt='xs' sx={{ alignItems: 'end' }}>
@@ -209,19 +220,6 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
         </Paper>
     ));
 
-    const handleTimeChange = (e) => {
-        let formattedTime = e.target.value.replace(/\D/g, '');
-        if (formattedTime.length > 2) {
-            formattedTime = `${formattedTime.slice(0, 2)}:${formattedTime.slice(
-                2
-            )}`;
-        }
-        if (formattedTime.length > 5) {
-            return;
-        }
-        form.setFieldValue('time', formattedTime);
-    };
-
     return (
         <>
             <Flex direction='column' justify='center' mt={30}>
@@ -229,7 +227,6 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
                     form={form}
                     handleCheckIn={handleCheckIn}
                     fields={fields}
-                    handleTimeChange={handleTimeChange}
                     isLoading={isLoading}
                     classes={classes}
                     isConfirm={isConfirm}

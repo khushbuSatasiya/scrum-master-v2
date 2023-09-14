@@ -9,7 +9,6 @@ import {
     Modal,
     Select,
     Text,
-    TextInput,
     createStyles,
 } from '@mantine/core';
 import { MonthPickerInput } from '@mantine/dates';
@@ -66,6 +65,7 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
 
     const { classes } = useStyles();
 
+    /* API call for project excel download*/
     const handleSubmit = (values: FormValues) => {
         const startDate = moment(values.date)
             .startOf('month')
@@ -164,6 +164,41 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
                             clearable
                             autoFocus={false}
                             {...form.getInputProps('teamMate')}
+                        />
+                    )}
+
+                    <MonthPickerInput
+                        label={'Select Month'}
+                        size='sm'
+                        monthsListFormat='MMM'
+                        variant='filled'
+                        mt='15px'
+                        placeholder='Pick a month'
+                        radius='md'
+                        minDate={new Date('01-08-2023')}
+                        sx={{ border: 'none !important' }}
+                        icon={<IconCalendar size={16} />}
+                        {...form.getInputProps('date')}
+                    />
+
+                    {!isEmpty(teamInfo) && (
+                        <Select
+                            label={'Select Employee'}
+                            placeholder='Select Team Member'
+                            searchable
+                            data={teamInfo}
+                            variant='filled'
+                            mt='lg'
+                            radius='md'
+                            withinPortal
+                            transitionProps={{
+                                transition: 'pop-top-left',
+                                duration: 80,
+                                timingFunction: 'ease',
+                            }}
+                            clearable
+                            autoFocus={false}
+                            {...form.getInputProps('userId')}
                         />
                     )}
 

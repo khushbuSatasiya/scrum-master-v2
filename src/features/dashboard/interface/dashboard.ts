@@ -20,3 +20,34 @@ export interface IUserDetail {
   experience: number;
   projectCount: number;
 }
+
+export interface IActionTime {
+  inTime: string;
+  outTime: string;
+}
+
+export interface IEnteredTask {
+  id: string;
+  projectId: string;
+  date: string;
+  taskCreate: string;
+  taskDone: string;
+  projectDetails: ProjectDetails;
+}
+
+export interface ProjectDetails {
+  projectName: string;
+}
+
+export interface IPersonalDetails {
+  id: string;
+  realName: string;
+  email: string;
+  designation: string;
+  avatar: string;
+  birthDate: string;
+  joiningDate: string;
+  confirmationDate: string;
+  probationCompletionDate: any;
+  paidLeaveStartDate: string;
+}

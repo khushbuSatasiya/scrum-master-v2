@@ -15,7 +15,15 @@ export const getUserTimeSheetColumns = (renderModal) => {
             width: 100,
             render: ({ date }) => {
                 return (
-                    <Text sx={{ fontWeight: 500 }}>{dateFormate(date)}</Text>
+                    <Anchor
+                        sx={{
+                            fontWeight: 500,
+                            cursor: 'unset',
+                            textDecoration: 'none !important',
+                            '&:hover': { textDecoration: 'none !important' },
+                        }}>
+                        {dateFormate(date)}
+                    </Anchor>
                 );
             },
         },

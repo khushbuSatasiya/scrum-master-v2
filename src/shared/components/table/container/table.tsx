@@ -22,9 +22,7 @@ const useStyles = createStyles((theme) => {
         header: {
             backgroundColor: theme.colors.blue[5],
             color: theme.white,
-            // '&& tr': { height: '50px', backgroundColor: theme.colors.blue[5] },
-            // '&& th': { fontSize: '16px', fontWeight: 'bold', color: theme.white },
-            // '&&& th:hover': { backgroundColor: theme.colors.blue[5], color: theme.white }
+
             '&& tr': {
                 height: '50px',
                 backgroundColor: theme.white,
@@ -49,7 +47,9 @@ const useStyles = createStyles((theme) => {
                 fontSize: 15,
                 fontWeight: 600,
                 color: '#78829D',
-                //cursor: "pointer",
+            },
+            '&& td:hover': {
+                textDecoration: 'none !important',
             },
         },
         pagination: {
@@ -73,6 +73,14 @@ export const TableSelection = (props: ITableProps) => {
 
     const { classes } = useStyles();
 
+    const getRowClass = (isUpcomingLeave) => {
+        if (isUpcomingLeave.isUpcomingLeave) {
+            return 'gray-background';
+        } else {
+            return '';
+        }
+    };
+
     return (
         <DataTable
             key={Math.random()}
@@ -84,13 +92,9 @@ export const TableSelection = (props: ITableProps) => {
             loaderBackgroundBlur={3}
             withBorder
             borderRadius='md'
-            //shadow='md'
-            // striped
             highlightOnHover
             records={userList}
             paginationSize='md'
-            // sortStatus={sortStatus}
-            // onSortStatusChange={handleSortStatusChange}
             noRecordsIcon={<NoRecordPage />}
             noRecordsText='No records found'
             totalRecords={props?.pagination?.total}
@@ -104,7 +108,9 @@ export const TableSelection = (props: ITableProps) => {
             onRecordsPerPageChange={(recordPerPage) =>
                 props.onRecordsPerPageChange(recordPerPage)
             }
-            rowClassName={({ name }) => classes.rowClass}
+            rowClassName={({ isUpcomingLeave }) =>
+                `${classes.rowClass} ${getRowClass({ isUpcomingLeave })}`
+            }
             onRowClick={props.onRowClick || null}
         />
     );

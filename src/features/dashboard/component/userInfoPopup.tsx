@@ -17,6 +17,8 @@ import httpService from "shared/services/http.service";
 import { API_CONFIG } from "shared/constants/api";
 import { dateFormate } from "shared/util/utility";
 
+import { IPersonalDetails } from "../interface/dashboard";
+
 interface IProps {
   isShowUserDetails: boolean;
   setIsShowUserDetails: (action: boolean) => void;
@@ -26,9 +28,12 @@ const UserInfoPopup: FC<IProps> = ({
   isShowUserDetails,
   setIsShowUserDetails,
 }) => {
-  const [userDetail, setUserDetail] = useState<any>({});
+  const [userDetail, setUserDetail] = useState<IPersonalDetails>(
+    {} as IPersonalDetails
+  );
   const [isLoading, setIsLoading] = useState(false);
 
+  /* API call for get profile data*/
   const getProfile = async () => {
     setIsLoading(true);
     try {
@@ -75,7 +80,6 @@ const UserInfoPopup: FC<IProps> = ({
         </Flex>
       )}
 
-      {/* {!isLoading && isEmpty(userDetail) && <Text>No data found</Text>} */}
       {!isLoading && !isEmpty(userDetail) && (
         <Paper radius="lg">
           <Text align="center" fw={600} size={22}>

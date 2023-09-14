@@ -6,15 +6,17 @@ import {
   Group,
   Paper,
   Select,
-  Space,
   Textarea,
   Text,
   Divider,
   TextInput,
   createStyles,
+  Title,
 } from "@mantine/core";
 
-import { changedDateFormat } from "shared/util/utility";
+import { changedDateFormat, formatTime } from "shared/util/utility";
+
+import { IActionTime } from "features/dashboard/interface/dashboard";
 
 import AddExtraTaskForm from "./addExtraTaskForm";
 
@@ -28,7 +30,7 @@ interface IProps {
   handleAddTaskBtn: () => void;
   checkOutDate: string;
   isLoading: boolean;
-  // handleTimeChange: (e: any) => void;
+  actionTime: IActionTime;
 }
 
 const CheckOutForm: FC<IProps> = (props) => {
@@ -42,7 +44,7 @@ const CheckOutForm: FC<IProps> = (props) => {
     checkOutDate,
     isLoading,
     userTasks,
-    // handleTimeChange,
+    actionTime,
   } = props;
 
   const useStyles = createStyles(() => ({
@@ -51,7 +53,9 @@ const CheckOutForm: FC<IProps> = (props) => {
       color: "5e6278",
       fontWight: "500",
       border: "transparent",
-      // border: "transparent",
+    },
+    label: {
+      color: "#99A1B7 !important",
     },
   }));
 
@@ -136,7 +140,6 @@ const CheckOutForm: FC<IProps> = (props) => {
                             input: classes.input,
                           }}
                           sx={{ marginLeft: "20px" }}
-                          // value={form.values.time}
                           {...form.getInputProps(`tasks.${index}.projectHours`)}
                         />
                       </Flex>
@@ -216,31 +219,56 @@ const CheckOutForm: FC<IProps> = (props) => {
 
             <Flex
               direction={"column"}
-              align={"center"}
-              justify={"space-between"}
-              sx={{ height: "180px" }}
+              sx={{ height: "200px" }}
               mt={"10px"}
+              pos={"relative"}
             >
+              <Text
+                fz="14px"
+                weight={600}
+                mt={10}
+                mb={20}
+                color="#99A1B7"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                Check in at{" "}
+                <Title fz="14px" weight={600} color="#5e6278" ml={4}>
+                  {formatTime(actionTime.inTime)}
+                </Title>
+              </Text>
               <TextInput
                 withAsterisk
                 placeholder="00:00"
                 maxLength={5}
-                mt={24}
                 classNames={{
                   input: classes.input,
+                  label: classes.label,
                 }}
                 label="(24 hour)"
                 ta={"center"}
+                w={205}
                 labelProps={{ style: { color: "#5e6278" } }}
                 value={form.values.time}
                 {...form.getInputProps("time")}
-                // onChange={(e) => handleTimeChange(e)}
+                m={"0 auto"}
               />
-              <Space w="lg" />
-              <Group position="center">
+              <Divider
+                my="sm"
+                variant="dashed"
+                sx={{ marginTop: "40px !important" }}
+              />
+              <Group position="center" pos={"absolute"} bottom={0} left={58}>
                 <Button
                   type="submit"
-                  sx={{ width: "140px", marginTop: "20px" }}
+                  sx={{
+                    width: "140px",
+                    background: "#fa5252",
+                    "&:hover": { background: "#fa5252 !important" },
+                  }}
                   loading={isLoading}
                   disabled={isLoading}
                   loaderPosition="left"

@@ -20,9 +20,10 @@ export const API_CONFIG = {
     profile: "users/profile",
 	leaveRequest:'request/leave',
 	changeTimeSheet:'request/changetime',
-	timeSheet:'request/timesheet'
-
-	
+	timeSheet:'request/timesheet',
+    teamReport: "web/report",
+    projects: "project/dropdown",
+    userList: "users/dropdown",
   },
 };
 
