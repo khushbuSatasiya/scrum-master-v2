@@ -11,7 +11,7 @@ import {
 } from "shared/constants/validation-schema";
 import { showNotification } from "shared/components/notification/notification";
 import httpService from "shared/services/http.service";
-
+import { getProjectList, minuteToHour } from "shared/util/utility";
 import { API_CONFIG } from "shared/constants/api";
 
 import {
@@ -20,7 +20,6 @@ import {
 } from "features/dashboard/interface/dashboard";
 
 import CheckOutForm from "./checkOutForm";
-import { getProjectList } from "shared/util/utility";
 import CheckoutModals from "./checkoutModals";
 
 interface IProps {
@@ -47,6 +46,8 @@ const CheckOut: FC<IProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isAlreadyCheckOut, setIsAlreadyCheckOut] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
+  const [onChangeTIme, setOnChangeTime] = useState("");
+  const [diffTime, setDiffTime] = useState("");
 
   const formatValues = (userTask: any) => {
     const tasksArray = userTask.map((task: any) => {
@@ -107,14 +108,24 @@ const CheckOut: FC<IProps> = ({
     setIsShowForm(!isShowForm);
   };
 
+  useEffect(() => {
+    setOnChangeTime(currentTime);
+  }, []);
+
   const handleTimeChange = (e) => {
     const input = e.target.value;
-    let formattedTime = input.replace(/\D+/g, "").slice(0, 4);
+    let formattedTime = input
+      .replace(/\D/g, "")
+      .slice(0, 4)
+      .replace(/(\d{2})(\d{0,2})/, "$1:$2");
 
-    if (formattedTime.length >= 3) {
-      formattedTime = formattedTime.slice(0, 2) + ":" + formattedTime.slice(2);
+    if (e.nativeEvent.inputType === "deleteContentBackward") {
+      const lastChar = formattedTime.charAt(formattedTime.length - 1);
+      if (lastChar === ":") {
+        formattedTime = formattedTime.slice(0, -1);
+      }
     }
-    e.target.value = formattedTime;
+    setOnChangeTime(formattedTime);
     form.setFieldValue("time", formattedTime);
   };
 
@@ -189,6 +200,39 @@ const CheckOut: FC<IProps> = ({
     ]
   );
 
+  const timeSubtraction = useCallback(() => {
+    const inTimeArr = actionTime.inTime.split(":");
+    let outTimeArr;
+
+    if (
+      onChangeTIme ||
+      onChangeTIme.includes(":") ||
+      onChangeTIme.length === 5
+    ) {
+      outTimeArr = onChangeTIme.split(":");
+    } else if (!onChangeTIme) {
+      outTimeArr = currentTime.split(":");
+    }
+    const inSec = new Date().setHours(
+      Number(inTimeArr[0]),
+      Number(inTimeArr[1])
+    );
+
+    const outSec = new Date().setHours(
+      Number(outTimeArr[0]),
+      Number(outTimeArr[1])
+    );
+
+    const workTime = (outSec - inSec) / (1000 * 60 * 60);
+    const dailyWorkingMinutes = Math.round(Number(workTime) * 60);
+
+    setDiffTime(minuteToHour(dailyWorkingMinutes));
+  }, [actionTime.inTime, currentTime, onChangeTIme]);
+
+  useEffect(() => {
+    timeSubtraction();
+  }, [timeSubtraction]);
+
   return (
     <>
       <CheckOutForm
@@ -203,6 +247,9 @@ const CheckOut: FC<IProps> = ({
         isLoading={isLoading}
         actionTime={actionTime}
         handleTimeChange={handleTimeChange}
+        timeSubtraction={timeSubtraction}
+        diffTime={diffTime}
+        onChangeTIme={onChangeTIme}
       />
 
       <CheckoutModals

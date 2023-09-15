@@ -261,3 +261,13 @@ export const teamReportIconColor = (data: any) => {
   }
   return iconColor;
 };
+
+export const minuteToHour = (data: number) => {
+  const hours = Math.floor(data / 60);
+  const minutes = Math.round(data % 60);
+
+  const fixedTotalHours = hours <= 9 ? "0" + hours : hours;
+  const fixedTotalMinutes = minutes <= 9 ? "0" + minutes : minutes;
+  const totalWorkingHours = fixedTotalHours + ":" + fixedTotalMinutes;
+  return totalWorkingHours;
+};
