@@ -17,9 +17,30 @@
 
   .rbc-month-view {
     border-radius: 6px;
+    margin-top: 42px;
   }
 }
 .rbc-overlay {
   max-height: 250px !important;
   overflow-x: scroll !important;
+}
+
+.toolbar-navigation {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+}
+
+.toolbar-btn {
+  // margin-left: 8px;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.toolbar-label {
+  position: absolute;
+  top: 26px;
+  left: 46%;
 }
