@@ -65,17 +65,12 @@ const CheckOutForm: FC<IProps> = (props) => {
 
   const handleOnChangeHours = (e, index) => {
     const input = e.target.value;
-    let formattedTime = input
-      .replace(/\D/g, "")
-      .slice(0, 4)
-      .replace(/(\d{2})(\d{0,2})/, "$1:$2");
+    let formattedTime = input.replace(/\D+/g, "").slice(0, 4);
 
-    if (e.nativeEvent.inputType === "deleteContentBackward") {
-      const lastChar = formattedTime.charAt(formattedTime.length - 1);
-      if (lastChar === ":") {
-        formattedTime = formattedTime.slice(0, -1);
-      }
+    if (formattedTime.length >= 3) {
+      formattedTime = formattedTime.slice(0, 2) + ":" + formattedTime.slice(2);
     }
+    e.target.value = formattedTime;
     form.setFieldValue(`tasks.${index}.projectHours`, formattedTime);
   };
 
