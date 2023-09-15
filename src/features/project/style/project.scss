@@ -2,6 +2,14 @@
   .toolbar-navigation {
     top: 84px !important;
     right: 100px !important;
+    border-radius: 4px;
+
+    button:first-child {
+      border-radius: 4px 0px 0px 4px;
+    }
+    button:last-child {
+      border-radius: 0px 4px 4px 0px;
+    }
   }
 
   .toolbar-label {

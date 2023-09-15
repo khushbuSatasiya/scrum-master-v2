@@ -31,6 +31,7 @@ interface IProps {
   checkOutDate: string;
   isLoading: boolean;
   actionTime: IActionTime;
+  handleTimeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const CheckOutForm: FC<IProps> = (props) => {
@@ -45,6 +46,7 @@ const CheckOutForm: FC<IProps> = (props) => {
     isLoading,
     userTasks,
     actionTime,
+    handleTimeChange,
   } = props;
 
   const useStyles = createStyles(() => ({
@@ -60,6 +62,22 @@ const CheckOutForm: FC<IProps> = (props) => {
   }));
 
   const { classes } = useStyles();
+
+  const handleOnChangeHours = (e, index) => {
+    const input = e.target.value;
+    let formattedTime = input
+      .replace(/\D/g, "")
+      .slice(0, 4)
+      .replace(/(\d{2})(\d{0,2})/, "$1:$2");
+
+    if (e.nativeEvent.inputType === "deleteContentBackward") {
+      const lastChar = formattedTime.charAt(formattedTime.length - 1);
+      if (lastChar === ":") {
+        formattedTime = formattedTime.slice(0, -1);
+      }
+    }
+    form.setFieldValue(`tasks.${index}.projectHours`, formattedTime);
+  };
 
   return (
     <Flex direction="column" justify="center" mt={30}>
@@ -141,6 +159,11 @@ const CheckOutForm: FC<IProps> = (props) => {
                           }}
                           sx={{ marginLeft: "20px" }}
                           {...form.getInputProps(`tasks.${index}.projectHours`)}
+                          onChange={(
+                            e: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            handleOnChangeHours(e, index);
+                          }}
                         />
                       </Flex>
 
@@ -254,6 +277,7 @@ const CheckOutForm: FC<IProps> = (props) => {
                 labelProps={{ style: { color: "#5e6278" } }}
                 value={form.values.time}
                 {...form.getInputProps("time")}
+                onChange={(e) => handleTimeChange(e)}
                 m={"0 auto"}
               />
               <Divider

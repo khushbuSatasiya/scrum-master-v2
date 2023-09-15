@@ -35,6 +35,22 @@ const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
     return !enable;
   };
 
+  const handleOnChangeHours = (e, index) => {
+    const input = e.target.value;
+    let formattedTime = input
+      .replace(/\D/g, "")
+      .slice(0, 4)
+      .replace(/(\d{2})(\d{0,2})/, "$1:$2");
+
+    if (e.nativeEvent.inputType === "deleteContentBackward") {
+      const lastChar = formattedTime.charAt(formattedTime.length - 1);
+      if (lastChar === ":") {
+        formattedTime = formattedTime.slice(0, -1);
+      }
+    }
+    form.setFieldValue(`employees.${index}.projectHours`, formattedTime);
+  };
+
   /* For input fields */
   const fields = form.values.employees.map((item, index) => {
     return (
@@ -68,6 +84,9 @@ const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
                     }}
                     // value={form.values.time}
                     {...form.getInputProps(`employees.${index}.projectHours`)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      handleOnChangeHours(e, index);
+                    }}
                   />
                 </Flex>
                 <Textarea

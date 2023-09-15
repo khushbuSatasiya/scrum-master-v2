@@ -29,6 +29,12 @@
   position: absolute;
   top: 18px;
   right: 20px;
+  button:first-child {
+    border-radius: 4px 0px 0px 4px;
+  }
+  button:last-child {
+    border-radius: 0px 4px 4px 0px;
+  }
 }
 
 .toolbar-btn {
