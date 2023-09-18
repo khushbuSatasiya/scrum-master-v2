@@ -42,11 +42,11 @@ const CheckInForm: FC<IProps> = ({ form, handleCheckIn, fields, isLoading, class
 						}
 					}}
 				>
-					<Flex align={'center'} justify={'space-between'} pb={'10px'} pt={'10px'}>
+					<Flex align={'center'} justify={'space-between'}>
 						<Text fz='lg' weight={600} color='#5e6278'>
 							Task
 						</Text>
-						<Text ta='center' fz='lg' weight={500} color='#5e6278'>
+						<Text ta='center' fz='lg' weight={500}>
 							{getTodayDate()}
 						</Text>
 
@@ -62,50 +62,48 @@ const CheckInForm: FC<IProps> = ({ form, handleCheckIn, fields, isLoading, class
 				<Paper
 					shadow='sm'
 					radius='lg'
-					p='lg'
+					p='10px'
 					sx={{
 						width: '25%',
 						height: '300px'
 					}}
 				>
-					<Flex align={'center'} justify={'center'} pb={'10px'} pt={'10px'}>
-						<Text fz='lg' weight={600} color='#5e6278'>
+					<Flex align={'center'} justify={'center'}>
+						<Text fz='lg' weight={600} color='#5e6278' p={5}>
 							Time
 						</Text>
 					</Flex>
 
 					<Divider my='sm' variant='dashed' />
-					<Flex
-						direction={'column'}
-						align={'center'}
-						justify={'space-between'}
-						sx={{ height: '180px' }}
-						mt={'10px'}
-					>
-						<TextInput
-							withAsterisk
-							placeholder='00:00'
-							maxLength={5}
-							mt={24}
-							label='(24 hour)'
-							value={form.values.time}
-							classNames={{
-								input: classes.input
-							}}
-							ta={'center'}
-							labelProps={{ style: { color: '#5e6278' } }}
-							{...form.getInputProps('time')}
-							onChange={(e) => handleTimeChange(e)}
-						/>
+					<Flex direction={'column'} justify={'space-between'} sx={{ height: '180px' }} mt={'10px'}>
+						<Flex align={'center'} justify={'center'}>
+							<TextInput
+								withAsterisk
+								placeholder='00:00'
+								maxLength={5}
+								mt={24}
+								w={205}
+								label='(24 hour)'
+								value={form.values.time}
+								classNames={{
+									input: classes.input
+								}}
+								ta={'center'}
+								labelProps={{ style: { color: '#5e6278' } }}
+								{...form.getInputProps('time')}
+								onChange={(e) => handleTimeChange(e)}
+							/>
+						</Flex>
 
-						<Space w='lg' />
+						<Divider my='sm' variant='dashed' sx={{ marginTop: '60px !important' }} />
 						<Group position='center'>
 							<Button
 								type='submit'
-								sx={{ width: '140px', marginTop: '20px' }}
+								sx={{ width: '140px' }}
 								loading={!isConfirm && isLoading}
 								disabled={isLoading}
 								loaderPosition='left'
+								mt={'10px'}
 								loaderProps={{
 									size: 'sm',
 									color: '#15aabf',

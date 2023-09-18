@@ -36,6 +36,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus, projectA
 	const [isLoading, setIsLoading] = useState(false);
 	const [isAlreadyCheckOut, setIsAlreadyCheckOut] = useState(false);
 	const [isConfirm, setIsConfirm] = useState(false);
+	const [isSubmit, setIsSubmit] = useState(false);
 	const [onChangeTIme, setOnChangeTime] = useState('');
 	const [diffTime, setDiffTime] = useState('');
 	const [dailyWorkingMinute, setDailyWorkingMinute] = useState(0);
@@ -162,9 +163,9 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus, projectA
 				setIsLoading(true);
 				try {
 					await httpService.post(API_CONFIG.path.checkOut, payload).then((res: any) => {
+						setIsSubmit(true);
 						setIsLoading(false);
-						showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);
-						checkStatus();
+						// showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);
 					});
 				} catch (error) {
 					setIsLoading(false);
@@ -176,7 +177,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus, projectA
 				}
 			}
 		},
-		[checkOutDate, checkStatus, enteredTask.length, theme.colors.blue, theme.colors.red]
+		[checkOutDate, enteredTask.length, theme.colors.red]
 	);
 
 	const timeSubtraction = useCallback(() => {
@@ -228,6 +229,8 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus, projectA
 				checkStatus={checkStatus}
 				isAlreadyCheckOut={isAlreadyCheckOut}
 				setIsAlreadyCheckOut={setIsAlreadyCheckOut}
+				setIsSubmit={setIsSubmit}
+				isSubmit={isSubmit}
 			/>
 		</>
 	);

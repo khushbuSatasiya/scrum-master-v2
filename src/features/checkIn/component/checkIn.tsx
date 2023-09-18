@@ -42,6 +42,8 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
 	const [isConfirm, setIsConfirm] = useState(false);
 	const [checkInValue, setCheckInValue] = useState<ICheckInValues>({} as ICheckInValues);
 	const [isAlreadyCheckIn, setIsAlreadyCheckIn] = useState(false);
+	const [isSubmit, setIsSubmit] = useState(false);
+	const [reminder, setReminder] = useState('');
 
 	const useStyles = createStyles(() => ({
 		input: {
@@ -107,19 +109,22 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
 
 			try {
 				await httpService.post(API_CONFIG.path.checkIn, payload).then((res: any) => {
+					setReminder(res.data.lateCount);
+					// showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);
 					setIsLoading(false);
-					showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);
-					checkStatus();
+					setIsSubmit(true);
 				});
 			} catch (error) {
 				setIsLoading(false);
+
+				showNotification(error, theme.colors.red[6], theme.colors.red[6]);
 				if (error?.response?.status === 409) {
 					setIsAlreadyCheckIn(true);
 				}
 				console.error(error);
 			}
 		},
-		[checkStatus]
+		[theme.colors.red]
 	);
 
 	/* add task button disable */
@@ -148,7 +153,7 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
 						input: classes.input
 					}}
 				/>
-				<Flex align={'center'}>
+				<Flex align={'end'}>
 					<Textarea
 						autosize
 						placeholder={`- task 1\n- task 2`}
@@ -245,6 +250,9 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
 				checkInValue={checkInValue}
 				isLoading={isLoading}
 				setIsLoading={setIsLoading}
+				isSubmit={isSubmit}
+				setIsSubmit={setIsSubmit}
+				reminder={reminder}
 			/>
 		</>
 	);

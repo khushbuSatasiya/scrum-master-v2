@@ -3,6 +3,10 @@ import React, { FC } from 'react';
 import { Button, Flex, Modal, Paper, Text } from '@mantine/core';
 import { IconAlertTriangle } from '@tabler/icons-react';
 
+import Lottie from 'react-lottie';
+
+import checkedJson from 'assets/lotties/checked.json';
+
 import { ICheckInValues } from '../interface/checkIn';
 
 interface IProps {
@@ -15,6 +19,9 @@ interface IProps {
 	checkInValue: ICheckInValues;
 	isLoading: boolean;
 	setIsLoading: (action: boolean) => void;
+	isSubmit: boolean;
+	setIsSubmit: (action: boolean) => void;
+	reminder: string;
 }
 
 const CheckInModal: FC<IProps> = (props: IProps) => {
@@ -27,14 +34,24 @@ const CheckInModal: FC<IProps> = (props: IProps) => {
 		checkStatus,
 		checkInValue,
 		isLoading,
-		setIsLoading
+		setIsLoading,
+		isSubmit,
+		setIsSubmit,
+		reminder
 	} = props;
+
+	const defaultOptions = {
+		loop: false,
+		autoplay: true,
+		animationData: checkedJson
+	};
+
 	return (
-		<div>
+		<>
 			<Modal
 				size='auto'
 				opened={isConfirm}
-				onClose={() => setIsConfirm(false)}
+				onClose={() => console.log()}
 				centered
 				padding={40}
 				radius='lg'
@@ -59,7 +76,10 @@ const CheckInModal: FC<IProps> = (props: IProps) => {
 									color: '#15aabf',
 									variant: 'oval'
 								}}
-								onClick={() => confirmCheckIn(checkInValue)}
+								onClick={() => {
+									confirmCheckIn(checkInValue);
+									setIsConfirm(false);
+								}}
 							>
 								Yes
 							</Button>
@@ -109,7 +129,44 @@ const CheckInModal: FC<IProps> = (props: IProps) => {
 					</Flex>
 				</Paper>
 			</Modal>
-		</div>
+
+			<Modal
+				size='auto'
+				opened={isSubmit}
+				onClose={() => console.log()}
+				centered
+				padding={40}
+				radius='lg'
+				withCloseButton={false}
+			>
+				<Paper radius='lg'>
+					<Flex align={'center'} direction={'column'}>
+						<Flex justify='center' align='center' direction='column' mb={20}>
+							<Lottie options={defaultOptions} height={120} width={120} speed={1.5} />
+						</Flex>
+						<Text ta='center' mb={10} weight={600} color='#99A1B7'>
+							You have successfully checked in
+						</Text>
+						{reminder && (
+							<Text ta='center' mb={30} weight={600} color='#99A1B7'>
+								Late coming reminder <span style={{ color: 'red' }}>{reminder}</span> in this month
+							</Text>
+						)}
+
+						<Button
+							variant='outline'
+							color='green'
+							onClick={() => {
+								setIsSubmit(false);
+								checkStatus();
+							}}
+						>
+							OK
+						</Button>
+					</Flex>
+				</Paper>
+			</Modal>
+		</>
 	);
 };
 

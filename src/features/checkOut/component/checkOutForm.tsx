@@ -277,7 +277,7 @@ const CheckOutForm: FC<IProps> = (props) => {
 						}}
 					>
 						<Flex align={'center'} justify={'center'}>
-							<Text fz='lg' weight={600} color='#5e6278' p={0}>
+							<Text fz='lg' weight={600} color='#5e6278'>
 								Time
 							</Text>
 						</Flex>
@@ -319,8 +319,8 @@ const CheckOutForm: FC<IProps> = (props) => {
 								onChange={(e) => handleTimeChange(e)}
 								m={'0 auto'}
 							/>
-							<Divider my='sm' variant='dashed' sx={{ marginTop: '40px !important' }} />
-							<Group position='center' pos={'absolute'} bottom={0} left={58}>
+							<Divider my='sm' variant='dashed' sx={{ marginTop: '35px !important' }} />
+							<Group position='center' pos={'absolute'} bottom={-6} left={58}>
 								<Button
 									type='submit'
 									sx={{
