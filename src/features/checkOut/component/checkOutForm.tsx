@@ -126,16 +126,17 @@ const CheckOutForm: FC<IProps> = (props) => {
                 dailyWorkingMinute > 0 ? (
                   <Tooltip
                     sx={{
-                      maxWidth: "220px",
                       wordWrap: "break-word",
                       textWrap: "balance",
                       height: "auto",
                       textAlign: "center",
                     }}
-                    width={"auto"}
                     inline
-                    position="top-start"
-                    label={diffTime}
+                    multiline
+                    width={250}
+                    label={
+                      "Determine total office hours based on check-in and check-out times."
+                    }
                     color="#1c7ed6"
                     transitionProps={{
                       transition: "slide-down",
@@ -157,7 +158,6 @@ const CheckOutForm: FC<IProps> = (props) => {
                     }}
                     width={"auto"}
                     inline
-                    position="top-start"
                     label={"Invalid check-out time"}
                     color="#1c7ed6"
                     transitionProps={{
