@@ -48,6 +48,7 @@ const CheckOut: FC<IProps> = ({
   const [isConfirm, setIsConfirm] = useState(false);
   const [onChangeTIme, setOnChangeTime] = useState("");
   const [diffTime, setDiffTime] = useState("");
+  const [dailyWorkingMinute, setDailyWorkingMinute] = useState(0);
 
   const formatValues = (userTask: any) => {
     const tasksArray = userTask.map((task: any) => {
@@ -225,7 +226,7 @@ const CheckOut: FC<IProps> = ({
 
     const workTime = (outSec - inSec) / (1000 * 60 * 60);
     const dailyWorkingMinutes = Math.round(Number(workTime) * 60);
-
+    setDailyWorkingMinute(dailyWorkingMinutes);
     setDiffTime(minuteToHour(dailyWorkingMinutes));
   }, [actionTime.inTime, currentTime, onChangeTIme]);
 
@@ -250,6 +251,7 @@ const CheckOut: FC<IProps> = ({
         timeSubtraction={timeSubtraction}
         diffTime={diffTime}
         onChangeTIme={onChangeTIme}
+        dailyWorkingMinute={dailyWorkingMinute}
       />
 
       <CheckoutModals

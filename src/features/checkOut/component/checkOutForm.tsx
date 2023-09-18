@@ -12,6 +12,7 @@ import {
   TextInput,
   createStyles,
   Title,
+  Tooltip,
 } from "@mantine/core";
 
 import { changedDateFormat, formatTime } from "shared/util/utility";
@@ -19,6 +20,7 @@ import { changedDateFormat, formatTime } from "shared/util/utility";
 import { IActionTime } from "features/dashboard/interface/dashboard";
 
 import AddExtraTaskForm from "./addExtraTaskForm";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 interface IProps {
   handleCheckOut: (values: any) => {};
@@ -35,6 +37,7 @@ interface IProps {
   timeSubtraction: () => void;
   diffTime: string;
   onChangeTIme: string;
+  dailyWorkingMinute: number;
 }
 
 const CheckOutForm: FC<IProps> = (props) => {
@@ -52,6 +55,7 @@ const CheckOutForm: FC<IProps> = (props) => {
     handleTimeChange,
     diffTime,
     onChangeTIme,
+    dailyWorkingMinute,
   } = props;
 
   const useStyles = createStyles(() => ({
@@ -115,14 +119,62 @@ const CheckOutForm: FC<IProps> = (props) => {
               <Text ta="center" fz="lg" weight={500}>
                 {changedDateFormat(checkOutDate)}
               </Text>
-              <Text
-                fz="lg"
-                weight={600}
-                color="#5e6278"
-                // sx={{ visibility: "hidden" }}
-              >
-                {onChangeTIme && onChangeTIme.length === 5 ? diffTime : "--:--"}
-              </Text>
+
+              <Group>
+                {onChangeTIme &&
+                onChangeTIme.length === 5 &&
+                dailyWorkingMinute > 0 ? (
+                  <Tooltip
+                    sx={{
+                      maxWidth: "220px",
+                      wordWrap: "break-word",
+                      textWrap: "balance",
+                      height: "auto",
+                      textAlign: "center",
+                    }}
+                    width={"auto"}
+                    inline
+                    position="top-start"
+                    label={diffTime}
+                    color="#1c7ed6"
+                    transitionProps={{
+                      transition: "slide-down",
+                      duration: 300,
+                    }}
+                  >
+                    <Text fz="lg" weight={600} color="#228be6" w={50}>
+                      {diffTime}
+                    </Text>
+                  </Tooltip>
+                ) : (
+                  <Tooltip
+                    sx={{
+                      maxWidth: "220px",
+                      wordWrap: "break-word",
+                      textWrap: "balance",
+                      height: "auto",
+                      textAlign: "center",
+                    }}
+                    width={"auto"}
+                    inline
+                    position="top-start"
+                    label={"Invalid check-out time"}
+                    color="#1c7ed6"
+                    transitionProps={{
+                      transition: "slide-down",
+                      duration: 300,
+                    }}
+                  >
+                    <Flex align={"center"} justify={"center"} w={50}>
+                      <IconAlertTriangle
+                        size={18}
+                        strokeWidth={2}
+                        color={"red"}
+                      />
+                    </Flex>
+                  </Tooltip>
+                )}
+              </Group>
             </Flex>
             <Divider my="sm" variant="dashed" />
             {form.values.tasks.map((data: any, index: number) => {
