@@ -1,23 +1,23 @@
 .team {
-  .toolbar-navigation {
-    top: 84px !important;
-    right: 100px !important;
-    border-radius: 4px;
+	.toolbar-navigation {
+		top: 84px !important;
+		right: 100px !important;
+		border-radius: 4px;
 
-    button:first-child {
-      border-radius: 4px 0px 0px 4px;
-    }
-    button:last-child {
-      border-radius: 0px 4px 4px 0px;
-    }
-  }
+		button:first-child {
+			border-radius: 4px 0px;
+		}
+		button:last-child {
+			border-radius: 0px 4px 4px 0px;
+		}
+	}
 
-  .toolbar-label {
-    top: 92px !important;
-    left: 46% !important;
-  }
+	.toolbar-label {
+		top: 92px !important;
+		left: 46% !important;
+	}
 
-  .rbc-month-view {
-    margin-top: 42px !important;
-  }
+	.rbc-month-view {
+		margin-top: 42px !important;
+	}
 }
