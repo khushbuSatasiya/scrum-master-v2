@@ -2,7 +2,7 @@ import { notifications } from "@mantine/notifications";
 
 const showNotification = (res, backgroundColor, borderColor) => {
   notifications.show({
-    message: res.message || res.response.data.message,
+    message: res.response.data.message || res.message,
     styles: (theme) => ({
       root: {
         backgroundColor: backgroundColor,
