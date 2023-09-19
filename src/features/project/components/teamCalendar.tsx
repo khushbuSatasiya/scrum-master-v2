@@ -10,6 +10,10 @@ import { DotIcon } from "shared/icons/icons";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { ICalendarInfo } from "features/calendar/interface/calendar.interface";
 
+import CustomToolbar from "shared/components/customToolbar/customToolbar";
+
+import "../style/project.scss";
+
 interface IProps {
   calendarInfo: ICalendarInfo[];
   getTeamReport: (projectId: string, month: string) => void;
@@ -90,8 +94,11 @@ const TeamCalendar: FC<IProps> = ({
               titleAccessor="title"
               eventPropGetter={eventPropGetter}
               tooltipAccessor={(event: any) => {}}
-              //   resourceIdAccessor={(event: any) => event.id}
               onNavigate={(date, view) => handleNavigate(date)}
+              className="team"
+              components={{
+                toolbar: CustomToolbar,
+              }}
             />
           </Flex>
           <Flex
