@@ -87,7 +87,6 @@ const NoActionRequired: FC<IProps> = ({ actionTime, tasks, date, totalHours }) =
 
 						<List mt={10} size='md' listStyleType={'circle'}>
 							{tasks.map((item, index) => {
-								console.log('item:', item.totalHours);
 								return (
 									<Paper
 										mb={20}
