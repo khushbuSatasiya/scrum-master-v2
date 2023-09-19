@@ -89,7 +89,7 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
 						key={index}
 						shadow='sm'
 						radius='lg'
-						mt={30}
+						mt={20}
 						w={'49%'}
 						p='lg'
 						sx={{
@@ -108,7 +108,7 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
 						<Flex
 							direction={'column'}
 							align={'center'}
-							justify={'center'}
+							justify={'space-evenly'}
 							sx={{
 								border: '1px dashed #228be6',
 								background: '#F1FAFF',

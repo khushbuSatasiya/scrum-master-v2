@@ -319,7 +319,7 @@ const CheckOutForm: FC<IProps> = (props) => {
 								onChange={(e) => handleTimeChange(e)}
 								m={'0 auto'}
 							/>
-							<Divider my='sm' variant='dashed' sx={{ marginTop: '35px !important' }} />
+							<Divider my='sm' variant='dashed' sx={{ marginTop: '40px !important' }} />
 							<Group position='center' pos={'absolute'} bottom={-6} left={58}>
 								<Button
 									type='submit'

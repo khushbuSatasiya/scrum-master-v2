@@ -162,7 +162,7 @@ const CheckOut: FC<IProps> = ({ enteredTask, checkOutDate, checkStatus, projectA
 				};
 				setIsLoading(true);
 				try {
-					await httpService.post(API_CONFIG.path.checkOut, payload).then((res: any) => {
+					await httpService.post(API_CONFIG.path.checkOut, payload).then(() => {
 						setIsSubmit(true);
 						setIsLoading(false);
 						// showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);

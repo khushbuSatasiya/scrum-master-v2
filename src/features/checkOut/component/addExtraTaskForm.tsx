@@ -47,7 +47,7 @@ const AddExtraTaskForm: FC<IProps> = (props: IProps) => {
 				{(isShowForm || form.values.tasks.length === 0) && (
 					<Flex direction={'column-reverse'}>
 						<Paper>
-							<Group mt='xs' sx={{ alignItems: 'end' }}>
+							<Group sx={{ alignItems: 'end' }} mb={24} mt={14}>
 								<Flex justify={'start'}>
 									<Select
 										clearable
