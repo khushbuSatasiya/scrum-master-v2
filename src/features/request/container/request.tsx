@@ -1,18 +1,20 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Button, Flex, Paper, Text } from '@mantine/core';
+import { Button, Flex, Group, Paper, Text } from '@mantine/core';
 import { isEmpty } from 'lodash';
 
 import httpService from 'shared/services/http.service';
 import { API_CONFIG } from 'shared/constants/api';
 import { IProjectsProps } from 'features/project/interface/project';
 
-import { IChangeTimeSheet, ILeaveRequestProps, IUpComingLeave } from '../interface/request';
+import { IAddMissingDay, IChangeTimeSheet, ILeaveRequestProps, IUpComingLeave } from '../interface/request';
 import LeaveRequest from '../components/leaveRequest';
 import ChangeTimeSheet from '../components/changeTimeSheet';
+import AddMissingDay from '../components/addMissingDay';
 
 const Request: FC<IProjectsProps> = ({ uId }) => {
 	const [leaveRequest, setLeaveRequest] = useState({} as ILeaveRequestProps);
 	const [changeTimeSheet, setChangeTimeSheet] = useState({} as IChangeTimeSheet);
+	const [addMissingDay, setAddMissingDay] = useState({} as IAddMissingDay);
 	const [isVacational, setIsVacational] = useState(false);
 	const [isDisableDate, setIsDisableDate] = useState([]);
 	const [isUpcomingLeave, setIsUpcomingLeave] = useState<IUpComingLeave[]>();
@@ -20,7 +22,7 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
 	const REQUEST_ARR = [
 		{
 			name: 'Leave Request',
-			title1: ' SUBMIT YOUR LEAVE REQUEST FOR APPROVAL.',
+			title1: ' SUBMIT YOUR LEAVE REQUEST FOR APPROVAL',
 			onClick: () => {
 				setLeaveRequest({
 					startDay: null,
@@ -31,10 +33,7 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
 				});
 			}
 		},
-		//{
-		//    name: 'Add Missing Day',
-		//    title1: 'Please add the missing day to your schedule. Thank you!',
-		//},
+
 		{
 			name: 'Change Time Request',
 			title1: 'SUBMIT YOUR CHANGE TIME REQUEST FOR US TO PROCESS',
@@ -45,11 +44,20 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
 					time: ''
 				});
 			}
+		},
+		{
+			name: 'Add Missing Day',
+			title1: 'SUBMIT YOUR MISSING DAY FOR APPROVAL',
+			onClick: () => {
+				setAddMissingDay({
+					date: null,
+					inTime: '',
+					outTime: '',
+					project: '',
+					task: ''
+				});
+			}
 		}
-		//{
-		//    name: 'Work From Home',
-		//    title1: 'Enjoy the flexibility of working from home and boost your productivity.Stay connected and thrive',
-		//},
 	];
 	//API call for getting Leave info
 	const getLeaveRequestInfo = useCallback(() => {
@@ -146,6 +154,13 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
 					changeTimeSheet={changeTimeSheet}
 					isOpen={!isEmpty(changeTimeSheet)}
 					isDisableDate={isDisableDate}
+				/>
+			)}
+
+			{!isEmpty(addMissingDay) && (
+				<AddMissingDay
+					onClose={() => setAddMissingDay({} as IAddMissingDay)}
+					isOpen={!isEmpty(addMissingDay)}
 				/>
 			)}
 		</Flex>
