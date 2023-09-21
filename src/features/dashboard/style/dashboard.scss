@@ -1,0 +1,15 @@
+.dropdown-menu {
+	.mantine-Menu-item {
+		&:hover {
+			.mantine-Menu-itemLabel {
+				.mantine-Button-root {
+					.mantine-Button-inner {
+						.mantine-Button-label {
+							color: #228be6 !important;
+						}
+					}
+				}
+			}
+		}
+	}
+}
