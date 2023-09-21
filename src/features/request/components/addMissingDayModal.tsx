@@ -69,7 +69,7 @@ const AddMissingDayModal: FC<IProps> = ({
 						radius='lg'
 						mr={30}
 						p='lg'
-						h={'400px'}
+						h={'450px'}
 						sx={{
 							width: '75%',
 							height: 'auto',
@@ -122,7 +122,7 @@ const AddMissingDayModal: FC<IProps> = ({
 						p='10px'
 						sx={{
 							width: '25%',
-							height: '400px'
+							height: '450px'
 						}}
 					>
 						<Flex align={'center'} justify={'center'}>
@@ -138,9 +138,9 @@ const AddMissingDayModal: FC<IProps> = ({
 									withAsterisk
 									autoFocus
 									icon={<IconCalendar size='1.1rem' stroke={1.5} />}
+									placeholder='Select a date'
 									mt={10}
 									popoverProps={{ withinPortal: true }}
-									placeholder='Select a date'
 									variant='filled'
 									label={'Date'}
 									classNames={{
@@ -152,9 +152,10 @@ const AddMissingDayModal: FC<IProps> = ({
 									excludeDate={excludeCustomDates}
 									firstDayOfWeek={0}
 									maxLevel={'year'}
-									{...form.getInputProps('startDay')}
-									onChange={(e) => {
-										setDate(formatDate(e));
+									{...form.getInputProps('date')}
+									onChange={(date) => {
+										setDate(formatDate(date));
+										form.setFieldValue('date', date);
 									}}
 								/>
 								<TextInput
@@ -206,8 +207,6 @@ const AddMissingDayModal: FC<IProps> = ({
 								<Button
 									type='submit'
 									sx={{ width: '140px' }}
-									// loading={!isConfirm && isLoading}
-									// disabled={isLoading}
 									loaderPosition='left'
 									mt={'10px'}
 									loaderProps={{

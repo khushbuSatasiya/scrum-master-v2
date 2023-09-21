@@ -18,6 +18,7 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
 	const [isVacational, setIsVacational] = useState(false);
 	const [isDisableDate, setIsDisableDate] = useState([]);
 	const [isUpcomingLeave, setIsUpcomingLeave] = useState<IUpComingLeave[]>();
+	const [isSuccess, setIsSuccess] = useState(false);
 
 	const REQUEST_ARR = [
 		{
@@ -159,8 +160,12 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
 
 			{!isEmpty(addMissingDay) && (
 				<AddMissingDay
-					onClose={() => setAddMissingDay({} as IAddMissingDay)}
+					onClose={() => {
+						setAddMissingDay({} as IAddMissingDay);
+					}}
 					isOpen={!isEmpty(addMissingDay)}
+					isSuccess={isSuccess}
+					setIsSuccess={setIsSuccess}
 				/>
 			)}
 		</Flex>
