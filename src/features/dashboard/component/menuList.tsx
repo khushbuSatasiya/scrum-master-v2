@@ -31,7 +31,7 @@ const MenuList: FC<IMenuProps> = ({ isShowUserDetails, setIsShowUserDetails, get
 			link: null
 		},
 		{
-			label: 'Team Profile',
+			label: 'Team List',
 			onClick: () => getTeamInfo(),
 			link: null
 		},
