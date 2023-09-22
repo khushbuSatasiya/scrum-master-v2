@@ -1,8 +1,8 @@
-import React, { FC, Fragment, useCallback, useEffect, useState } from 'react';
+import React, { FC, Fragment, useCallback, useState } from 'react';
 import isEmpty from 'lodash/isEmpty';
 
-import { Button, Flex, Image, Menu, Paper, Space, Tabs, Text, ThemeIcon, Tooltip, createStyles } from '@mantine/core';
-import { IconDots, IconExternalLink, IconMail, IconUserStar } from '@tabler/icons-react';
+import { Flex, Image, Paper, Space, Tabs, Text, Tooltip } from '@mantine/core';
+import { IconMail, IconUserStar } from '@tabler/icons-react';
 
 import { getTotalWorkingHourColor } from 'shared/util/utility';
 

@@ -1,6 +1,6 @@
+import React, { FC } from 'react';
 import { Button, Flex, Menu, ThemeIcon, createStyles } from '@mantine/core';
 import { IconDots, IconExternalLink } from '@tabler/icons-react';
-import React, { FC } from 'react';
 
 interface IMenuProps {
 	isShowUserDetails: boolean;
@@ -23,6 +23,40 @@ const MenuList: FC<IMenuProps> = ({ isShowUserDetails, setIsShowUserDetails, get
 	}));
 
 	const { classes } = useStyles();
+
+	const menuItems = [
+		{
+			label: 'My Profile',
+			onClick: () => setIsShowUserDetails(!isShowUserDetails),
+			link: null
+		},
+		{
+			label: 'Team Profile',
+			onClick: () => getTeamInfo(),
+			link: null
+		},
+		{
+			label: 'Holiday List',
+			onClick: () => getHolidayList(),
+			link: null
+		},
+		{
+			label: 'Leave Policy',
+			onClick: null,
+			link: 'https://docs.google.com/document/d/1TfUVxotVmZ1Ctj2flcuOwzVNUr-UL99H/edit'
+		},
+		{
+			label: 'Handbook',
+			onClick: null,
+			link: 'https://drive.google.com/file/d/1rEK3UmEOAmegnf11vKrHzG1RJD5WKHyi/view?usp=share_link'
+		},
+		{
+			label: 'Healthy Workplace',
+			onClick: null,
+			link: 'https://docs.google.com/document/d/1bDzOoZI8itijukUC_VeAnPKv6rf0dOfKgWJlGFjVRXA/edit'
+		}
+	];
+
 	return (
 		<Flex sx={{ position: 'absolute', top: 30, right: 30 }}>
 			<Menu
@@ -40,109 +74,30 @@ const MenuList: FC<IMenuProps> = ({ isShowUserDetails, setIsShowUserDetails, get
 				</Menu.Target>
 
 				<Menu.Dropdown className='dropdown-menu'>
-					<Menu.Item p={'0 15px'} onClick={() => setIsShowUserDetails(!isShowUserDetails)}>
-						<Button
-							variant={'transparent'}
-							p={0}
-							sx={{
-								color: '#252F4A',
-								fontSize: '13px',
-								fontWeight: 500,
-								'&:hover': { color: '#228be6', fontWeight: 600 }
-							}}
-						>
-							My Profile
-						</Button>
-					</Menu.Item>
-					<Menu.Item p={'0 15px'} onClick={() => getTeamInfo()}>
-						<Button
-							variant={'transparent'}
-							p={0}
-							sx={{
-								color: '#252F4A',
-								fontSize: '13px',
-								fontWeight: 500,
-								'&:hover': { color: '#228be6' }
-							}}
-						>
-							Team Profile
-						</Button>
-					</Menu.Item>
-					<Menu.Item p={'0 15px'} onClick={() => getHolidayList()}>
-						<Button
-							variant={'transparent'}
-							p={0}
-							sx={{
-								color: '#252F4A',
-								fontSize: '13px',
-								fontWeight: 500,
-								'&:hover': { color: '#228be6' }
-							}}
-						>
-							Holiday List
-						</Button>
-					</Menu.Item>
-
-					<Menu.Item p={'0 15px'}>
-						<Button
-							sx={{
-								color: '#252F4A',
-								fontSize: '13px',
-								fontWeight: 500,
-								'&:hover': { color: '#228be6' }
-							}}
-							variant={'transparent'}
-							p={0}
-							component='a'
-							href='https://docs.google.com/document/d/1TfUVxotVmZ1Ctj2flcuOwzVNUr-UL99H/edit'
-							target='_blank'
-						>
-							Leave Policy
-							<span style={{ marginLeft: '3px' }}>
-								<IconExternalLink size='18px' />
-							</span>
-						</Button>
-					</Menu.Item>
-					<Menu.Item p={'0 15px'}>
-						<Button
-							sx={{
-								color: '#252F4A',
-								fontSize: '13px',
-								fontWeight: 500,
-								'&:hover': { color: '#228be6' }
-							}}
-							variant={'transparent'}
-							p={0}
-							component='a'
-							href='https://drive.google.com/file/d/1rEK3UmEOAmegnf11vKrHzG1RJD5WKHyi/view?usp=share_link'
-							target='_blank'
-						>
-							Handbook
-							<span style={{ marginLeft: '3px' }}>
-								<IconExternalLink size='18px' />
-							</span>
-						</Button>
-					</Menu.Item>
-					<Menu.Item p={'0 15px'}>
-						<Button
-							sx={{
-								color: '#252F4A',
-								fontSize: '13px',
-								fontWeight: 500,
-								'&:hover': { color: '#228be6' }
-							}}
-							variant={'transparent'}
-							p={0}
-							component='a'
-							href='https://docs.google.com/document/d/1bDzOoZI8itijukUC_VeAnPKv6rf0dOfKgWJlGFjVRXA/edit'
-							target='_blank'
-						>
-							Healthy Workplace
-							<span style={{ marginLeft: '3px' }}>
-								<IconExternalLink size='18px' />
-							</span>
-						</Button>
-					</Menu.Item>
+					{menuItems.map(({ link, onClick, label }, index) => (
+						<Menu.Item p={'0 15px'} onClick={onClick} key={index}>
+							<Button
+								variant={'transparent'}
+								p={0}
+								sx={{
+									color: '#252F4A',
+									fontSize: '13px',
+									fontWeight: 500,
+									'&:hover': { color: '#228be6', fontWeight: 600 }
+								}}
+								component={link ? 'a' : 'button'}
+								href={link}
+								target={link ? '_blank' : ''}
+							>
+								{label}
+								{link && (
+									<span style={{ marginLeft: '3px' }}>
+										<IconExternalLink size='18px' />
+									</span>
+								)}
+							</Button>
+						</Menu.Item>
+					))}
 				</Menu.Dropdown>
 			</Menu>
 		</Flex>

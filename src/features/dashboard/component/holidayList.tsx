@@ -1,7 +1,10 @@
-import { Avatar, Box, Divider, Flex, LoadingOverlay, Modal, Text, createStyles } from '@mantine/core';
 import React, { FC } from 'react';
-import { IHolidayList } from '../interface/dashboard';
+import { Box, Divider, LoadingOverlay, Modal, Text, createStyles } from '@mantine/core';
+
 import { TableSelection } from 'shared/components/table/container/table';
+
+import { IHolidayList } from '../interface/dashboard';
+
 import { getHolidayColumns } from '../constant/constant';
 
 interface IHolidayProps {

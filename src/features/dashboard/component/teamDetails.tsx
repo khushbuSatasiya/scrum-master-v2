@@ -1,7 +1,7 @@
-import { Avatar, Box, Divider, Flex, LoadingOverlay, Modal, Text, createStyles } from '@mantine/core';
 import React, { FC } from 'react';
+import { Avatar, Box, Divider, Flex, LoadingOverlay, Modal, Text, createStyles } from '@mantine/core';
+
 import { ITeamDetails } from '../interface/dashboard';
-import { wrap } from 'module';
 
 interface ITeamInfoProps {
 	teamInfo: ITeamDetails[];
