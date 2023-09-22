@@ -24,7 +24,8 @@ export const API_CONFIG = {
     teamReport: "web/report",
     projects: "project/dropdown",
     userList: "users/dropdown",
-	teamInfo:'users/teaminfo'
+	teamInfo:'users/teaminfo',
+	holidayList:'holiday/list'
   },
 };
 

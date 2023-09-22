@@ -1,16 +1,21 @@
-import { Avatar, Box, Flex, Modal, Text, createStyles } from '@mantine/core';
+import { Avatar, Box, Divider, Flex, LoadingOverlay, Modal, Text, createStyles } from '@mantine/core';
 import React, { FC } from 'react';
+import { ITeamDetails } from '../interface/dashboard';
+import { wrap } from 'module';
 
-interface ITeamDetails {
-	teamInfo: any;
+interface ITeamInfoProps {
+	teamInfo: ITeamDetails[];
+	teamLoading: boolean;
+	onClose: () => void;
 }
-const TeamDetails: FC<ITeamDetails> = ({ teamInfo }) => {
+const TeamDetails: FC<ITeamInfoProps> = ({ teamInfo, teamLoading, onClose }) => {
+	console.log('teamLoading:', teamLoading);
 	const useStyles = createStyles(() => ({
 		body: {
 			height: '500px '
 		},
 		content: {
-			overflow: 'auto',
+			overflow: 'hidden',
 			'::-webkit-scrollbar': {
 				display: 'none'
 			}
@@ -30,30 +35,54 @@ const TeamDetails: FC<ITeamDetails> = ({ teamInfo }) => {
 				withCloseButton={false}
 				opened={true}
 				classNames={{ body: classes.body, content: classes.content }}
-				onClose={() => {
-					//setTeamInfo([]);
-				}}
+				onClose={onClose}
 			>
 				<Text ta='center' c={'#071437'} fz={26} fw={600}>
-					Your Great Team
+					Our Team
 				</Text>
 
-				{teamInfo &&
-					teamInfo.map(({ name, avatar, designation }) => {
-						return (
-							<Flex align={'center'} mb={20}>
-								<Avatar src={avatar} alt={name} radius='md' />
-								<Box ml={10}>
-									<Text c={'#071437'} fz={14} fw={500}>
-										{name}
-									</Text>
-									<Text c={'#B5B5C3'} fz={12} fw={500}>
-										{designation ? designation : 'Team Member'}
-									</Text>
-								</Box>
-							</Flex>
-						);
-					})}
+				<Divider variant='dashed' mt={10} mb={0} />
+
+				{teamLoading && (
+					<LoadingOverlay
+						loaderProps={{
+							size: 'xl'
+						}}
+						visible={teamLoading}
+						overlayBlur={2}
+					/>
+				)}
+
+				{!teamLoading && (
+					<Flex
+						wrap={'wrap'}
+						mt={20}
+						sx={{
+							height: '600px',
+							overflow: 'scroll ',
+							'&::-webkit-scrollbar': {
+								display: 'none'
+							}
+						}}
+					>
+						{teamInfo &&
+							teamInfo.map(({ name, avatar, designation }) => {
+								return (
+									<Flex align={'center'} mb={20} w={'50%'}>
+										<Avatar src={avatar} alt={name} radius='md' />
+										<Box ml={10}>
+											<Text c={'#071437'} fz={14} fw={500}>
+												{name}
+											</Text>
+											<Text c={'#B5B5C3'} fz={12} fw={500}>
+												{designation ? designation : 'Team Member'}
+											</Text>
+										</Box>
+									</Flex>
+								);
+							})}
+					</Flex>
+				)}
 			</Modal>
 		</Box>
 	);

@@ -6,7 +6,7 @@ import { IconDots, IconExternalLink, IconMail, IconUserStar } from '@tabler/icon
 
 import { getTotalWorkingHourColor } from 'shared/util/utility';
 
-import { IUserDetail, IUserInfoArr } from '../interface/dashboard';
+import { IHolidayList, ITeamDetails, IUserDetail, IUserInfoArr } from '../interface/dashboard';
 import { DotIcon } from 'shared/icons/icons';
 import { colorMap } from 'shared/constants/constants';
 
@@ -16,6 +16,8 @@ import httpService from 'shared/services/http.service';
 import { API_CONFIG } from 'shared/constants/api';
 
 import '../style/dashboard.scss';
+import HolidayList from './holidayList';
+import MenuList from './menuList';
 
 interface IProps {
 	activeTab: string;
@@ -40,22 +42,10 @@ const UserDetail: FC<IProps> = (props: IProps) => {
 		calendarIndicator
 	} = props;
 
-	const useStyles = createStyles(() => ({
-		dropdown: {
-			left: '-170px !important',
-			top: '35px !important'
-		},
-		item: {
-			'&:hover': {
-				color: '#228be6 !important',
-				background: 'rgba(231, 245, 255, 1) !important'
-			}
-		}
-	}));
-
-	const { classes } = useStyles();
-
-	const [teamInfo, setTeamInfo] = useState([]);
+	const [teamInfo, setTeamInfo] = useState<ITeamDetails[]>();
+	const [teamLoading, setTeamLoading] = useState(false);
+	const [holidayList, setHolidayList] = useState<IHolidayList[]>([]);
+	const [holidayLoading, setHolidayLoading] = useState(false);
 
 	const renderPaper = (label, value, color) => {
 		return (
@@ -107,21 +97,41 @@ const UserDetail: FC<IProps> = (props: IProps) => {
 
 	const totalExperience = newToken?.experience / 365;
 
-	/* API call to get Project list */
+	/* API call to get Team list */
 	const getTeamInfo = useCallback(() => {
+		setTeamLoading(true);
 		httpService
 			.get(`${API_CONFIG.path.teamInfo}`)
 			.then((res) => {
 				setTeamInfo(res.data);
+				setTimeout(() => {
+					setTeamLoading(false);
+				}, 200);
 			})
 			.catch((error) => {
+				console.error('Error', error);
+				setTeamLoading(false);
+			});
+	}, []);
+
+	/* API call to get holiday List */
+	const getHolidayList = useCallback(() => {
+		setHolidayLoading(true);
+		httpService
+			.get(`${API_CONFIG.path.holidayList}`)
+			.then((res) => {
+				setHolidayList(res.data);
+				setTimeout(() => {
+					setHolidayLoading(false);
+				}, 200);
+			})
+			.catch((error) => {
+				setHolidayLoading(false);
 				console.error('Error', error);
 			});
 	}, []);
 
-	useEffect(() => {
-		getTeamInfo();
-	}, []);
+	useEffect(() => {}, []);
 
 	return (
 		<Paper shadow='sm' radius='lg' m={'20px 20px 10px'} p='30px 30px 0px' pos={'relative'}>
@@ -131,12 +141,7 @@ const UserDetail: FC<IProps> = (props: IProps) => {
 
 				<Flex direction='column'>
 					<Text fw='600' color='#071437' fz='xl'>
-						<span
-							onClick={() => setIsShowUserDetails(!isShowUserDetails)}
-							className={newToken?.realName ? 'hovered-title' : ''}
-						>
-							{newToken?.realName ? newToken.realName : '-'}
-						</span>
+						<span>{newToken?.realName ? newToken.realName : '-'}</span>
 					</Text>
 					<Flex mt={5} direction='row' justify='start' align='center'>
 						<IconUserStar size='16' color='#B5B5C3' />
@@ -246,121 +251,12 @@ const UserDetail: FC<IProps> = (props: IProps) => {
 				</Flex>
 			</Flex>
 
-			<Flex sx={{ position: 'absolute', top: 30, right: 30 }}>
-				<Menu
-					shadow='md'
-					width={200}
-					opened
-					classNames={{
-						dropdown: classes.dropdown,
-						item: classes.item
-						//label: classes.label
-					}}
-				>
-					<Menu.Target>
-						<ThemeIcon size={28} variant='light' radius='sm' sx={{ height: '27px !important' }}>
-							<IconDots size={18} style={{ cursor: 'pointer' }} />
-						</ThemeIcon>
-					</Menu.Target>
-
-					<Menu.Dropdown className='dropdown-menu'>
-						<Menu.Item p={'0 15px'}>
-							<Button
-								variant={'transparent'}
-								p={0}
-								sx={{
-									color: '#252F4A',
-									fontSize: '13px',
-									fontWeight: 500,
-									'&:hover': { color: '#228be6', fontWeight: 600 }
-								}}
-							>
-								My Profile
-							</Button>
-						</Menu.Item>
-						<Menu.Item p={'0 15px'} onClick={() => setTeamInfo([])}>
-							<Button
-								variant={'transparent'}
-								p={0}
-								sx={{
-									color: '#252F4A',
-									fontSize: '13px',
-									fontWeight: 500,
-									'&:hover': { color: '#228be6' }
-								}}
-							>
-								Team Profile
-							</Button>
-						</Menu.Item>
-						<Menu.Item p={'0 15px'}>
-							<Button
-								variant={'transparent'}
-								p={0}
-								sx={{
-									color: '#252F4A',
-									fontSize: '13px',
-									fontWeight: 500,
-									'&:hover': { color: '#228be6' }
-								}}
-							>
-								Holiday List
-							</Button>
-						</Menu.Item>
-
-						<Menu.Item p={'0 15px'}>
-							<Button
-								sx={{
-									color: '#252F4A',
-									fontSize: '13px',
-									fontWeight: 500,
-									'&:hover': { color: '#228be6' }
-								}}
-								variant={'transparent'}
-								p={0}
-								component='a'
-								href='https://docs.google.com/document/d/1TfUVxotVmZ1Ctj2flcuOwzVNUr-UL99H/edit'
-								rightIcon={<IconExternalLink size='18px' />}
-							>
-								Leave Policy
-							</Button>
-						</Menu.Item>
-						<Menu.Item p={'0 15px'}>
-							<Button
-								sx={{
-									color: '#252F4A',
-									fontSize: '13px',
-									fontWeight: 500,
-									'&:hover': { color: '#228be6' }
-								}}
-								variant={'transparent'}
-								p={0}
-								component='a'
-								href='https://drive.google.com/file/d/1rEK3UmEOAmegnf11vKrHzG1RJD5WKHyi/view?usp=share_link'
-								rightIcon={<IconExternalLink size='18px' />}
-							>
-								Handbook
-							</Button>
-						</Menu.Item>
-						<Menu.Item p={'0 15px'}>
-							<Button
-								sx={{
-									color: '#252F4A',
-									fontSize: '13px',
-									fontWeight: 500,
-									'&:hover': { color: '#228be6' }
-								}}
-								variant={'transparent'}
-								p={0}
-								component='a'
-								href='https://docs.google.com/document/d/1bDzOoZI8itijukUC_VeAnPKv6rf0dOfKgWJlGFjVRXA/edit'
-								rightIcon={<IconExternalLink size='18px' />}
-							>
-								Healthy Workplace
-							</Button>
-						</Menu.Item>
-					</Menu.Dropdown>
-				</Menu>
-			</Flex>
+			<MenuList
+				isShowUserDetails={isShowUserDetails}
+				setIsShowUserDetails={setIsShowUserDetails}
+				getTeamInfo={getTeamInfo}
+				getHolidayList={getHolidayList}
+			/>
 
 			<Tabs.List sx={{ borderBottom: '1px solid transparent' }} mt='20px'>
 				{USER_INFO_ARR.map(({ label, value }, index) => {
@@ -382,7 +278,21 @@ const UserDetail: FC<IProps> = (props: IProps) => {
 				})}
 			</Tabs.List>
 
-			{!isEmpty(teamInfo) && <TeamDetails teamInfo={teamInfo} />}
+			{!isEmpty(teamInfo) && (
+				<TeamDetails
+					teamInfo={teamInfo}
+					onClose={() => setTeamInfo({} as ITeamDetails[])}
+					teamLoading={teamLoading}
+				/>
+			)}
+
+			{!isEmpty(holidayList) && (
+				<HolidayList
+					holidayList={holidayList}
+					onClose={() => setHolidayList({} as IHolidayList[])}
+					holidayLoading={holidayLoading}
+				/>
+			)}
 		</Paper>
 	);
 };
