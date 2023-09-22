@@ -1,20 +1,23 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Button, Flex, Group, Paper, Text } from '@mantine/core';
+import { Button, Flex, Paper, Text } from '@mantine/core';
 import { isEmpty } from 'lodash';
 
 import httpService from 'shared/services/http.service';
 import { API_CONFIG } from 'shared/constants/api';
 import { IProjectsProps } from 'features/project/interface/project';
 
-import { IAddMissingDay, IChangeTimeSheet, ILeaveRequestProps, IUpComingLeave } from '../interface/request';
+import { IAddMissingDay, IChangeTimeSheet, ILeaveRequestProps, IUpComingLeave, IWfh } from '../interface/request';
+
 import LeaveRequest from '../components/leaveRequest';
 import ChangeTimeSheet from '../components/changeTimeSheet';
 import AddMissingDay from '../components/addMissingDay';
+import WorkFromHome from '../components/workFromHome';
 
 const Request: FC<IProjectsProps> = ({ uId }) => {
 	const [leaveRequest, setLeaveRequest] = useState({} as ILeaveRequestProps);
 	const [changeTimeSheet, setChangeTimeSheet] = useState({} as IChangeTimeSheet);
 	const [addMissingDay, setAddMissingDay] = useState({} as IAddMissingDay);
+	const [workFromHome, setWorkFromHome] = useState({} as IWfh);
 	const [isVacational, setIsVacational] = useState(false);
 	const [isDisableDate, setIsDisableDate] = useState([]);
 	const [isUpcomingLeave, setIsUpcomingLeave] = useState<IUpComingLeave[]>();
@@ -56,6 +59,18 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
 					outTime: '',
 					project: '',
 					task: ''
+				});
+			}
+		},
+		{
+			name: 'Work From Home',
+			title1: 'SUBMIT YOUR WORK FROM HOME REQUEST FOR APPROVAL',
+			onClick: () => {
+				setWorkFromHome({
+					startDate: '',
+					endDate: '',
+					reason: '',
+					isConfirm: false
 				});
 			}
 		}
@@ -166,6 +181,15 @@ const Request: FC<IProjectsProps> = ({ uId }) => {
 					isOpen={!isEmpty(addMissingDay)}
 					isSuccess={isSuccess}
 					setIsSuccess={setIsSuccess}
+				/>
+			)}
+
+			{!isEmpty(workFromHome) && (
+				<WorkFromHome
+					onClose={() => {
+						setWorkFromHome({} as IWfh);
+					}}
+					isOpen={!isEmpty(workFromHome)}
 				/>
 			)}
 		</Flex>

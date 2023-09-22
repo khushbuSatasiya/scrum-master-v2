@@ -20,6 +20,13 @@ export interface IAddMissingDay {
 	task: string;
 }
 
+export interface IWfh {
+	startDate: string;
+	endDate: string;
+	reason: string;
+	isConfirm: boolean;
+}
+
 export interface ILeaveReviewProps {
 	action: string;
 	startDate: string;

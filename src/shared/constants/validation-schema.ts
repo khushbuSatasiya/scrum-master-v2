@@ -145,11 +145,19 @@ const addMissingDayValidationSchema = Yup.object().shape({
 	outTime: Yup.string().required(' ')
 });
 
+const wfhValidationSchema = Yup.object().shape({
+	startDate: Yup.date().required('Start Date is required'),
+	endDate: Yup.date().required('End Date is required'),
+	reason: Yup.string().required('Reason is required'),
+	isConfirm: Yup.boolean().oneOf([true], 'You must agree to the terms and conditions')
+});
+
 export {
 	validationSchema,
 	checkOutValidationSchema,
 	checkOutValidationWithOptSchema,
 	checkOutwithNoTaskValidationSchema,
 	checkInValidationSchema,
-	addMissingDayValidationSchema
+	addMissingDayValidationSchema,
+	wfhValidationSchema
 };

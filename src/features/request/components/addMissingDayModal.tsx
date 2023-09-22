@@ -14,7 +14,7 @@ interface IProps {
 	isOpen: boolean;
 	onClose: () => void;
 	form: any;
-
+	isLoading: boolean;
 	handleTimeChange: (e: React.ChangeEvent<HTMLInputElement>, action: string) => void;
 	fields: any;
 	time: string;
@@ -34,18 +34,26 @@ const AddMissingDayModal: FC<IProps> = ({
 	dailyWorkingMinute,
 	formatTime,
 	isDisableDate,
-	handleSubmit
+	handleSubmit,
+	isLoading
 }) => {
 	const [date, setDate] = useState('');
 
 	const { classes } = useStyles();
 
 	const excludeCustomDates = (date) => {
+		const currentDate = new Date();
 		const datesArray = isDisableDate.map((item) => item);
+
 		if (date.getDay() === 0 || date.getDay() === 6) {
 			return true;
 		}
+
 		const formattedDate = moment(date).format('YYYY-MM-DD');
+
+		if (date > currentDate) {
+			return true;
+		}
 
 		return datesArray.includes(formattedDate);
 	};
@@ -224,13 +232,14 @@ const AddMissingDayModal: FC<IProps> = ({
 								<Button
 									type='submit'
 									sx={{ width: '140px' }}
-									loaderPosition='left'
 									mt={'10px'}
+									loaderPosition='left'
 									loaderProps={{
 										size: 'sm',
 										color: '#15aabf',
 										variant: 'oval'
 									}}
+									loading={isLoading}
 								>
 									Submit
 								</Button>

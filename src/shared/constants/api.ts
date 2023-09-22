@@ -25,7 +25,8 @@ export const API_CONFIG = {
 		projects: 'project/dropdown',
 		userList: 'users/dropdown',
 		disableNonMissingDay: 'request/missingday',
-		missingDay: 'request/missingday'
+		missingDay: 'request/missingday',
+		wfh: 'request/wfh'
 	}
 };
 

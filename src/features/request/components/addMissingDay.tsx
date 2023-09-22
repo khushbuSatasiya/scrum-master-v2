@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
-import { Divider, Flex, Group, Paper, Select, TextInput, Textarea } from '@mantine/core';
+import { Divider, Flex, Group, Paper, Select, TextInput, Textarea, useMantineTheme } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 
 import { getProjectList, minuteToHour } from 'shared/util/utility';
@@ -8,6 +8,7 @@ import httpService from 'shared/services/http.service';
 import { API_CONFIG } from 'shared/constants/api';
 import { IProject } from 'features/checkIn/interface/checkIn';
 import { addMissingDayValidationSchema } from 'shared/constants/validation-schema';
+import { showNotification } from 'shared/components/notification/notification';
 
 import { useStyles } from '../constants/requestConstants';
 
@@ -30,8 +31,10 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 	const [isDisableDate, setIsDisableDate] = useState([]);
 	const [projectList, setProjectList] = useState<IProject[]>([]);
 	const [isConfirm, setIsConfirm] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const { classes } = useStyles();
+	const theme = useMantineTheme();
 
 	const form = useForm({
 		initialValues: {
@@ -230,18 +233,22 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 			});
 
 			payload.tasks = filteredTasks;
-
+			setIsLoading(true);
 			await httpService
 				.post(API_CONFIG.path.missingDay, payload)
-				.then(() => {
+				.then((res) => {
+					setIsLoading(false);
 					setIsSuccess(true);
+					// showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);
 				})
 				.catch((error) => {
 					console.error('error', error);
+					showNotification(error, theme.colors.red[6], theme.colors.red[6]);
+					setIsLoading(false);
 					setIsSuccess(false);
 				});
 		},
-		[setIsSuccess]
+		[setIsSuccess, theme.colors.red]
 	);
 
 	return (
@@ -257,6 +264,7 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 				formatTime={formatTime}
 				isDisableDate={isDisableDate}
 				handleSubmit={handleSubmit}
+				isLoading={isLoading}
 			/>
 			<AddMissingDayConfirmModal
 				isConfirm={isConfirm}

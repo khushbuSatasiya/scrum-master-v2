@@ -70,7 +70,7 @@ const AddMissingDayConfirmModal: FC<IProps> = ({ isConfirm, setIsConfirm, isSucc
 							<Lottie options={defaultOptions} height={120} width={120} speed={1.5} />
 						</Flex>
 						<Text ta='center' mb={10} weight={600} color='#99A1B7'>
-							You have successfully submitted
+							Request has been submitted successfully
 						</Text>
 
 						<Button
