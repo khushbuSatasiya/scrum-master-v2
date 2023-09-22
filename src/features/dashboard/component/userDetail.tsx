@@ -131,8 +131,6 @@ const UserDetail: FC<IProps> = (props: IProps) => {
 			});
 	}, []);
 
-	useEffect(() => {}, []);
-
 	return (
 		<Paper shadow='sm' radius='lg' m={'20px 20px 10px'} p='30px 30px 0px' pos={'relative'}>
 			<Flex>

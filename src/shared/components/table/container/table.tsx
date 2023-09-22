@@ -76,7 +76,6 @@ export const TableSelection = (props: ITableProps) => {
 	const { classes } = useStyles();
 
 	const getRowClass = (isUpcomingLeave) => {
-		console.log('getRowClass ~ isUpcomingLeave:', isUpcomingLeave);
 		return isUpcomingLeave.isUpcomingLeave ? 'gray-background' : '';
 	};
 

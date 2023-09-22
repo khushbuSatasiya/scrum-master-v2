@@ -3,7 +3,7 @@ import { IconDots, IconExternalLink } from '@tabler/icons-react';
 import React, { FC } from 'react';
 
 interface IMenuProps {
-	isShowUserDetails: any;
+	isShowUserDetails: boolean;
 	setIsShowUserDetails: (val) => void;
 	getTeamInfo: () => void;
 	getHolidayList: () => void;
@@ -11,8 +11,8 @@ interface IMenuProps {
 const MenuList: FC<IMenuProps> = ({ isShowUserDetails, setIsShowUserDetails, getTeamInfo, getHolidayList }) => {
 	const useStyles = createStyles(() => ({
 		dropdown: {
-			left: '-170px !important',
-			top: '35px !important'
+			left: '-210px !important',
+			top: '0px !important'
 		},
 		item: {
 			'&:hover': {
@@ -28,7 +28,6 @@ const MenuList: FC<IMenuProps> = ({ isShowUserDetails, setIsShowUserDetails, get
 			<Menu
 				shadow='md'
 				width={200}
-				opened
 				classNames={{
 					dropdown: classes.dropdown,
 					item: classes.item

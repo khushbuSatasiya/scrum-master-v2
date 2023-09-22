@@ -9,7 +9,6 @@ interface ITeamInfoProps {
 	onClose: () => void;
 }
 const TeamDetails: FC<ITeamInfoProps> = ({ teamInfo, teamLoading, onClose }) => {
-	console.log('teamLoading:', teamLoading);
 	const useStyles = createStyles(() => ({
 		body: {
 			height: '500px '
@@ -37,7 +36,7 @@ const TeamDetails: FC<ITeamInfoProps> = ({ teamInfo, teamLoading, onClose }) => 
 				classNames={{ body: classes.body, content: classes.content }}
 				onClose={onClose}
 			>
-				<Text ta='center' c={'#071437'} fz={26} fw={600}>
+				<Text ta='center' c={'#071437'} fz={22} fw={600}>
 					Our Team
 				</Text>
 
@@ -66,9 +65,9 @@ const TeamDetails: FC<ITeamInfoProps> = ({ teamInfo, teamLoading, onClose }) => 
 						}}
 					>
 						{teamInfo &&
-							teamInfo.map(({ name, avatar, designation }) => {
+							teamInfo.map(({ name, avatar, designation }, index) => {
 								return (
-									<Flex align={'center'} mb={20} w={'50%'}>
+									<Flex align={'center'} mb={20} w={'50%'} key={index}>
 										<Avatar src={avatar} alt={name} radius='md' />
 										<Box ml={10}>
 											<Text c={'#071437'} fz={14} fw={500}>

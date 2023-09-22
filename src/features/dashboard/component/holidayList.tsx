@@ -10,8 +10,6 @@ interface IHolidayProps {
 	onClose: () => void;
 }
 const HolidayList: FC<IHolidayProps> = ({ holidayList, holidayLoading, onClose }) => {
-	console.log('holidayList:', holidayList);
-
 	const useStyles = createStyles(() => ({
 		body: {
 			height: '500px '
@@ -39,7 +37,7 @@ const HolidayList: FC<IHolidayProps> = ({ holidayList, holidayLoading, onClose }
 				onClose={onClose}
 				classNames={{ body: classes.body, content: classes.content }}
 			>
-				<Text ta='center' c={'#071437'} fz={26} fw={600}>
+				<Text ta='center' c={'#071437'} fz={22} fw={600}>
 					Holiday List
 				</Text>
 

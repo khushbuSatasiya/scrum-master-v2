@@ -99,7 +99,6 @@ const Dashboard: FC = () => {
 	/* API call for login*/
 	const login = useCallback(
 		async (token: string) => {
-			console.log('token:', token);
 			try {
 				await httpService
 					.post(API_CONFIG.path.login, {
@@ -108,7 +107,6 @@ const Dashboard: FC = () => {
 						token: token
 					})
 					.then((res) => {
-						console.log('.then ~ res:', res);
 						navigate('/');
 						authService.setAuthData(res);
 						checkStatus();
@@ -127,7 +125,6 @@ const Dashboard: FC = () => {
 	useEffect(() => {
 		if (authService.getAuthData() && !pathname.includes('verify-token')) {
 			const tempToken = authService.getAuthData();
-			console.log('useEffect ~ tempToken:', tempToken);
 			setNewToken(tempToken);
 			navigate('/');
 		} else {
