@@ -1,26 +1,14 @@
 import React, { FC } from 'react';
 
-import {
-	Button,
-	Flex,
-	Group,
-	Paper,
-	Select,
-	Textarea,
-	Text,
-	Divider,
-	TextInput,
-	createStyles,
-	Title,
-	Tooltip
-} from '@mantine/core';
+import { Button, Flex, Group, Paper, Select, Textarea, Text, Divider, TextInput, Title, Tooltip } from '@mantine/core';
+import { IconAlertTriangle } from '@tabler/icons-react';
 
 import { changedDateFormat, formatTime } from 'shared/util/utility';
 
 import { IActionTime } from 'features/dashboard/interface/dashboard';
+import { useStyles } from 'features/request/constants/requestConstants';
 
 import AddExtraTaskForm from './addExtraTaskForm';
-import { IconAlertTriangle } from '@tabler/icons-react';
 
 interface IProps {
 	handleCheckOut: (values: any) => {};
@@ -57,18 +45,6 @@ const CheckOutForm: FC<IProps> = (props) => {
 		onChangeTIme,
 		dailyWorkingMinute
 	} = props;
-
-	const useStyles = createStyles(() => ({
-		input: {
-			backgroundColor: '#f5f8fa',
-			color: '5e6278',
-			fontWight: '500',
-			border: 'transparent'
-		},
-		label: {
-			color: '#99A1B7 !important'
-		}
-	}));
 
 	const { classes } = useStyles();
 

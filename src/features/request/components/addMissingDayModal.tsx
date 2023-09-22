@@ -8,11 +8,13 @@ import moment from 'moment';
 
 import { formatDate } from 'shared/util/utility';
 
+import { useStyles } from '../constants/requestConstants';
+
 interface IProps {
 	isOpen: boolean;
 	onClose: () => void;
 	form: any;
-	classes: any;
+
 	handleTimeChange: (e: React.ChangeEvent<HTMLInputElement>, action: string) => void;
 	fields: any;
 	time: string;
@@ -26,7 +28,6 @@ const AddMissingDayModal: FC<IProps> = ({
 	isOpen,
 	onClose,
 	form,
-	classes,
 	handleTimeChange,
 	fields,
 	time,
@@ -36,6 +37,8 @@ const AddMissingDayModal: FC<IProps> = ({
 	handleSubmit
 }) => {
 	const [date, setDate] = useState('');
+
+	const { classes } = useStyles();
 
 	const excludeCustomDates = (date) => {
 		const datesArray = isDisableDate.map((item) => item);
@@ -51,7 +54,7 @@ const AddMissingDayModal: FC<IProps> = ({
 		<Modal
 			shadow='sm'
 			pos={'relative'}
-			size={1250}
+			size={'1050px'}
 			sx={{
 				display: 'unset !important'
 			}}
@@ -63,15 +66,20 @@ const AddMissingDayModal: FC<IProps> = ({
 			onClose={onClose}
 		>
 			<form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-				<Flex justify={'space-between'}>
+				<Text ta={'center'} fw={700} c={'#252F4A'} fz={22}>
+					Add missing day
+				</Text>
+
+				<Divider my='sm' variant='dashed' />
+				<Flex justify={'center'}>
 					<Paper
 						shadow='sm'
 						radius='lg'
-						mr={30}
+						mr={40}
 						p='lg'
-						h={'450px'}
+						h={'400px'}
 						sx={{
-							width: '75%',
+							width: '68%',
 							height: 'auto',
 							maxHeight: '500px',
 							scrollbarWidth: 'none',
@@ -121,8 +129,8 @@ const AddMissingDayModal: FC<IProps> = ({
 						radius='lg'
 						p='10px'
 						sx={{
-							width: '25%',
-							height: '450px'
+							width: '27%',
+							height: '400px'
 						}}
 					>
 						<Flex align={'center'} justify={'center'}>
@@ -144,7 +152,10 @@ const AddMissingDayModal: FC<IProps> = ({
 									variant='filled'
 									label={'Date'}
 									classNames={{
-										input: classes.input
+										label: classes.label,
+										input: classes.input,
+										error: classes.error,
+										wrapper: classes.wrapper
 									}}
 									sx={{
 										width: '205px !important'
@@ -167,7 +178,10 @@ const AddMissingDayModal: FC<IProps> = ({
 									label='In(24 hour)'
 									value={form.values.inTime}
 									classNames={{
-										input: classes.input
+										label: classes.label,
+										input: classes.input,
+										error: classes.error,
+										wrapper: classes.wrapper
 									}}
 									ta={'center'}
 									labelProps={{ style: { color: '#5e6278' } }}
@@ -188,7 +202,10 @@ const AddMissingDayModal: FC<IProps> = ({
 									label='Out(24 hour)'
 									value={form.values.outTime}
 									classNames={{
-										input: classes.input
+										label: classes.label,
+										input: classes.input,
+										error: classes.error,
+										wrapper: classes.wrapper
 									}}
 									sx={{
 										display: 'flex',

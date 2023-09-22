@@ -1,17 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
-import {
-	ActionIcon,
-	Button,
-	Flex,
-	Group,
-	Paper,
-	Select,
-	Textarea,
-	Divider,
-	createStyles,
-	useMantineTheme
-} from '@mantine/core';
+import { ActionIcon, Button, Flex, Group, Paper, Select, Textarea, Divider, useMantineTheme } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 
@@ -25,6 +14,8 @@ import { IProjectArray } from 'features/dashboard/interface/dashboard';
 
 import CheckInForm from './checkInForm';
 import CheckInModal from './checkInModal';
+
+import { useStyles } from 'features/request/constants/requestConstants';
 
 import { ICheckInValues, IEmployee, IProject } from '../interface/checkIn';
 
@@ -44,15 +35,6 @@ const CheckIn: FC<IProps> = ({ projectArray, checkStatus, currentTime }) => {
 	const [isAlreadyCheckIn, setIsAlreadyCheckIn] = useState(false);
 	const [isSubmit, setIsSubmit] = useState(false);
 	const [reminder, setReminder] = useState('');
-
-	const useStyles = createStyles(() => ({
-		input: {
-			backgroundColor: '#f5f8fa',
-			color: 'black ',
-			fontWight: ' 500 ',
-			border: 'none '
-		}
-	}));
 
 	const { classes } = useStyles();
 

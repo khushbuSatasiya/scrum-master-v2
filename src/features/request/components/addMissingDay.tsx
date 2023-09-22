@@ -1,17 +1,18 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
-import { Divider, Flex, Group, Paper, Select, TextInput, Textarea, createStyles } from '@mantine/core';
+import { Divider, Flex, Group, Paper, Select, TextInput, Textarea } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 
-import { minuteToHour } from 'shared/util/utility';
+import { getProjectList, minuteToHour } from 'shared/util/utility';
 import httpService from 'shared/services/http.service';
 import { API_CONFIG } from 'shared/constants/api';
-
 import { IProject } from 'features/checkIn/interface/checkIn';
+import { addMissingDayValidationSchema } from 'shared/constants/validation-schema';
+
+import { useStyles } from '../constants/requestConstants';
 
 import AddMissingDayModal from './addMissingDayModal';
 import AddMissingDayConfirmModal from './addMissingDayConfirmModal';
-import { addMissingDayValidationSchema } from 'shared/constants/validation-schema';
 
 interface IProps {
 	isOpen: boolean;
@@ -29,18 +30,6 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 	const [isDisableDate, setIsDisableDate] = useState([]);
 	const [projectList, setProjectList] = useState<IProject[]>([]);
 	const [isConfirm, setIsConfirm] = useState(false);
-
-	const useStyles = createStyles(() => ({
-		input: {
-			backgroundColor: '#f5f8fa',
-			color: '5e6278',
-			fontWight: '500',
-			border: 'transparent'
-		},
-		label: {
-			color: '#99A1B7 !important'
-		}
-	}));
 
 	const { classes } = useStyles();
 
@@ -136,12 +125,12 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 						data={projectList}
 						{...form.getInputProps(`employees.${index}.project`)}
 						sx={{
-							width: '40%',
-							border: 'none',
-							color: 'black'
+							width: '40%'
 						}}
 						classNames={{
-							input: classes.input
+							label: classes.label,
+							input: classes.input,
+							wrapper: classes.wrapper
 						}}
 					/>
 					<TextInput
@@ -150,7 +139,9 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 						maxLength={5}
 						maw={270}
 						classNames={{
-							input: classes.input
+							label: classes.label,
+							input: classes.input,
+							wrapper: classes.wrapper
 						}}
 						sx={{ marginLeft: '20px' }}
 						{...form.getInputProps(`employees.${index}.projectHour`)}
@@ -164,7 +155,7 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 						autosize
 						placeholder={`- task 1\n- task 2`}
 						minRows={2}
-						sx={{ width: '730px', color: 'black' }}
+						sx={{ width: '640px', color: 'black' }}
 						{...form.getInputProps(`employees.${index}.task`)}
 						onKeyDown={(event) => {
 							if (event.key === ' ' && event.currentTarget.selectionStart === 0) {
@@ -172,7 +163,9 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 							}
 						}}
 						classNames={{
-							input: classes.input
+							label: classes.label,
+							input: classes.input,
+							wrapper: classes.wrapper
 						}}
 					/>
 				</Flex>
@@ -201,13 +194,7 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 		httpService
 			.get(`${API_CONFIG.path.projects}`)
 			.then((res) => {
-				const proList = res.data.map((item) => {
-					return {
-						label: item.projectName,
-						value: item.id
-					};
-				});
-				setProjectList(proList);
+				setProjectList(getProjectList(res.data));
 			})
 			.catch((error) => {
 				console.error('Error', error);
@@ -220,7 +207,7 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 
 	const handleSubmit = useCallback(
 		async (values) => {
-			const project = values.employees.filter((item) => item.project && item.task && item.projectHour);
+			const project = values.employees.filter((item) => item.project !== null && item.task && item.projectHour);
 			!project.length && setIsConfirm(true);
 
 			const tasks = values.employees.map((item) => {
@@ -261,7 +248,6 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 		<>
 			<AddMissingDayModal
 				form={form}
-				classes={classes}
 				isOpen={isOpen}
 				onClose={onClose}
 				handleTimeChange={handleTimeChange}

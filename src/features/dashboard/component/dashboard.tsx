@@ -60,11 +60,6 @@ const Dashboard: FC = () => {
 				setActionType(action);
 
 				if (action === 'noActionRequired') {
-					const { inTime, outTime } = res.data.timeSheet;
-					setActionTime({
-						inTime: inTime,
-						outTime: outTime
-					} as IActionTime);
 					setTasks(res.data.tasks);
 					setDate(res.data.date);
 					setTotalHours(res.data.totalHours);
@@ -76,13 +71,14 @@ const Dashboard: FC = () => {
 					setProjectArray(res.data.projects);
 				}
 
-				action === 'checkOut' && res.data?.tasks && setEnteredTask(res.data.tasks);
-
-				const { inTime, outTime } = res.data.timeSheet;
-				setActionTime({
-					inTime: inTime,
-					outTime: outTime
-				} as IActionTime);
+				if (action === 'checkOut' || action === 'noActionRequired') {
+					res.data?.tasks && setEnteredTask(res.data.tasks);
+					const { inTime, outTime } = res.data.timeSheet;
+					setActionTime({
+						inTime: inTime,
+						outTime: outTime
+					} as IActionTime);
+				}
 			});
 		} catch (error) {
 			setIsActionLoader(false);

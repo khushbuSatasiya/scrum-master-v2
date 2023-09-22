@@ -24,7 +24,7 @@ const AddMissingDayConfirmModal: FC<IProps> = ({ isConfirm, setIsConfirm, isSucc
 	return (
 		<>
 			<Modal
-				size='auto'
+				size='sm'
 				opened={isConfirm}
 				onClose={() => console.log()}
 				centered
@@ -56,11 +56,11 @@ const AddMissingDayConfirmModal: FC<IProps> = ({ isConfirm, setIsConfirm, isSucc
 			</Modal>
 
 			<Modal
-				size='auto'
+				size='sm'
 				opened={isSuccess}
 				onClose={() => console.log()}
 				centered
-				padding={40}
+				padding={35}
 				radius='lg'
 				withCloseButton={false}
 			>

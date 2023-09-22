@@ -39,7 +39,7 @@ const checkInValidationSchema = Yup.object().shape({
 
 			return true;
 		})
-		.required('Time is required')
+		.required(' ')
 });
 
 const checkOutValidationWithOptSchema = Yup.object().shape({
@@ -137,12 +137,12 @@ const checkOutwithNoTaskValidationSchema = Yup.object().shape({
 const addMissingDayValidationSchema = Yup.object().shape({
 	date: Yup.date()
 		.nullable()
-		.required('Date is required')
-		.test('is-date', 'Invalid Date', (value) => {
+		.required(' ')
+		.test('is-date', ' ', (value) => {
 			return value instanceof Date && !isNaN(value.getTime());
 		}),
-	inTime: Yup.string().required('In Time is required'),
-	outTime: Yup.string().required('Out Time is required')
+	inTime: Yup.string().required(' '),
+	outTime: Yup.string().required(' ')
 });
 
 export {
