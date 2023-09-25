@@ -46,6 +46,8 @@ const AddMissingDayModal: FC<IProps> = ({
 
 	const { classes } = useStyles();
 
+	const minDate = new Date(moment().subtract(2, 'months').startOf('month').format('YYYY-MM-DD'));
+
 	const defaultOptions = {
 		loop: false,
 		autoplay: true,
@@ -68,6 +70,7 @@ const AddMissingDayModal: FC<IProps> = ({
 
 		return datesArray.includes(formattedDate);
 	};
+
 	return (
 		<Modal
 			shadow='sm'
@@ -182,6 +185,8 @@ const AddMissingDayModal: FC<IProps> = ({
 										excludeDate={excludeCustomDates}
 										firstDayOfWeek={0}
 										maxLevel={'year'}
+										maxDate={new Date()}
+										minDate={minDate}
 										{...form.getInputProps('date')}
 										onChange={(date) => {
 											setDate(formatDate(date));

@@ -75,10 +75,13 @@ export const TableSelection = (props: ITableProps) => {
 
 	const { classes } = useStyles();
 
-	const getRowClass = (isUpcomingLeave) => (isUpcomingLeave.isUpcomingLeave ? 'gray-background' : '');
+	const getRowClass = (isUpcomingLeave) => {
+		return isUpcomingLeave.isUpcomingLeave ? 'gray-background' : '';
+	};
 
 	return (
 		<DataTable
+			className='table-wrapper'
 			key={Math.random()}
 			classNames={classes}
 			minHeight={600}
