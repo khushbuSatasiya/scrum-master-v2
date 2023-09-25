@@ -75,7 +75,14 @@ const MenuList: FC<IMenuProps> = ({ isShowUserDetails, setIsShowUserDetails, get
 
 				<Menu.Dropdown className='dropdown-menu'>
 					{menuItems.map(({ link, onClick, label }, index) => (
-						<Menu.Item p={'0 15px'} onClick={onClick} key={index}>
+						<Menu.Item
+							p={'0 15px'}
+							onClick={onClick}
+							key={index}
+							component={link ? 'a' : 'button'}
+							target={link ? '_blank' : ''}
+							href={link}
+						>
 							<Button
 								variant={'transparent'}
 								p={0}
@@ -85,9 +92,6 @@ const MenuList: FC<IMenuProps> = ({ isShowUserDetails, setIsShowUserDetails, get
 									fontWeight: 500,
 									'&:hover': { color: '#228be6', fontWeight: 600 }
 								}}
-								component={link ? 'a' : 'button'}
-								href={link}
-								target={link ? '_blank' : ''}
 							>
 								{label}
 								{link && (
