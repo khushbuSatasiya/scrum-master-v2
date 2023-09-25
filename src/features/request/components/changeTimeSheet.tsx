@@ -177,7 +177,7 @@ const ChangeTimeSheet: FC<IChangeTimeProps> = ({ changeTimeSheet, isDisableDate,
 						<Flex h={'250px'} p={'0 80px'} direction={'column'} justify={'center'} align={'center'}>
 							<Lottie options={defaultOptions} height={120} width={120} speed={1.5} />
 							<Text fz={16} fw={600} mt={30} ta={'center'} c={'#99A1B7'}>
-								Your change timeSheet request submitted successfully.
+								Request has been submitted successfully
 							</Text>
 						</Flex>
 					)}

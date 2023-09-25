@@ -7,6 +7,7 @@ import { wfhValidationSchema } from 'shared/constants/validation-schema';
 import httpService from 'shared/services/http.service';
 import { API_CONFIG } from 'shared/constants/api';
 import { showNotification } from 'shared/components/notification/notification';
+import { dateFormat } from 'shared/util/utility';
 
 import WorkFromHomeModal from './workFromHomeModal';
 
@@ -35,8 +36,8 @@ const WorkFromHome: FC<IProps> = ({ onClose, isOpen }) => {
 		const { startDate, endDate, reason } = values;
 
 		const payload = {
-			startDate,
-			endDate,
+			startDate: dateFormat(startDate),
+			endDate: dateFormat(endDate),
 			reason
 		};
 		setIsLoading(true);

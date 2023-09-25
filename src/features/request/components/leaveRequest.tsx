@@ -227,7 +227,7 @@ const LeaveRequest: FC<ILeaveProps> = ({
 							<Flex h={'320px'} p={'0 80px'} direction={'column'} justify={'center'} align={'center'}>
 								<Lottie options={defaultOptions} height={120} width={120} speed={1.5} />
 								<Text fz={16} fw={600} mt={30} c={'#99A1B7'}>
-									Your leave request submitted successfully.
+									Request has been submitted successfully
 								</Text>
 							</Flex>
 						)}

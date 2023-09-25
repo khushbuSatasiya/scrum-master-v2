@@ -18,11 +18,9 @@ import AddMissingDayConfirmModal from './addMissingDayConfirmModal';
 interface IProps {
 	isOpen: boolean;
 	onClose: () => void;
-	isSuccess: boolean;
-	setIsSuccess: (action: boolean) => void;
 }
 
-const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess }) => {
+const AddMissingDay: FC<IProps> = ({ isOpen, onClose }) => {
 	const [time, setTime] = useState('');
 	const [inTime, setInTime] = useState(0);
 	const [outTime, setOutTime] = useState(0);
@@ -32,6 +30,7 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 	const [projectList, setProjectList] = useState<IProject[]>([]);
 	const [isConfirm, setIsConfirm] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isSuccess, setIsSuccess] = useState(false);
 
 	const { classes } = useStyles();
 	const theme = useMantineTheme();
@@ -210,45 +209,50 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 
 	const handleSubmit = useCallback(
 		async (values) => {
-			const project = values.employees.filter((item) => item.project !== null && item.task && item.projectHour);
-			!project.length && setIsConfirm(true);
+			const project = values.employees.filter(
+				(item) => (item.project !== null || '') && item.task && item.projectHour
+			);
+			if (!project.length) {
+				setIsConfirm(true);
+			} else {
+				const filteredData = project.filter((item) => item.project !== '' || item.project !== null);
 
-			const tasks = values.employees.map((item) => {
-				return {
-					projectId: item.project,
-					taskName: item.task,
-					projectHours: item.projectHour
-				};
-			});
-
-			const payload = {
-				date: values.date,
-				inTime: values.inTime,
-				outTime: values.outTime,
-				tasks
-			};
-
-			const filteredTasks = payload.tasks.filter((task) => {
-				return task.projectId !== '' && task.projectHours !== '' && task.taskName !== '';
-			});
-
-			payload.tasks = filteredTasks;
-			setIsLoading(true);
-			await httpService
-				.post(API_CONFIG.path.missingDay, payload)
-				.then((res) => {
-					setIsLoading(false);
-					setIsSuccess(true);
-					// showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);
-				})
-				.catch((error) => {
-					console.error('error', error);
-					showNotification(error, theme.colors.red[6], theme.colors.red[6]);
-					setIsLoading(false);
-					setIsSuccess(false);
+				const tasks = filteredData.map((item) => {
+					return {
+						projectId: item.project,
+						taskName: item.task,
+						projectHours: item.projectHour
+					};
 				});
+
+				const payload = {
+					date: values.date,
+					inTime: values.inTime,
+					outTime: values.outTime,
+					tasks
+				};
+
+				setIsLoading(true);
+
+				await httpService
+					.post(API_CONFIG.path.missingDay, payload)
+					.then((res) => {
+						setIsLoading(false);
+						setIsSuccess(true);
+
+						setTimeout(() => {
+							onClose();
+						}, 3000);
+						// showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);
+					})
+					.catch((error) => {
+						console.error('error', error);
+						showNotification(error, theme.colors.red[6], theme.colors.red[6]);
+						setIsLoading(false);
+					});
+			}
 		},
-		[setIsSuccess, theme.colors.red]
+		[onClose, setIsSuccess, theme.colors.red]
 	);
 
 	return (
@@ -265,13 +269,13 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose, isSuccess, setIsSuccess })
 				isDisableDate={isDisableDate}
 				handleSubmit={handleSubmit}
 				isLoading={isLoading}
+				isSuccess={isSuccess}
 			/>
 			<AddMissingDayConfirmModal
 				isConfirm={isConfirm}
 				setIsConfirm={setIsConfirm}
 				isSuccess={isSuccess}
 				onClose={onClose}
-				setIsSuccess={setIsSuccess}
 			/>
 		</>
 	);

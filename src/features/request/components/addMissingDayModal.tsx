@@ -6,6 +6,9 @@ import { IconAlertTriangle, IconCalendar } from '@tabler/icons-react';
 
 import moment from 'moment';
 
+import Lottie from 'react-lottie';
+import checkedJson from 'assets/lotties/checked.json';
+
 import { formatDate } from 'shared/util/utility';
 
 import { useStyles } from '../constants/requestConstants';
@@ -22,6 +25,7 @@ interface IProps {
 	formatTime: string;
 	isDisableDate: string[];
 	handleSubmit: (values) => void;
+	isSuccess: boolean;
 }
 
 const AddMissingDayModal: FC<IProps> = ({
@@ -35,11 +39,18 @@ const AddMissingDayModal: FC<IProps> = ({
 	formatTime,
 	isDisableDate,
 	handleSubmit,
-	isLoading
+	isLoading,
+	isSuccess
 }) => {
 	const [date, setDate] = useState('');
 
 	const { classes } = useStyles();
+
+	const defaultOptions = {
+		loop: false,
+		autoplay: true,
+		animationData: checkedJson
+	};
 
 	const excludeCustomDates = (date) => {
 		const currentDate = new Date();
@@ -57,12 +68,11 @@ const AddMissingDayModal: FC<IProps> = ({
 
 		return datesArray.includes(formattedDate);
 	};
-
 	return (
 		<Modal
 			shadow='sm'
 			pos={'relative'}
-			size={'1050px'}
+			size={!isSuccess ? '1050px' : '600px'}
 			sx={{
 				display: 'unset !important'
 			}}
@@ -79,175 +89,186 @@ const AddMissingDayModal: FC<IProps> = ({
 				</Text>
 
 				<Divider my='sm' variant='dashed' />
-				<Flex justify={'center'}>
-					<Paper
-						shadow='sm'
-						radius='lg'
-						mr={40}
-						p='lg'
-						h={'400px'}
-						sx={{
-							width: '68%',
-							height: 'auto',
-							maxHeight: '500px',
-							scrollbarWidth: 'none',
-							'::-webkit-scrollbar': {
-								width: '0.5em',
-								display: 'none'
-							},
-							'::-webkit-scrollbar-thumb': {
-								backgroundColor: '#888'
-							}
-						}}
-					>
-						<Flex align={'center'} justify={'space-between'}>
-							<Text fz='lg' weight={600} color='#5e6278'>
-								Task
-							</Text>
-							<Text ta='center' fz='lg' weight={500}>
-								{date ? date : ''}
-							</Text>
+				{!isSuccess && (
+					<Flex justify={'center'}>
+						<Paper
+							shadow='sm'
+							radius='lg'
+							mr={40}
+							p='lg'
+							h={'400px'}
+							sx={{
+								width: '68%',
+								height: 'auto',
+								maxHeight: '500px',
+								scrollbarWidth: 'none',
+								'::-webkit-scrollbar': {
+									width: '0.5em',
+									display: 'none'
+								},
+								'::-webkit-scrollbar-thumb': {
+									backgroundColor: '#888'
+								}
+							}}
+						>
+							<Flex align={'center'} justify={'space-between'}>
+								<Text fz='lg' weight={600} color='#5e6278'>
+									Task
+								</Text>
+								<Text ta='center' fz='lg' weight={500}>
+									{date ? date : ''}
+								</Text>
 
-							<Text fz='lg' weight={500} sx={{ marginRight: '15px' }} w={50}>
-								{time ? (
-									!time.includes('NaN:NaN') &&
-									formatTime.length === 5 &&
-									dailyWorkingMinute > 0 &&
-									time.length === 5 ? (
-										time
+								<Text fz='lg' weight={500} sx={{ marginRight: '15px' }} w={50}>
+									{time ? (
+										!time.includes('NaN:NaN') &&
+										formatTime.length === 5 &&
+										dailyWorkingMinute > 0 &&
+										time.length === 5 ? (
+											time
+										) : (
+											<Flex align={'center'} justify={'center'} w={50}>
+												<IconAlertTriangle size={18} strokeWidth={2} color={'red'} />
+											</Flex>
+										)
 									) : (
 										<Flex align={'center'} justify={'center'} w={50}>
 											<IconAlertTriangle size={18} strokeWidth={2} color={'red'} />
 										</Flex>
-									)
-								) : (
-									<Flex align={'center'} justify={'center'} w={50}>
-										<IconAlertTriangle size={18} strokeWidth={2} color={'red'} />
-									</Flex>
-								)}
-							</Text>
-						</Flex>
-						<Divider my='sm' variant='dashed' />
-						{fields.length > 0 ? <Group mb='xs'></Group> : <></>}
-						{fields.length > 0 && <Box>{fields.reverse()}</Box>}
-					</Paper>
+									)}
+								</Text>
+							</Flex>
+							<Divider my='sm' variant='dashed' />
+							{fields.length > 0 ? <Group mb='xs'></Group> : <></>}
+							{fields.length > 0 && <Box>{fields.reverse()}</Box>}
+						</Paper>
 
-					<Paper
-						shadow='sm'
-						radius='lg'
-						p='10px'
-						sx={{
-							width: '27%',
-							height: '400px'
-						}}
-					>
-						<Flex align={'center'} justify={'center'}>
-							<Text fz='lg' weight={600} color='#5e6278' p={5}>
-								Time
-							</Text>
-						</Flex>
-
-						<Divider my='sm' variant='dashed' />
-						<Flex direction={'column'} justify={'space-between'} sx={{ height: '180px' }} mt={'10px'}>
-							<Flex align={'center'} justify={'center'} direction={'column'}>
-								<DatePickerInput
-									withAsterisk
-									autoFocus
-									icon={<IconCalendar size='1.1rem' stroke={1.5} />}
-									placeholder='Select a date'
-									mt={10}
-									popoverProps={{ withinPortal: true }}
-									variant='filled'
-									label={'Date'}
-									classNames={{
-										label: classes.label,
-										input: classes.input,
-										error: classes.error,
-										wrapper: classes.wrapper
-									}}
-									sx={{
-										width: '205px !important'
-									}}
-									excludeDate={excludeCustomDates}
-									firstDayOfWeek={0}
-									maxLevel={'year'}
-									{...form.getInputProps('date')}
-									onChange={(date) => {
-										setDate(formatDate(date));
-										form.setFieldValue('date', date);
-									}}
-								/>
-								<TextInput
-									w={205}
-									withAsterisk
-									placeholder='00:00'
-									maxLength={5}
-									mt={10}
-									label='In(24 hour)'
-									value={form.values.inTime}
-									classNames={{
-										label: classes.label,
-										input: classes.input,
-										error: classes.error,
-										wrapper: classes.wrapper
-									}}
-									ta={'center'}
-									labelProps={{ style: { color: '#5e6278' } }}
-									{...form.getInputProps('inTime')}
-									onChange={(e) => handleTimeChange(e, 'inTime')}
-									sx={{
-										display: 'flex',
-										flexDirection: 'column',
-										alignItems: 'start'
-									}}
-								/>
-								<TextInput
-									withAsterisk
-									placeholder='00:00'
-									maxLength={5}
-									mt={10}
-									w={205}
-									label='Out(24 hour)'
-									value={form.values.outTime}
-									classNames={{
-										label: classes.label,
-										input: classes.input,
-										error: classes.error,
-										wrapper: classes.wrapper
-									}}
-									sx={{
-										display: 'flex',
-										flexDirection: 'column',
-										alignItems: 'start'
-									}}
-									ta={'center'}
-									labelProps={{ style: { color: '#5e6278' } }}
-									{...form.getInputProps('outTime')}
-									onChange={(e) => handleTimeChange(e, 'outTime')}
-								/>
+						<Paper
+							shadow='sm'
+							radius='lg'
+							p='10px'
+							sx={{
+								width: '27%',
+								height: '400px'
+							}}
+						>
+							<Flex align={'center'} justify={'center'}>
+								<Text fz='lg' weight={600} color='#5e6278' p={5}>
+									Time
+								</Text>
 							</Flex>
 
-							<Divider my='sm' variant='dashed' sx={{ marginTop: '30px !important' }} />
-							<Group position='center'>
-								<Button
-									type='submit'
-									sx={{ width: '140px' }}
-									mt={'10px'}
-									loaderPosition='left'
-									loaderProps={{
-										size: 'sm',
-										color: '#15aabf',
-										variant: 'oval'
-									}}
-									loading={isLoading}
-								>
-									Submit
-								</Button>
-							</Group>
-						</Flex>
-					</Paper>
-				</Flex>
+							<Divider my='sm' variant='dashed' />
+							<Flex direction={'column'} justify={'space-between'} sx={{ height: '180px' }} mt={'10px'}>
+								<Flex align={'center'} justify={'center'} direction={'column'}>
+									<DatePickerInput
+										withAsterisk
+										autoFocus
+										icon={<IconCalendar size='1.1rem' stroke={1.5} />}
+										placeholder='Select a date'
+										mt={10}
+										popoverProps={{ withinPortal: true }}
+										variant='filled'
+										label={'Date'}
+										classNames={{
+											label: classes.label,
+											input: classes.input,
+											error: classes.error,
+											wrapper: classes.wrapper
+										}}
+										sx={{
+											width: '205px !important'
+										}}
+										excludeDate={excludeCustomDates}
+										firstDayOfWeek={0}
+										maxLevel={'year'}
+										{...form.getInputProps('date')}
+										onChange={(date) => {
+											setDate(formatDate(date));
+											form.setFieldValue('date', date);
+										}}
+									/>
+									<TextInput
+										w={205}
+										withAsterisk
+										placeholder='00:00'
+										maxLength={5}
+										mt={10}
+										label='In(24 hour)'
+										value={form.values.inTime}
+										classNames={{
+											label: classes.label,
+											input: classes.input,
+											error: classes.error,
+											wrapper: classes.wrapper
+										}}
+										ta={'center'}
+										labelProps={{ style: { color: '#5e6278' } }}
+										{...form.getInputProps('inTime')}
+										onChange={(e) => handleTimeChange(e, 'inTime')}
+										sx={{
+											display: 'flex',
+											flexDirection: 'column',
+											alignItems: 'start'
+										}}
+									/>
+									<TextInput
+										withAsterisk
+										placeholder='00:00'
+										maxLength={5}
+										mt={10}
+										w={205}
+										label='Out(24 hour)'
+										value={form.values.outTime}
+										classNames={{
+											label: classes.label,
+											input: classes.input,
+											error: classes.error,
+											wrapper: classes.wrapper
+										}}
+										sx={{
+											display: 'flex',
+											flexDirection: 'column',
+											alignItems: 'start'
+										}}
+										ta={'center'}
+										labelProps={{ style: { color: '#5e6278' } }}
+										{...form.getInputProps('outTime')}
+										onChange={(e) => handleTimeChange(e, 'outTime')}
+									/>
+								</Flex>
+
+								<Divider my='sm' variant='dashed' sx={{ marginTop: '30px !important' }} />
+								<Group position='center'>
+									<Button
+										type='submit'
+										sx={{ width: '140px' }}
+										mt={'10px'}
+										loaderPosition='left'
+										loaderProps={{
+											size: 'sm',
+											color: '#15aabf',
+											variant: 'oval'
+										}}
+										loading={isLoading}
+									>
+										Submit
+									</Button>
+								</Group>
+							</Flex>
+						</Paper>
+					</Flex>
+				)}
 			</form>
+
+			{isSuccess && (
+				<Flex h={'250px'} p={'0 80px'} direction={'column'} justify={'center'} align={'center'}>
+					<Lottie options={defaultOptions} height={120} width={120} speed={1.5} />
+					<Text fz={16} fw={600} mt={30} ta={'center'} c={'#99A1B7'}>
+						Request has been submitted successfully
+					</Text>
+				</Flex>
+			)}
 		</Modal>
 	);
 };
