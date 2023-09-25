@@ -4,7 +4,7 @@ import { IconDots, IconExternalLink } from '@tabler/icons-react';
 
 interface IMenuProps {
 	isShowUserDetails: boolean;
-	setIsShowUserDetails: (val) => void;
+	setIsShowUserDetails: (val: boolean) => void;
 	getTeamInfo: () => void;
 	getHolidayList: () => void;
 }
