@@ -140,8 +140,20 @@ const WorkFromHomeModal: FC<IProps> = ({ isOpen, onClose, form, handleSubmit, is
 									/>
 
 									<Checkbox
-										label='I agree to term and condition of work from home'
-										mt={24}
+										label={
+											<>
+												I agree{' '}
+												<Anchor
+													href='https://docs.google.com/document/d/1NwUvp0YJ-DwcuWFp-NMxa4bTHSMbrozAkzb-cXYdjfE/edit'
+													target='_blank'
+													inherit
+												>
+													term and condition
+												</Anchor>{' '}
+												of work from home
+											</>
+										}
+										mt={35}
 										checked={form.values.isConfirm}
 										{...form.getInputProps('isConfirm')}
 									/>
