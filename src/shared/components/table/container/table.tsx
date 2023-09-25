@@ -4,6 +4,8 @@ import { DataTable, DataTableColumn } from 'mantine-datatable';
 import { IPagination } from 'shared/interface';
 import { NoRecordPage } from '../componets/noRecordPage';
 
+import '../style/table.scss';
+
 interface ITableProps {
 	userList: [];
 	columns: DataTableColumn<any>[];
@@ -102,6 +104,7 @@ export const TableSelection = (props: ITableProps) => {
 			onRecordsPerPageChange={(recordPerPage) => props.onRecordsPerPageChange(recordPerPage)}
 			rowClassName={({ isUpcomingLeave }) => `${classes.rowClass} ${getRowClass({ isUpcomingLeave })}`}
 			onRowClick={props.onRowClick || null}
+			scrollAreaProps={{ type: 'never' }}
 		/>
 	);
 };
