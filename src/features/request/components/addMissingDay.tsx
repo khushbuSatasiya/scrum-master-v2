@@ -63,14 +63,16 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose }) => {
 		let tmpInTime = inTime;
 		let tmpOutTime = outTime;
 
-		if (action === 'inTime' && formattedTime.includes(':') && formattedTime.length === 5) {
-			inTimeArr = formattedTime.split(':');
-			tmpInTime = new Date().setHours(Number(inTimeArr[0]), Number(inTimeArr[1]));
-			inTimeArr.length === 2 && setInTime(tmpInTime);
-		} else if (action === 'outTime' && formattedTime.includes(':') && formattedTime.length === 5) {
-			outTimeArr = formattedTime.split(':');
-			tmpOutTime = new Date().setHours(Number(outTimeArr[0]), Number(outTimeArr[1]));
-			outTimeArr.length === 2 && setOutTime(tmpOutTime);
+		if (formattedTime.includes(':') && formattedTime.length === 5) {
+			if (action === 'inTime') {
+				inTimeArr = formattedTime.split(':');
+				tmpInTime = new Date().setHours(Number(inTimeArr[0]), Number(inTimeArr[1]));
+				inTimeArr.length === 2 && setInTime(tmpInTime);
+			} else if (action === 'outTime') {
+				outTimeArr = formattedTime.split(':');
+				tmpOutTime = new Date().setHours(Number(outTimeArr[0]), Number(outTimeArr[1]));
+				outTimeArr.length === 2 && setOutTime(tmpOutTime);
+			}
 		}
 
 		const workTime = (tmpOutTime - tmpInTime) / (1000 * 60 * 60);
@@ -243,7 +245,6 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose }) => {
 						setTimeout(() => {
 							onClose();
 						}, 3000);
-						// showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);
 					})
 					.catch((error) => {
 						console.error('error', error);
@@ -271,12 +272,7 @@ const AddMissingDay: FC<IProps> = ({ isOpen, onClose }) => {
 				isLoading={isLoading}
 				isSuccess={isSuccess}
 			/>
-			<AddMissingDayConfirmModal
-				isConfirm={isConfirm}
-				setIsConfirm={setIsConfirm}
-				isSuccess={isSuccess}
-				onClose={onClose}
-			/>
+			<AddMissingDayConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} onClose={onClose} />
 		</>
 	);
 };

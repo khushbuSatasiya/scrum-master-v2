@@ -123,8 +123,6 @@ const WorkFromHomeModal: FC<IProps> = ({ isOpen, onClose, form, handleSubmit, is
 										label='Reason'
 										w={'100%'}
 										mt={24}
-										// onChange={handleChange('isConfirm')}
-										// onBlur={handleBlur('isConfirm')}
 										{...form.getInputProps('reason')}
 										classNames={{
 											label: classes.label,

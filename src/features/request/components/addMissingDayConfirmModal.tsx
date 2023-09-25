@@ -6,17 +6,16 @@ import { IconAlertTriangle } from '@tabler/icons-react';
 interface IProps {
 	isConfirm: boolean;
 	setIsConfirm: (action: boolean) => void;
-	isSuccess: boolean;
 	onClose: () => void;
 }
 
-const AddMissingDayConfirmModal: FC<IProps> = ({ isConfirm, setIsConfirm }) => {
+const AddMissingDayConfirmModal: FC<IProps> = ({ isConfirm, setIsConfirm, onClose }) => {
 	return (
 		<>
 			<Modal
 				size='sm'
 				opened={isConfirm}
-				onClose={() => console.log()}
+				onClose={onClose}
 				centered
 				padding={35}
 				radius='lg'

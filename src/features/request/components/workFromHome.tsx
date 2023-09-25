@@ -50,7 +50,6 @@ const WorkFromHome: FC<IProps> = ({ onClose, isOpen }) => {
 				setTimeout(() => {
 					onClose();
 				}, 3000);
-				// showNotification(res, theme.colors.blue[6], theme.colors.blue[6]);
 			})
 			.catch((error) => {
 				console.error('error', error);
