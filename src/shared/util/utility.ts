@@ -258,3 +258,13 @@ export const minuteToHour = (data: number) => {
 	const totalWorkingHours = fixedTotalHours + ':' + fixedTotalMinutes;
 	return totalWorkingHours;
 };
+
+export const yearWithMonth = (data: any) => {
+	var years = Math.floor(data / 365);
+	var months = Math.floor((data % 365) / 30);
+
+	return {
+		years,
+		months
+	};
+};

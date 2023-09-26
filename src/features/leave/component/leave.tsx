@@ -55,7 +55,8 @@ const Leave: FC<ILeaveProps> = ({ handleLeaveDetails, uId }) => {
 						remainingLeaves,
 						usedLeaves,
 						usedVacationalLeave,
-						vacationLeaves
+						vacationLeaves,
+						compensationRemainHr
 					} = res.data.details;
 					const leaveInfo = {
 						compensationLeaves: compensationLeaves,
@@ -63,7 +64,8 @@ const Leave: FC<ILeaveProps> = ({ handleLeaveDetails, uId }) => {
 						remainingLeaves: remainingLeaves,
 						usedLeaves: usedLeaves,
 						vacationLeaves: vacationLeaves,
-						usedVacationalLeave: usedVacationalLeave
+						usedVacationalLeave: usedVacationalLeave,
+						compensationRemainHr: compensationRemainHr
 					};
 
 					handleLeaveDetails(leaveInfo);
@@ -159,6 +161,7 @@ const Leave: FC<ILeaveProps> = ({ handleLeaveDetails, uId }) => {
 					handlePagination={handlePagination}
 					onRecordsPerPageChange={onRecordsPerPageChange}
 					columns={getLeaveColumns(uId)}
+					leave={true}
 				/>
 			</Flex>
 		</Box>
