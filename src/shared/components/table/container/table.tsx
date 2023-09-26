@@ -14,6 +14,8 @@ interface ITableProps {
 	onRowClick?: (record: any) => void;
 	handlePagination?: (currentPage?: number, recordPerPage?: number) => void;
 	onRecordsPerPageChange?: (recordPerPage?: number) => void;
+	leave?: boolean;
+	className?: string;
 }
 
 const useStyles = createStyles((theme) => {
@@ -71,17 +73,17 @@ const useStyles = createStyles((theme) => {
 const PAGE_SIZES = [10, 50, 75, 100];
 
 export const TableSelection = (props: ITableProps) => {
-	const { isLoading, userList, columns } = props;
+	const { isLoading, userList, columns, leave, className } = props;
 
 	const { classes } = useStyles();
 
 	const getRowClass = (isUpcomingLeave) => {
-		return isUpcomingLeave.isUpcomingLeave ? 'gray-background' : '';
+		return leave && !isUpcomingLeave.isUpcomingLeave ? 'gray-background' : '';
 	};
 
 	return (
 		<DataTable
-			className='table-wrapper'
+			className={className}
 			key={Math.random()}
 			classNames={classes}
 			minHeight={600}

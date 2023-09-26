@@ -138,15 +138,23 @@ const Dashboard: FC = () => {
 	};
 
 	const handleLeaveDetails = (leaveInfo) => {
-		const { grantedLeaves, usedLeaves, remainingLeaves, vacationLeaves, compensationLeaves, usedVacationalLeave } =
-			leaveInfo;
+		const {
+			grantedLeaves,
+			usedLeaves,
+			remainingLeaves,
+			vacationLeaves,
+			compensationLeaves,
+			usedVacationalLeave,
+			compensationRemainHr
+		} = leaveInfo;
 		setLeaveDetails({
 			grantedLeaves,
 			usedLeaves,
 			remainingLeaves,
 			vacationLeaves,
 			compensationLeaves,
-			usedVacationalLeave
+			usedVacationalLeave,
+			compensationRemainHr
 		});
 	};
 

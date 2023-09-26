@@ -71,6 +71,7 @@ const HolidayList: FC<IHolidayProps> = ({ holidayList, holidayLoading, onClose }
 						isLoading={false}
 						userList={holidayList as any}
 						columns={getHolidayColumns()}
+						className='table-wrapper'
 					/>
 				</Box>
 			</Modal>

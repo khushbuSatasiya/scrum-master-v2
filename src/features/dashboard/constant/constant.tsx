@@ -22,6 +22,7 @@ export const LEAVE_DETAILS = (leaveDetails) => {
 		{
 			label: 'Compensation',
 			value: leaveDetails.compensationLeaves,
+			hourValue: leaveDetails.compensationRemainHr,
 			color: '#FF9B38'
 		}
 	];
