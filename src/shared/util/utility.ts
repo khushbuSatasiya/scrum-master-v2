@@ -259,9 +259,18 @@ export const minuteToHour = (data: number) => {
 	return totalWorkingHours;
 };
 
-export const yearWithMonth = (data: any) => {
-	var years = Math.floor(data / 365);
-	var months = Math.floor((data % 365) / 30);
+export const yearWithMonth = (data) => {
+	let years;
+	let months;
+
+	years = Math.floor(data / 365);
+	const remainingDays = data % 365;
+	months = Math.floor(remainingDays / 30);
+
+	if (months >= 12) {
+		years += Math.floor(months / 12);
+		months %= 12;
+	}
 
 	return {
 		years,

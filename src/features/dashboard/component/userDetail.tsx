@@ -16,7 +16,6 @@ import { LEAVE_DETAILS } from '../constant/constant';
 import TeamDetails from './teamDetails';
 import HolidayList from './holidayList';
 import MenuList from './menuList';
-import CompensationModal from './compensationModal';
 
 import '../style/dashboard.scss';
 
@@ -47,7 +46,6 @@ const UserDetail: FC<IProps> = (props: IProps) => {
 	const [teamLoading, setTeamLoading] = useState(false);
 	const [holidayList, setHolidayList] = useState<IHolidayList[]>([]);
 	const [holidayLoading, setHolidayLoading] = useState(false);
-	const [isShowCompModal, setIsShowCompModal] = useState(false);
 
 	const renderPaper = (label, value, color, hourValue) => {
 		return (
@@ -58,42 +56,16 @@ const UserDetail: FC<IProps> = (props: IProps) => {
 					width: '125px',
 					padding: '6px 10px'
 				}}
-				pos={'relative'}
 			>
-				{label === 'Compensation' && (
-					<Group
-						pos={'absolute'}
-						top={-12}
-						right={-12}
-						sx={{ cursor: 'pointer' }}
-						c={'#228be6'}
-						onClick={() => setIsShowCompModal(true)}
-					>
-						<IconInfoCircleFilled size={24} strokeWidth={1.5} />
-					</Group>
-				)}
 				<Text fw='bold' fz={'22px'} c={'#071437'}>
 					{value || '0'}{' '}
-					{label === 'Compensation' && (
-						<span
-							style={{
-								color: '#B5B5C3',
-								fontWeight: '500',
-								fontSize: '14px'
-							}}
-						>
-							Day
-						</span>
-					)}
 				</Text>
 
 				{label === 'Compensation' || label === 'Paid Leave' || label === 'Vacational' ? (
 					<Tooltip
 						label={`${
 							label === 'Compensation'
-								? `${value || '0'} ${
-										label === 'Compensation' ? `day and ${hourValue || '00:00'} hour` : ''
-								  }`
+								? 'We have calculated the approximate compensation and not calculated anywhere. For further details, please reach out to the HR department.'
 								: 'Used / Granted'
 						}`}
 						sx={{
@@ -218,17 +190,22 @@ const UserDetail: FC<IProps> = (props: IProps) => {
 									{' '}
 									Yrs
 								</span>{' '}
-								{newToken?.experience ? yearWithMonth(newToken?.experience).months : 0}
-								<span
-									style={{
-										color: '#B5B5C3',
-										fontWeight: '500',
-										fontSize: '14px'
-									}}
-								>
-									{' '}
-									Mos
-								</span>
+								{newToken?.experience
+									? yearWithMonth(newToken?.experience).months !== 0 &&
+									  yearWithMonth(newToken?.experience).months
+									: 0}
+								{yearWithMonth(newToken?.experience).months !== 0 && (
+									<span
+										style={{
+											color: '#B5B5C3',
+											fontWeight: '500',
+											fontSize: '14px'
+										}}
+									>
+										{' '}
+										Mos
+									</span>
+								)}
 							</Text>
 							<Text c='#B5B5C3' fz='sm' fw={500}>
 								With us
@@ -331,8 +308,6 @@ const UserDetail: FC<IProps> = (props: IProps) => {
 					holidayLoading={holidayLoading}
 				/>
 			)}
-
-			<CompensationModal isShowCompModal={isShowCompModal} setIsShowCompModal={setIsShowCompModal} />
 		</Paper>
 	);
 };
