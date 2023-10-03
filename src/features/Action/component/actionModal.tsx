@@ -15,7 +15,7 @@ interface IProps {
 
 export const ActionModal: FC<IProps> = ({ action, onClose, leaveStatus, selectedItem, isStatusLoading }) => {
 	return (
-		<Modal opened={action.isAction} onClose={() => onClose()} centered radius='lg' withCloseButton={false}>
+		<Modal opened={action.isAction} onClose={onClose} centered radius='lg' withCloseButton={false}>
 			<Paper radius='lg'>
 				<Flex align={'center'} direction={'column'}>
 					<Flex justify='center' align='center' direction='column' mb={20}>
@@ -42,13 +42,7 @@ export const ActionModal: FC<IProps> = ({ action, onClose, leaveStatus, selected
 						>
 							Yes
 						</Button>
-						<Button
-							variant='outline'
-							color='red'
-							onClick={() => {
-								onClose();
-							}}
-						>
+						<Button variant='outline' color='red' onClick={onClose}>
 							Cancel
 						</Button>
 					</Flex>
