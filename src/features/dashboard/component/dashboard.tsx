@@ -23,6 +23,7 @@ import { IActionTime, IEnteredTask, IProjectArray, IUserDetail } from '../interf
 import UserInfoTab from './userInfoTab';
 import UserDetail from './userDetail';
 import UserInfoPopup from './userInfoPopup';
+import Action from 'features/Action/component/action';
 
 const Dashboard: FC = () => {
 	const { token } = useParams<{ token: string }>();
@@ -209,6 +210,11 @@ const Dashboard: FC = () => {
 			label: 'Request',
 			value: 'request',
 			content: <Request uId={newToken && newToken.userId} />
+		},
+		{
+			label: 'Action',
+			value: 'action',
+			content: <Action />
 		}
 	];
 

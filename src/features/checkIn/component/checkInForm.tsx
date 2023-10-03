@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Box, Button, Flex, Group, Paper, Space, Text, Divider, TextInput } from '@mantine/core';
+import { Box, Button, Flex, Group, Paper, Text, Divider, TextInput } from '@mantine/core';
 
 import { getTodayDate } from 'shared/util/utility';
 

@@ -57,7 +57,7 @@ const Layout: React.FC<PropsWithChildren> = (props) => {
 						}}
 						fw={600}
 					>
-						v2.3.1
+						v2.4.0
 					</Anchor>
 				</Text>
 			</ScrollArea>

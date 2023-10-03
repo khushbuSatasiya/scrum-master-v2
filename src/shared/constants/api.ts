@@ -28,7 +28,9 @@ export const API_CONFIG = {
 		missingDay: 'request/missingday',
 		wfh: 'request/wfh',
 		teamInfo: 'users/teaminfo',
-		holidayList: 'holiday/list'
+		holidayList: 'holiday/list',
+		leadApproval: 'request/leave/leadapproval',
+		leaveStatus: 'request/leave/action/leadapproval'
 	}
 };
 
