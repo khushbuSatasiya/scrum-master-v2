@@ -1,6 +1,7 @@
 export interface IAction {
 	isAction: boolean;
 	status: string;
+	index: number;
 }
 
 export interface ILeaveData {

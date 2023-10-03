@@ -96,7 +96,7 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 									</Box>
 									<Box sx={{ width: '50%' }}>
 										<Text color='' fz={'14px'} fw={600}>
-											Total Day
+											Total Work Day
 										</Text>
 										<Text size='lg' fz='14px' fw={600} color='#228be6'>
 											{totalDay}
@@ -218,7 +218,8 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 													onClick={() => {
 														setAction({
 															isAction: true,
-															status: 'approve'
+															status: 'approve',
+															index: index
 														});
 														setSelectedItem(item);
 													}}
@@ -232,7 +233,8 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 													onClick={() => {
 														setAction({
 															isAction: true,
-															status: 'reject'
+															status: 'reject',
+															index: index
 														});
 														setSelectedItem(item);
 													}}

@@ -16,7 +16,8 @@ import LeaveAction from './leaveAction';
 const Action: FC = () => {
 	const [action, setAction] = useState<IAction>({
 		isAction: false,
-		status: ''
+		status: '',
+		index: 0
 	});
 	const [leaveData, setLeaveData] = useState<ILeaveData[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -37,24 +38,28 @@ const Action: FC = () => {
 		}
 	}, []);
 
-	const leaveStatus = useCallback(async (selectedItem, status) => {
-		setIsStatusLoading(true);
+	const leaveStatus = useCallback(
+		async (selectedItem, status) => {
+			setIsStatusLoading(true);
 
-		const params = { leaveCode: selectedItem.leaveCode, status, note: selectedItem.leadNote };
-		try {
-			await httpService.put(API_CONFIG.path.leaveStatus, params).then(() => {
+			const params = { leaveCode: selectedItem.leaveCode, status, note: selectedItem.leadNote };
+			try {
+				await httpService.put(API_CONFIG.path.leaveStatus, params).then((res) => {
+					setIsStatusLoading(false);
+					let currentIndex = action.index;
+					leaveData[currentIndex] = res.data;
+				});
+			} catch (error) {
 				setIsStatusLoading(false);
-				leadApproval();
-			});
-		} catch (error) {
-			setIsStatusLoading(false);
-			console.error(error);
-		}
-	}, []);
+				console.error(error);
+			}
+		},
+		[action.index, leaveData]
+	);
 
 	useEffect(() => {
 		leadApproval();
-	}, []);
+	}, [leadApproval]);
 
 	return (
 		<>

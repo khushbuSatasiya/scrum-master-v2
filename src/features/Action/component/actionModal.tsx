@@ -3,13 +3,13 @@ import React, { FC } from 'react';
 import { Flex, Modal, Paper, Text, Button } from '@mantine/core';
 import { IconAlertTriangle } from '@tabler/icons-react';
 
-import { IAction } from '../interface/action.interface';
+import { IAction, ILeaveData } from '../interface/action.interface';
 
 interface IProps {
 	action: IAction;
 	setAction: (action: IAction) => void;
 	leaveStatus: (selectedItem, status) => void;
-	selectedItem: any;
+	selectedItem: ILeaveData;
 	isStatusLoading: boolean;
 }
 
