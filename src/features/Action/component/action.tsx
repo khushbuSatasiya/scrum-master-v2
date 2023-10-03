@@ -105,7 +105,7 @@ const Action: FC = () => {
 
 			<ActionModal
 				action={action}
-				setAction={setAction}
+				onClose={() => setAction({} as IAction)}
 				leaveStatus={leaveStatus}
 				selectedItem={selectedItem}
 				isStatusLoading={isStatusLoading}
