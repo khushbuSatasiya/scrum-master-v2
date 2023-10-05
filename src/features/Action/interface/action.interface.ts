@@ -14,10 +14,11 @@ export interface ILeaveData {
 	leaveType: string;
 	reason: string;
 	status: string;
-	leaveCode: number;
+	code: number;
 	requestApplyDate: string;
 	myStatus: string;
 	projectName: string;
 	actionByLead: string;
 	leadNote: string;
+	requestType: string;
 }

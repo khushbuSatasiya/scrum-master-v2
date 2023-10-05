@@ -42,7 +42,12 @@ const Action: FC = () => {
 		async (selectedItem, status) => {
 			setIsStatusLoading(true);
 
-			const params = { leaveCode: selectedItem.leaveCode, status, note: selectedItem.leadNote };
+			const params = {
+				code: selectedItem.code,
+				status,
+				note: selectedItem.leadNote,
+				requestType: selectedItem.requestType
+			};
 			try {
 				await httpService.put(API_CONFIG.path.leaveStatus, params).then((res) => {
 					setIsStatusLoading(false);

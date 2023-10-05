@@ -28,15 +28,20 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 					toDate,
 					duration,
 					totalDay,
-					leaveCode,
+					code,
 					leaveType,
 					myStatus,
 					leadNote,
 					status,
-					reason
+					reason,
+					requestType
 				} = item;
 				return (
 					<Paper key={index}>
+						<Text color='grey' fw='700' fz='md' ta={'center'}>
+							{requestType === 'wfh' ? 'WFh Request' : 'Leave Request'}
+						</Text>
+
 						<Flex justify={'space-between'}>
 							<Flex align={'center'} justify={'space-between'}>
 								<Image maw={50} radius='md' src={avatar ?? avatar} alt={realName} />
@@ -51,7 +56,7 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 								</Flex>
 							</Flex>
 							<Flex>
-								<Text fz={'sm'} fw={600} color='#B5B5C3'>
+								<Text fz={'sm'} fw={700} color='#B5B5C3'>
 									{projectName}
 								</Text>
 							</Flex>
@@ -85,15 +90,44 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 										marginTop: '15px'
 									}}
 								>
-									<Box sx={{ width: '50%' }}>
-										<Text color='' fw={600} fz={'14px'}>
-											Duration
-										</Text>
-										<Text fz='14px' color='#B5B5C3' fw={600}>
-											{' '}
-											{duration}
-										</Text>
-									</Box>
+									{requestType === 'leave' ? (
+										<Box sx={{ width: '50%' }}>
+											<Text color='' fw={600} fz={'14px'}>
+												Duration
+											</Text>
+											<Text fz='14px' color='#B5B5C3' fw={600}>
+												{duration}
+											</Text>
+										</Box>
+									) : (
+										<Box sx={{ width: '50%' }}>
+											<Text fw={600} fz={'14px'}>
+												Reason
+											</Text>
+											<Tooltip
+												sx={{
+													maxWidth: '200px',
+													wordWrap: 'break-word',
+													textWrap: 'balance',
+													height: 'auto',
+													textAlign: 'center'
+												}}
+												inline
+												position='top-start'
+												label={reason}
+												color='#1c7ed6'
+												transitionProps={{
+													transition: 'slide-down',
+													duration: 300
+												}}
+											>
+												<Text fz='14px' color='#B5B5C3' fw={600} truncate>
+													{reason}
+												</Text>
+											</Tooltip>
+										</Box>
+									)}
+
 									<Box sx={{ width: '50%' }}>
 										<Text color='' fz={'14px'} fw={600}>
 											Total Work Day
@@ -105,22 +139,25 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 								</Flex>
 							</Box>
 
-							<Box sx={{ width: '25%', marginTop: '20px', marginLeft: '50px' }}>
+							<Box sx={{ width: '25%', marginTop: '20px', marginLeft: '25px' }}>
 								<Flex justify={'space-between'} sx={{ width: '100%' }}>
-									<Box sx={{ width: '50%' }}>
-										<Text fw={600} fz={'14px'}>
-											Leave Type
-										</Text>
-										<Text fw='600' fz='14px' color='#40c057'>
-											{leaveType}
-										</Text>
-									</Box>
+									{requestType === 'leave' && (
+										<Box sx={{ width: '50%' }}>
+											<Text fw={600} fz={'14px'}>
+												Leave Type
+											</Text>
+											<Text fw='600' fz='14px' color='#40c057'>
+												{leaveType}
+											</Text>
+										</Box>
+									)}
+
 									<Box sx={{ width: '50%' }}>
 										<Text color='' fz={'14px'} fw={600}>
-											Leave Code
+											{requestType === 'wfh' ? 'WFH Code' : 'Leave Code'}
 										</Text>
 										<Text color='#228be6' fz='14px' fw={600}>
-											{leaveCode}
+											{code}
 										</Text>
 									</Box>
 								</Flex>
@@ -139,32 +176,34 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 											{status}
 										</Text>
 									</Box>
-									<Box sx={{ width: '50%' }}>
-										<Text fw={600} fz={'14px'}>
-											Reason
-										</Text>
-										<Tooltip
-											sx={{
-												maxWidth: '200px',
-												wordWrap: 'break-word',
-												textWrap: 'balance',
-												height: 'auto',
-												textAlign: 'center'
-											}}
-											inline
-											position='top-start'
-											label={reason}
-											color='#1c7ed6'
-											transitionProps={{
-												transition: 'slide-down',
-												duration: 300
-											}}
-										>
-											<Text fz='14px' color='#B5B5C3' fw={600} truncate>
-												{reason}
+									{requestType === 'leave' && (
+										<Box sx={{ width: '50%' }}>
+											<Text fw={600} fz={'14px'}>
+												Reason
 											</Text>
-										</Tooltip>
-									</Box>
+											<Tooltip
+												sx={{
+													maxWidth: '200px',
+													wordWrap: 'break-word',
+													textWrap: 'balance',
+													height: 'auto',
+													textAlign: 'center'
+												}}
+												inline
+												position='top-start'
+												label={reason}
+												color='#1c7ed6'
+												transitionProps={{
+													transition: 'slide-down',
+													duration: 300
+												}}
+											>
+												<Text fz='14px' color='#B5B5C3' fw={600} truncate>
+													{reason}
+												</Text>
+											</Tooltip>
+										</Box>
+									)}
 								</Flex>
 							</Box>
 
