@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
 
-import { Badge, Box, Divider, Flex, Group, Image, Paper, Space, Text, TextInput, Tooltip } from '@mantine/core';
-import { IconThumbDown, IconThumbUp } from '@tabler/icons-react';
+import { Box, Divider, Flex, Group, Image, Paper, Space, Text, TextInput, Tooltip, createStyles } from '@mantine/core';
+import { IconCalendar, IconThumbDown, IconThumbUp } from '@tabler/icons-react';
 import moment from 'moment';
 
 import { dateFormate } from 'shared/util/utility';
 
 import { IAction, ILeaveData } from '../interface/action.interface';
+import { DatePickerInput, DatePickerProps } from '@mantine/dates';
 
 interface IProps {
 	leaveData: ILeaveData[];
@@ -16,11 +17,49 @@ interface IProps {
 }
 
 const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, setAction }) => {
+	const useStyles = createStyles(() => ({
+		input: {
+			border: ' 0.0625rem solid transparent',
+			backgroundColor: 'transparent',
+			fontWeight: 500,
+			height: 'unset !important',
+			minHeight: '1.25rem !important',
+			left: '-10px',
+			color: 'transparent',
+			paddingLeft: '0px !important',
+			padding: '0px 9px !important',
+
+			'&:focus': {
+				background: 'transparent',
+				borderColor: 'transparent'
+			}
+		},
+		day: {
+			// cursor: 'not-allowed'
+		}
+	}));
+
+	const { classes } = useStyles();
+
+	// const getDayProps: DatePickerProps['getDayProps'] = (date) => {
+	// 	if (date.getDate() === 13) {
+	// 		return {
+	// 			style: {
+	// 				backgroundColor: 'var(--mantine-color-red-filled)',
+	// 				color: 'var(--mantine-color-white)'
+	// 			}
+	// 		};
+	// 	}
+
+	// 	return {};
+	// };
+
 	return (
 		<>
 			{leaveData.map((item, index) => {
 				const {
 					realName,
+					requestDate,
 					avatar,
 					requestApplyDate,
 					projectName,
@@ -36,11 +75,12 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 					reason,
 					requestType
 				} = item;
+
 				return (
 					<Paper key={index}>
-						<Text color='grey' fw='700' fz='md' ta={'center'}>
-							{requestType === 'wfh' ? 'WFh Request' : 'Leave Request'}
-						</Text>
+						{/* <Text color='grey' fw='700' fz='md' ta={'center'}>
+							{requestType === 'wfh' ? 'WFH Request' : 'Leave Request'}
+						</Text> */}
 
 						<Flex justify={'space-between'}>
 							<Flex align={'center'} justify={'space-between'}>
@@ -64,22 +104,72 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 
 						<Flex>
 							<Box sx={{ width: '25%', marginTop: '20px' }}>
-								<Box display={'flex'} sx={{ justifyContent: 'space-between', width: '100%' }}>
+								<Box
+									display={'flex'}
+									sx={{ justifyContent: 'space-between', width: '100%' }}
+									pos={'relative'}
+								>
 									<Box sx={{ width: '50%' }}>
 										<Text color='' fw={600} fz={'14px'}>
 											From
 										</Text>
-										<Badge size='lg' radius='md'>
+										<Text fw={600} fz={'14px'} c={'blue'}>
 											{dateFormate(fromDate)}
-										</Badge>
+										</Text>
 									</Box>
+									<Box sx={{ cursor: 'pointer' }}>
+										<DatePickerInput
+											icon={
+												<Group pos={'absolute'} left={2} bottom={8}>
+													<IconCalendar size='20px' stroke={1.5} />
+												</Group>
+											}
+											sx={{ borderColor: 'transparent', paddingLeft: 0 }}
+											pos={'absolute'}
+											left={'33%'}
+											bottom={'-12%'}
+											classNames={{
+												input: classes.input,
+												day: classes.day
+											}}
+											excludeDate={(date) => {
+												const datesArray = requestDate.map((item) =>
+													moment(item).format('YYYY-MM-DD')
+												);
+												const formattedDate = moment(date).format('YYYY-MM-DD');
+
+												const updateDate = datesArray.includes(formattedDate);
+												return !updateDate;
+											}}
+											defaultValue={new Date(fromDate)}
+											getDayProps={(date) => {
+												const datesArray = requestDate.map((item) =>
+													moment(item).format('YYYY-MM-DD')
+												);
+												if (datesArray.includes(moment(date).format('YYYY-MM-DD'))) {
+													console.log('datesArray:', datesArray);
+													return {
+														style: {
+															backgroundColor: '#228be6',
+															color: 'white'
+														}
+													};
+												}
+
+												return {};
+											}}
+										/>
+									</Box>
+
+									{/* <DatePicker /> */}
+
 									<Box sx={{ width: '50%' }}>
 										<Text fz={'14px'} fw={600}>
 											To
 										</Text>
-										<Badge size='lg' radius='md'>
+										<Text fw={600} fz={'14px'} c={'blue'}>
 											{dateFormate(toDate)}
-										</Badge>
+										</Text>
 									</Box>
 								</Box>
 								<Flex
@@ -217,10 +307,10 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 								<Box sx={{ width: '60%' }}>
 									<TextInput
 										styles={{
-											label: { fontSize: '16px', fontWeight: 600 },
+											label: { fontSize: '14px', fontWeight: 600, color: '#717981' },
 											error: { fontSize: '12px' }
 										}}
-										label='Notes'
+										label={`${requestType === 'wfh' ? 'WFH Note' : 'Leave Note'}`}
 										defaultValue={leadNote !== null ? leadNote : ''}
 										radius='md'
 										placeholder='Write Something'

@@ -21,4 +21,5 @@ export interface ILeaveData {
 	actionByLead: string;
 	leadNote: string;
 	requestType: string;
+	requestDate: string[];
 }
