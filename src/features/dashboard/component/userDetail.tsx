@@ -1,8 +1,8 @@
 import React, { FC, Fragment, useCallback, useState } from 'react';
 import isEmpty from 'lodash/isEmpty';
 
-import { Flex, Group, Image, Paper, Space, Tabs, Text, Tooltip } from '@mantine/core';
-import { IconInfoCircleFilled, IconMail, IconUserStar } from '@tabler/icons-react';
+import { Flex, Image, Paper, Space, Tabs, Text, Tooltip } from '@mantine/core';
+import { IconMail, IconUserStar } from '@tabler/icons-react';
 
 import { getTotalWorkingHourColor, yearWithMonth } from 'shared/util/utility';
 import { DotIcon } from 'shared/icons/icons';

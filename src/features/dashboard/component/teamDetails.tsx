@@ -57,7 +57,7 @@ const TeamDetails: FC<ITeamInfoProps> = ({ teamInfo, teamLoading, onClose }) => 
 						wrap={'wrap'}
 						mt={20}
 						sx={{
-							height: '600px',
+							height: '400px',
 							overflow: 'scroll ',
 							'&::-webkit-scrollbar': {
 								display: 'none'
