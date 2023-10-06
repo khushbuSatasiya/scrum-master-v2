@@ -7,7 +7,7 @@ import moment from 'moment';
 import { dateFormate } from 'shared/util/utility';
 
 import { IAction, ILeaveData } from '../interface/action.interface';
-import { DatePickerInput, DatePickerProps } from '@mantine/dates';
+import { DatePickerInput } from '@mantine/dates';
 
 interface IProps {
 	leaveData: ILeaveData[];
@@ -33,26 +33,10 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 				background: 'transparent',
 				borderColor: 'transparent'
 			}
-		},
-		day: {
-			// cursor: 'not-allowed'
 		}
 	}));
 
 	const { classes } = useStyles();
-
-	// const getDayProps: DatePickerProps['getDayProps'] = (date) => {
-	// 	if (date.getDate() === 13) {
-	// 		return {
-	// 			style: {
-	// 				backgroundColor: 'var(--mantine-color-red-filled)',
-	// 				color: 'var(--mantine-color-white)'
-	// 			}
-	// 		};
-	// 	}
-
-	// 	return {};
-	// };
 
 	return (
 		<>
@@ -78,10 +62,6 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 
 				return (
 					<Paper key={index}>
-						{/* <Text color='grey' fw='700' fz='md' ta={'center'}>
-							{requestType === 'wfh' ? 'WFH Request' : 'Leave Request'}
-						</Text> */}
-
 						<Flex justify={'space-between'}>
 							<Flex align={'center'} justify={'space-between'}>
 								<Image maw={50} radius='md' src={avatar ?? avatar} alt={realName} />
@@ -129,8 +109,7 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 											left={'33%'}
 											bottom={'-12%'}
 											classNames={{
-												input: classes.input,
-												day: classes.day
+												input: classes.input
 											}}
 											excludeDate={(date) => {
 												const datesArray = requestDate.map((item) =>
@@ -160,8 +139,6 @@ const LeaveAction: FC<IProps> = ({ leaveData, setLeaveData, setSelectedItem, set
 											}}
 										/>
 									</Box>
-
-									{/* <DatePicker /> */}
 
 									<Box sx={{ width: '50%' }}>
 										<Text fz={'14px'} fw={600}>
