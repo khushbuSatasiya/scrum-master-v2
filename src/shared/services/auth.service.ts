@@ -15,12 +15,12 @@ const checkLogin = (): boolean => {
 
 const setAuthData = (data: any): void => {
   const cipherText = CryptoJS.AES.encrypt(JSON.stringify(data), KEY);
-  localStorage.setItem("authData", cipherText.toString());
+  sessionStorage.setItem("authData", cipherText.toString());
 };
 
 const getAuthData = () => {
   try {
-    const data = localStorage.authData;
+    const data = sessionStorage.authData;
     if (data) {
       const bytes = CryptoJS.AES.decrypt(data.toString(), KEY);
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
@@ -63,7 +63,7 @@ const getSelectedOrg = (): { label: string; value: string } | null => {
 };
 
 const removeAuthData = (): void => {
-  localStorage.removeItem("authData");
+  sessionStorage.removeItem("authData");
 };
 
 const authService = {

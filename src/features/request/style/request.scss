@@ -1,0 +1,14 @@
+.time-input {
+    .mantine-TextInput-input {
+        &::placeholder {
+            color: #4b5675;
+            font-weight: 600;
+        }
+    }
+    .mantine-1ld4eom {
+        &:disabled {
+            color: #4b5675;
+            font-weight: 600;
+        }
+    }
+}

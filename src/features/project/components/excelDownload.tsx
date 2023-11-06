@@ -20,6 +20,7 @@ import httpService from "shared/services/http.service";
 import { API_CONFIG } from "shared/constants/api";
 
 import { IExcelProps } from "../interface/project";
+import { notifications } from "@mantine/notifications";
 
 interface IExcelDownloadProps {
   excelData: IExcelProps;
@@ -87,6 +88,11 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
         });
 
         fileSever.saveAs(blob, `${moment(startDate).format("MMMM")}.xlsx`);
+        setExcelData({});
+        notifications.show({
+          message: "Excel Download SuccessFully",
+          color: "green",
+        });
       })
       .catch((error) => {
         console.error("Error", error);
@@ -136,7 +142,9 @@ const ExcelDownload: FC<IExcelDownloadProps> = ({
             mt="15px"
             placeholder="Pick a month"
             radius="md"
-            minDate={new Date("01-08-2023")}
+            maxDate={new Date()}
+            minDate={new Date("31-12-2023")}
+            maxLevel="year"
             sx={{ border: "none !important" }}
             icon={<IconCalendar size={16} />}
             {...form.getInputProps("date")}

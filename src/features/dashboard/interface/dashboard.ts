@@ -51,3 +51,18 @@ export interface IPersonalDetails {
   probationCompletionDate: any;
   paidLeaveStartDate: string;
 }
+
+
+export interface ITeamDetails{
+	id: string
+	name: string
+	avatar: string
+	designation: string
+}
+
+export interface IHolidayList{
+	id: string
+	leaveDate: string
+	day: string
+	reason: string
+}
