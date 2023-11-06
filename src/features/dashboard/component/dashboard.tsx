@@ -17,6 +17,7 @@ import GuestUser from 'features/guestUser/component/guestUser';
 import NoActionRequired from 'features/noActionRequired/noActionRequired';
 import TeamCalendar from 'features/calendar/component/teamCalendar';
 import Request from 'features/request/container/request';
+import Wfh from 'features/wfh/component/wfh';
 
 import { IActionTime, IEnteredTask, IProjectArray, IUserDetail } from '../interface/dashboard';
 
@@ -195,6 +196,11 @@ const Dashboard: FC = () => {
 			label: 'Leave Report',
 			value: 'leavereport',
 			content: <Leave handleLeaveDetails={handleLeaveDetails} uId={newToken && newToken.userId} />
+		},
+		{
+			label: 'WFH Report',
+			value: 'wfhreport',
+			content: <Wfh uId={newToken && newToken.userId} />
 		},
 		{
 			label: 'Projects',
