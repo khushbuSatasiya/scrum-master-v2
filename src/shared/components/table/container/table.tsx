@@ -5,9 +5,10 @@ import { IPagination } from 'shared/interface';
 import { NoRecordPage } from '../componets/noRecordPage';
 
 import '../style/table.scss';
+import { IWfh } from 'features/wfh/interface/wfh';
 
 interface ITableProps {
-	userList: [];
+	userList: IWfh[] | [];
 	columns: DataTableColumn<any>[];
 	isLoading: boolean;
 	pagination?: IPagination;

@@ -12,6 +12,7 @@ import httpService from 'shared/services/http.service';
 import authService from 'shared/services/auth.service';
 
 import { STATUS_DATA, getLeaveColumns } from '../constant/wfhConstant';
+import { IWfh } from '../interface/wfh';
 
 interface IWfhProps {
 	uId: string;
@@ -22,7 +23,7 @@ const Wfh: FC<IWfhProps> = ({ uId }) => {
 	const [isLoading, setLoading] = useState(false);
 	const [selectedStatus, setSelectedStatus] = useState<string>('');
 
-	const [wfhList, setWfhList] = useState<[]>([]);
+	const [wfhList, setWfhList] = useState<IWfh[]>([]);
 	const [pagination, setPagination] = useState<IPagination>({
 		currentPage: 1,
 		nextPage: null,
@@ -44,7 +45,6 @@ const Wfh: FC<IWfhProps> = ({ uId }) => {
 			httpService
 				.get(API_CONFIG.path.wfhList, params)
 				.then((res) => {
-					console.log('🚀 ~ file: wfh.tsx:52 ~ .then ~ res:', res.data.items);
 					setWfhList(res.data.items);
 					const { currentPage, recordPerPage, total } = res.data.pagination;
 					setPagination({
@@ -136,8 +136,8 @@ const Wfh: FC<IWfhProps> = ({ uId }) => {
 					handlePagination={handlePagination}
 					onRecordsPerPageChange={onRecordsPerPageChange}
 					columns={getLeaveColumns()}
-					leave={true}
-					isUpcomingWfh={true}
+					leave
+					isUpcomingWfh
 				/>
 			</Flex>
 		</Box>
