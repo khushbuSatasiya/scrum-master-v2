@@ -1,11 +1,12 @@
+import { useMemo } from 'react';
 import { createStyles } from '@mantine/core';
 import { DataTable, DataTableColumn } from 'mantine-datatable';
 
 import { IPagination } from 'shared/interface';
 import { NoRecordPage } from '../componets/noRecordPage';
 
-import '../style/table.scss';
 import { IWfh } from 'features/wfh/interface/wfh';
+import '../style/table.scss';
 
 interface ITableProps {
 	userList: IWfh[] | [];
@@ -79,10 +80,10 @@ export const TableSelection = (props: ITableProps) => {
 
 	const { classes } = useStyles();
 
-	const getRowClass = (item) => {
+	const getRowClass = useMemo(() => {
 		const upcomingProperty = isUpcomingWfh ? 'isUpcomingWfh' : 'isUpcomingLeave';
-		return leave && !item[upcomingProperty] ? 'gray-background' : '';
-	};
+		return (item) => (leave && !item[upcomingProperty] ? 'gray-background' : '');
+	}, [isUpcomingWfh, leave]);
 
 	return (
 		<DataTable
