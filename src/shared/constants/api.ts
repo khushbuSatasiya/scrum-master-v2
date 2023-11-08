@@ -14,6 +14,8 @@ export const API_CONFIG = {
 		timeSheetExcel: 'timesheet/excel',
 		leaveList: 'leave/list',
 		leaveExcel: 'leave/excel',
+		wfhList: 'wfh/list',
+		wfhExcel: 'wfh/excel',
 		checkOut: 'web/checkOut',
 		projectList: 'project/list',
 		project: 'project',

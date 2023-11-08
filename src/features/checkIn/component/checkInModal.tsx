@@ -49,9 +49,9 @@ const CheckInModal: FC<IProps> = (props: IProps) => {
 	return (
 		<>
 			<Modal
-				size='auto'
 				opened={isConfirm}
 				onClose={() => console.log()}
+				size='auto'
 				centered
 				padding={40}
 				radius='lg'

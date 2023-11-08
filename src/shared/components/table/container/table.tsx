@@ -1,13 +1,15 @@
+import { useMemo } from 'react';
 import { createStyles } from '@mantine/core';
 import { DataTable, DataTableColumn } from 'mantine-datatable';
 
 import { IPagination } from 'shared/interface';
 import { NoRecordPage } from '../componets/noRecordPage';
 
+import { IWfh } from 'features/wfh/interface/wfh';
 import '../style/table.scss';
 
 interface ITableProps {
-	userList: [];
+	userList: IWfh[] | [];
 	columns: DataTableColumn<any>[];
 	isLoading: boolean;
 	pagination?: IPagination;
@@ -16,6 +18,7 @@ interface ITableProps {
 	onRecordsPerPageChange?: (recordPerPage?: number) => void;
 	leave?: boolean;
 	className?: string;
+	isUpcomingWfh?: boolean;
 }
 
 const useStyles = createStyles((theme) => {
@@ -73,13 +76,14 @@ const useStyles = createStyles((theme) => {
 const PAGE_SIZES = [10, 50, 75, 100];
 
 export const TableSelection = (props: ITableProps) => {
-	const { isLoading, userList, columns, leave, className } = props;
+	const { isLoading, userList, columns, leave, isUpcomingWfh, className } = props;
 
 	const { classes } = useStyles();
 
-	const getRowClass = (isUpcomingLeave) => {
-		return leave && !isUpcomingLeave.isUpcomingLeave ? 'gray-background' : '';
-	};
+	const getRowClass = useMemo(() => {
+		const upcomingProperty = isUpcomingWfh ? 'isUpcomingWfh' : 'isUpcomingLeave';
+		return (item) => (leave && !item[upcomingProperty] ? 'gray-background' : '');
+	}, [isUpcomingWfh, leave]);
 
 	return (
 		<DataTable
@@ -107,7 +111,7 @@ export const TableSelection = (props: ITableProps) => {
 			rowBorderColor={(theme) => theme.colors.gray[2]}
 			onPageChange={(currentPage) => props.handlePagination(currentPage)}
 			onRecordsPerPageChange={(recordPerPage) => props.onRecordsPerPageChange(recordPerPage)}
-			rowClassName={({ isUpcomingLeave }) => `${classes.rowClass} ${getRowClass({ isUpcomingLeave })}`}
+			rowClassName={(item) => `${classes.rowClass} ${getRowClass(item)}`}
 			onRowClick={props.onRowClick || null}
 			scrollAreaProps={{ type: 'never' }}
 		/>
