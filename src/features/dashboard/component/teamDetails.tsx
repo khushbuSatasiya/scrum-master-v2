@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Avatar, Box, Divider, Flex, LoadingOverlay, Modal, Text, createStyles } from '@mantine/core';
+import { Avatar, Box, Divider, Flex, LoadingOverlay, Modal, Text, createStyles, Tooltip } from '@mantine/core';
 
 import { ITeamDetails } from '../interface/dashboard';
 
@@ -65,14 +65,40 @@ const TeamDetails: FC<ITeamInfoProps> = ({ teamInfo, teamLoading, onClose }) => 
 						}}
 					>
 						{teamInfo &&
-							teamInfo.map(({ name, avatar, designation }, index) => {
+							teamInfo.map(({ name, avatar, designation, projectDetails }, index) => {
 								return (
 									<Flex align={'center'} mb={20} w={'50%'} key={index}>
 										<Avatar src={avatar} alt={name} radius='md' />
 										<Box ml={10}>
-											<Text c={'#071437'} fz={14} fw={500}>
-												{name}
-											</Text>
+											<Tooltip
+												key={index}
+												label={
+													<Box>
+														{projectDetails.map((project, projectIndex) => (
+															<div key={projectIndex}>
+																{project.projectName}
+																{projectIndex < projectDetails.length - 1 && ','}
+															</div>
+														))}
+													</Box>
+												}
+												sx={{
+													maxWidth: '220px',
+													wordWrap: 'break-word',
+													textWrap: 'balance',
+													height: 'auto',
+													textAlign: 'center'
+												}}
+												width={'auto'}
+												inline
+												position='bottom'
+												withArrow
+												color='#1c7ed6'
+											>
+												<Text c={'#071437'} fz={14} fw={500}>
+													{name}
+												</Text>
+											</Tooltip>
 											<Text c={'#B5B5C3'} fz={12} fw={500}>
 												{designation ? designation : 'Team Member'}
 											</Text>

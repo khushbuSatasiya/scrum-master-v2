@@ -144,7 +144,7 @@ const CheckInModal: FC<IProps> = (props: IProps) => {
 						<Flex justify='center' align='center' direction='column' mb={20}>
 							<Lottie options={defaultOptions} height={120} width={120} speed={1.5} />
 						</Flex>
-						<Text ta='center' mb={10} weight={600} color='#99A1B7'>
+						<Text ta='center' mb={reminder ? 10 : 30} weight={600} color='#99A1B7'>
 							You have successfully checked in
 						</Text>
 						{reminder && (
